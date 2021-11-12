@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [ 
+      "@babel/preset-env", 
+      {
+      "targets": {
+        "browsers": ["last 2 versions", "IE >= 11"]
+      },
+      "modules":false,
+      "loose":true
+    }]
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-syntax-dynamic-import"
+  ]
+}
