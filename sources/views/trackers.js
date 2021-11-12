@@ -67,13 +67,12 @@ export default class TrackersView extends JetView {
 							view: "button",
 							label: "Отмена",
 							click: () => {
-								this.form.clear();
-								this.form.clearValidation();
+								this.form.clearForm();
 							}
 						},
 						{
 							view: "button",
-							label: "Добавить",
+							label: "Сохранить",
 							css: "webix_primary",
 							click: () => {
 								if (this.form.validate()) {
@@ -84,11 +83,10 @@ export default class TrackersView extends JetView {
 									else {
 										trackers.add(formValues);
 									}
-									this.form.clear();
-									this.form.clearValidation();
+									this.form.clearForm();
 								}
 								else {
-									webix.message("Please, fill all fields in the form");
+									webix.message("Пожалуйста, заполните все необходимые поля");
 								}
 							}
 						}
@@ -121,8 +119,8 @@ export default class TrackersView extends JetView {
 									}).then(() => {
 										for (let i = 0; i < selectedTrackers.length; i++) {
 											trackers.remove(selectedTrackers[i]);
-											this.selectedTrackers.delete(selectedTrackers[i]);
 										}
+										this.selectedTrackers.clear();
 									});
 								}
 							}
@@ -133,10 +131,14 @@ export default class TrackersView extends JetView {
 							width: 200,
 							css: "webix_primary",
 							click: () => {
-								this.form.clear();
-								this.form.clearValidation();
+								this.form.clearForm();
 								const selectedTracker = this.trackersList.getSelectedItem();
-								this.form.parse(selectedTracker);
+								if (selectedTracker) {
+									this.form.parse(selectedTracker);
+								}
+								else {
+									webix.message("Пожалуйста, выберите трекер для редактирования");
+								}
 							}
 						}
 					]
@@ -210,5 +212,10 @@ export default class TrackersView extends JetView {
 
 		const stateNumbersList = cars.serialize().map(elem => elem.stateNumber);
 		this.$$("stateNumberSelect").define("options", stateNumbersList);
+	}
+
+	clearForm() {
+		this.form.clear();
+		this.form.clearValidation();
 	}
 }

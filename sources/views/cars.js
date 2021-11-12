@@ -118,7 +118,7 @@ export default class CarsView extends JetView {
 									this.clearForm();
 								}
 								else {
-									webix.message("Please, fill all fields in the form");
+									webix.message("Пожалуйста, заполните все необходимые поля");
 								}
 							}
 						}
@@ -151,8 +151,8 @@ export default class CarsView extends JetView {
 									}).then(() => {
 										for (let i = 0; i < selectedCars.length; i++) {
 											cars.remove(selectedCars[i]);
-											this.selectedCars.delete(selectedCars[i]);
 										}
+										this.selectedCars.clear();
 									});
 								}
 							}
@@ -165,9 +165,14 @@ export default class CarsView extends JetView {
 							click: () => {
 								this.clearForm();
 								const selectedCar = this.carsList.getSelectedItem();
-								this.form.parse(selectedCar);
+								if (selectedCar) {
+									this.form.parse(selectedCar);
+								}
+								else {
+									webix.message("Пожалуйста выберите автомобиль для редактирования");
+								}
+
 								this.$$("carPhoto").setValues({Photo: selectedCar.photo});
-								return false;
 							}
 						}
 					]

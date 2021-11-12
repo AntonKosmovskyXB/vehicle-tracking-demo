@@ -226,3 +226,12 @@
     align-items: center;
     justify-content: center;
 }
+
+.travelCards {
+    background: #ffffff;
+    padding: 10px;
+}
+
+.filter-button span {
+    margin: 0;
+}
