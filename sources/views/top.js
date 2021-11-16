@@ -27,7 +27,6 @@ export default class TopView extends JetView {
 				{
 					paddingX: 5,
 					paddingY: 10,
-					css: "webix_shadow_medium",
 					rows: [menu]
 				},
 				{

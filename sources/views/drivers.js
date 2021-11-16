@@ -42,7 +42,7 @@ export default class DriversView extends JetView {
 						},
 						{
 							view: "button",
-							label: "Добавить",
+							label: "Сохранить",
 							css: "webix_primary",
 							click: () => {
 								if (this.form.validate()) {

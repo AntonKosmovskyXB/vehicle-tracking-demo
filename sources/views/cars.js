@@ -103,7 +103,7 @@ export default class CarsView extends JetView {
 						},
 						{
 							view: "button",
-							label: "Добавить",
+							label: "Сохранить",
 							css: "webix_primary",
 							click: () => {
 								if (this.form.validate()) {
