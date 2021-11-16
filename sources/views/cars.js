@@ -41,7 +41,7 @@ export default class CarsView extends JetView {
 					}
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					options: ["Volvo", "Man", "Scania"],
 					label: "Марка автомобиля",
 					labelPosition: "top",
@@ -63,7 +63,7 @@ export default class CarsView extends JetView {
 					required: true
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"],
 					label: "Группа",
 					labelPosition: "top",
@@ -71,13 +71,13 @@ export default class CarsView extends JetView {
 					required: true
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					label: "Количество осей",
 					options: ["Двухосные", "Трехосные"],
 					labelPosition: "top"
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					label: "Состав",
 					options: ["Автомобиль-прицеп", "Одиночное транспортное средство"],
 					labelPosition: "top",
@@ -85,7 +85,7 @@ export default class CarsView extends JetView {
 					required: true
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					label: "Грузоподъемность",
 					options: ["От 1,5 до 16 тонн", "Свыше 16 тонн"],
 					labelPosition: "top",

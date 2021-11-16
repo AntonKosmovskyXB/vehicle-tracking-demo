@@ -16,6 +16,69 @@ export default class DashboardView extends JetView {
 								},
 								{
 									view: "richselect",
+									width: 230,
+									options: ["Все", "Изменился угол наклона", "Сошел с маршрута", "Превысил скорость"],
+									value: "Все",
+									on: {
+										onChange: (value) => {
+											if (value === "Изменился угол наклона") {
+												this.$$("incidentsChart").define("value", "#tiltAngle#");
+												this.$$("incidentsChart").define("series", []);
+												this.$$("incidentsChart").define("line", {
+													color: "#024ED7",
+													width: 3
+												});
+												this.$$("incidentsChart").refresh();
+											}
+											else if (value === "Сошел с маршрута") {
+												this.$$("incidentsChart").define("value", "#routeLiving#");
+												this.$$("incidentsChart").define("series", []);
+												this.$$("incidentsChart").define("line", {
+													color: "#F90C0C",
+													width: 3
+												});
+												this.$$("incidentsChart").refresh();
+											}
+											else if (value === "Превысил скорость") {
+												this.$$("incidentsChart").define("value", "#overSpeed#");
+												this.$$("incidentsChart").define("series", []);
+												this.$$("incidentsChart").define("line", {
+													color: "#04CC67",
+													width: 3
+												});
+												this.$$("incidentsChart").refresh();
+											}
+											else {
+												this.$$("incidentsChart").define("series", [
+													{
+														value: "#tiltAngle#",
+														line: {
+															color: "#024ED7",
+															width: 3
+														}
+													},
+													{
+														value: "#routeLiving#",
+														line: {
+															color: "#F90C0C",
+															width: 3
+														}
+													},
+													{
+														value: "#overSpeed#",
+														line: {
+															color: "#04CC67",
+															width: 3
+														}
+													}
+												]);
+												this.$$("incidentsChart").refresh();
+											}
+										}
+									}
+								},
+								{
+									view: "richselect",
 									width: 100,
 									options: ["2019", "2020"],
 									value: "2020",
@@ -45,6 +108,7 @@ export default class DashboardView extends JetView {
 								width: 400,
 								margin: 10
 							},
+							value: "#tiltAngle#",
 							series: [
 								{
 									value: "#tiltAngle#",

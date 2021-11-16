@@ -13,7 +13,7 @@ webix.ui({
 		paddingY: 10,
 		rows: [
 			{
-				view: "combo",
+				view: "richselect",
 				label: "Марка автомобиля",
 				labelPosition: "top",
 				options: ["Volvo", "Scania", "Man"],
@@ -30,7 +30,7 @@ webix.ui({
 				}
 			},
 			{
-				view: "combo",
+				view: "richselect",
 				label: "Группа",
 				labelPosition: "top",
 				options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"],

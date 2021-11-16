@@ -18,7 +18,7 @@ export default class TrackersView extends JetView {
 					css: "headLabel"
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					options: ["Глонасс", "GPS"],
 					label: "Тип",
 					labelPosition: "top",
@@ -45,7 +45,7 @@ export default class TrackersView extends JetView {
 					label: "Прикрепить к транспорту"
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					options: ["Volvo", "Man", "Scania"],
 					label: "Марка автомобиля",
 					labelPosition: "top",
@@ -53,7 +53,7 @@ export default class TrackersView extends JetView {
 					required: true
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					options: [],
 					localId: "stateNumberSelect",
 					label: "Гос.номер",
@@ -67,7 +67,7 @@ export default class TrackersView extends JetView {
 							view: "button",
 							label: "Отмена",
 							click: () => {
-								this.form.clearForm();
+								this.clearForm();
 							}
 						},
 						{
