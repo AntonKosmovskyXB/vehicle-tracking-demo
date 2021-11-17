@@ -154,6 +154,12 @@ export default class MainView extends JetView {
 											this.destructor();
 											cards.splice(0, 1);
 										});
+									},
+									"mdi-pencil": function() {
+										const currentClass = this.$scope;
+										if (this.data.status === "С маршрутом") {
+											currentClass.addRoutePopup.showPopup(0, "edit");
+										}
 									}
 								},
 								template: obj =>
@@ -201,6 +207,12 @@ export default class MainView extends JetView {
 											this.destructor();
 											cards.splice(1, 1);
 										});
+									},
+									"mdi-pencil": function() {
+										const currentClass = this.$scope;
+										if (this.data.status === "С маршрутом") {
+											currentClass.addRoutePopup.showPopup(1, "edit");
+										}
 									}
 								},
 								template: obj =>
@@ -254,6 +266,12 @@ export default class MainView extends JetView {
 										if (this.data.status === "Без маршрута") {
 											currentClass.addRoutePopup.showPopup(2);
 										}
+									},
+									"mdi-pencil": function() {
+										const currentClass = this.$scope;
+										if (this.data.status === "С маршрутом") {
+											currentClass.addRoutePopup.showPopup(2, "edit");
+										}
 									}
 								},
 								template: obj =>
@@ -306,6 +324,12 @@ export default class MainView extends JetView {
 										const currentClass = this.$scope;
 										if (this.data.status === "Без маршрута") {
 											currentClass.addRoutePopup.showPopup(3);
+										}
+									},
+									"mdi-pencil": function() {
+										const currentClass = this.$scope;
+										if (this.data.status === "С маршрутом") {
+											currentClass.addRoutePopup.showPopup(3, "edit");
 										}
 									}
 								},
@@ -382,6 +406,12 @@ export default class MainView extends JetView {
 			}, true);
 			this.$$(`card${num}`).define("height", 300);
 			this.$$(`card${num}`).resize();
+		});
+		this.on(this.app, "onRouteEdit", (num, startCity, endCity) => {
+			this.$$(`card${num}`).setValues({
+				startPoint: startCity,
+				endPoint: endCity
+			}, true);
 		});
 	}
 }
