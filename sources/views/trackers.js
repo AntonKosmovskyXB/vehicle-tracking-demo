@@ -10,7 +10,7 @@ export default class TrackersView extends JetView {
 			localId: "trackerForm",
 			css: "newTrackerForm",
 			width: 300,
-			height: 1500,
+			height: 5000,
 			elements: [
 				{
 					view: "label",

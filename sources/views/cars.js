@@ -9,7 +9,7 @@ export default class CarsView extends JetView {
 			localId: "carsForm",
 			css: "newTrackerForm",
 			width: 300,
-			height: 1500,
+			height: 5000,
 			elements: [
 				{
 					view: "label",
@@ -202,28 +202,27 @@ export default class CarsView extends JetView {
 						{
 							header: "Марка",
 							id: "model",
-							minWidth: 150
+							minWidth: 100
 						},
 						{
 							header: "Гос.номер",
 							id: "stateNumber",
-							width: 150
+							width: 130
 						},
 						{
 							header: "Трекер",
 							id: "tracker",
-							width: 150
+							width: 110
 						},
 						{
 							header: "Масса",
 							id: "weight",
-							width: 150
+							width: 90
 						},
 						{
 							header: "Группа",
 							id: "group",
 							width: 150,
-							fillspace: true
 						},
 						{
 							header: "Состав",
