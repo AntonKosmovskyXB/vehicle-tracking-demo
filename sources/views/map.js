@@ -249,8 +249,11 @@ export default class MainView extends JetView {
 											cards.splice(2, 1);
 										});
 									},
-									"mdi-map-marker": () => {
-										this.addRoutePopup.showPopup(2);
+									"mdi-map-marker": function() {
+										const currentClass = this.$scope;
+										if (this.data.status === "Без маршрута") {
+											currentClass.addRoutePopup.showPopup(2);
+										}
 									}
 								},
 								template: obj =>
@@ -299,8 +302,11 @@ export default class MainView extends JetView {
 											cards.splice(3, 1);
 										});
 									},
-									"mdi-map-marker": () => {
-										this.addRoutePopup.showPopup(3);
+									"mdi-map-marker": function() {
+										const currentClass = this.$scope;
+										if (this.data.status === "Без маршрута") {
+											currentClass.addRoutePopup.showPopup(3);
+										}
 									}
 								},
 								template: obj =>
