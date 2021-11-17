@@ -362,24 +362,6 @@
     opacity: 1;
 }
 
-.tooltiptext {
-    visibility: visible;
-    width: 160px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    left: 50%;
-    margin-left: -60px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    margin-top: 45px;
-    line-height: 20px;
-}
-
 .tooltipLine {
     display: flex;
     justify-content: space-between;

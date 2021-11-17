@@ -129,7 +129,6 @@ export default class MainView extends JetView {
 	config() {
 		const newDriver = {
 			css: "travelCards",
-			height: 1500,
 			rows: [
 				{
 					cols: [
@@ -155,7 +154,6 @@ export default class MainView extends JetView {
 					localId: "scrollview",
 					id: "scrollview",
 					width: 320,
-					height: 650,
 					scroll: "y",
 					body: {
 						rows: [
@@ -358,13 +356,14 @@ export default class MainView extends JetView {
 										<div class="cardRow"><b>Номер телефона:</b><span class="cardRowInfo"> ${obj.phone}</span></div>
 									</div>`
 							},
+							{height: cards.length * 5}
 						]
 					}
 				}
 			]
 		};
 
-		const driversList = {
+		const map = {
 			view: "open-map",
 			localId: "map"
 		};
@@ -372,7 +371,7 @@ export default class MainView extends JetView {
 		return {
 			paddingX: 15,
 			paddingY: 15,
-			cols: [newDriver, {width: 15}, driversList]
+			cols: [newDriver, {width: 15}, map]
 		};
 	}
 
