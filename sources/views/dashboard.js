@@ -1,9 +1,12 @@
 import {JetView} from "webix-jet";
 
-import {incidents, incidents19, incidents20, maintenance, mileAge} from "../models/statistics";
+import {incidents19, incidents20, maintenance, mileAge} from "../models/statistics";
 
 export default class DashboardView extends JetView {
 	config() {
+		const changedDegree = "Изменился угол наклона";
+		const routeLiving = "Сошел с маршрута";
+		const overSpeed = "Превысил скорость";
 		return {
 			cols: [
 				{
@@ -17,62 +20,70 @@ export default class DashboardView extends JetView {
 								{
 									view: "richselect",
 									width: 230,
-									options: ["Все", "Изменился угол наклона", "Сошел с маршрута", "Превысил скорость"],
+									options: ["Все", changedDegree, routeLiving, overSpeed],
 									value: "Все",
 									on: {
 										onChange: (value) => {
-											if (value === "Изменился угол наклона") {
-												this.$$("incidentsChart").define("value", "#tiltAngle#");
-												this.$$("incidentsChart").define("series", []);
-												this.$$("incidentsChart").define("line", {
-													color: "#024ED7",
-													width: 3
-												});
-												this.$$("incidentsChart").refresh();
-											}
-											else if (value === "Сошел с маршрута") {
-												this.$$("incidentsChart").define("value", "#routeLiving#");
-												this.$$("incidentsChart").define("series", []);
-												this.$$("incidentsChart").define("line", {
-													color: "#F90C0C",
-													width: 3
-												});
-												this.$$("incidentsChart").refresh();
-											}
-											else if (value === "Превысил скорость") {
-												this.$$("incidentsChart").define("value", "#overSpeed#");
-												this.$$("incidentsChart").define("series", []);
-												this.$$("incidentsChart").define("line", {
-													color: "#04CC67",
-													width: 3
-												});
-												this.$$("incidentsChart").refresh();
-											}
-											else {
-												this.$$("incidentsChart").define("series", [
-													{
+											switch (value) {
+												case changedDegree:
+													this.$$("incidentsChart").define({
 														value: "#tiltAngle#",
+														series: [],
 														line: {
 															color: "#024ED7",
 															width: 3
 														}
-													},
-													{
+													});
+													this.$$("incidentsChart").refresh();
+													break;
+												case routeLiving:
+													this.$$("incidentsChart").define({
 														value: "#routeLiving#",
+														series: [],
 														line: {
 															color: "#F90C0C",
 															width: 3
 														}
-													},
-													{
+													});
+													this.$$("incidentsChart").refresh();
+													break;
+												case overSpeed:
+													this.$$("incidentsChart").define({
 														value: "#overSpeed#",
+														series: [],
 														line: {
 															color: "#04CC67",
 															width: 3
 														}
-													}
-												]);
-												this.$$("incidentsChart").refresh();
+													});
+													this.$$("incidentsChart").refresh();
+													break;
+												default:
+													this.$$("incidentsChart").define("series", [
+														{
+															value: "#tiltAngle#",
+															line: {
+																color: "#024ED7",
+																width: 3
+															}
+														},
+														{
+															value: "#routeLiving#",
+															line: {
+																color: "#F90C0C",
+																width: 3
+															}
+														},
+														{
+															value: "#overSpeed#",
+															line: {
+																color: "#04CC67",
+																width: 3
+															}
+														}
+													]);
+													this.$$("incidentsChart").refresh();
+													break;
 											}
 										}
 									}
@@ -101,7 +112,7 @@ export default class DashboardView extends JetView {
 							localId: "incidentsChart",
 							type: "spline",
 							legend: {
-								values: [{text: "Изменился угол наклона", color: "#024ED7"}, {text: "Сошел с маршрута", color: "#F90C0C"}, {text: "Превысил скорость", color: "#04CC67"}],
+								values: [{text: changedDegree, color: "#024ED7"}, {text: routeLiving, color: "#F90C0C"}, {text: overSpeed, color: "#04CC67"}],
 								align: "left",
 								valign: "top",
 								layout: "x",
@@ -142,9 +153,7 @@ export default class DashboardView extends JetView {
 								start: 0,
 								step: 5,
 								end: 50,
-								template: function (value) {
-									return (value % 5 ? "" : value);
-								}
+								template: value => (value % 5 ? "" : value)
 							}
 						}
 					]
@@ -167,15 +176,7 @@ export default class DashboardView extends JetView {
 									value: "2020",
 									on: {
 										onChange: (value) => {
-											if (value === "2019") {
-												this.$$("mileAgeChart").define("value", "#mileAge19#");
-												this.$$("mileAgeChart").define("label", "#mileAge19#");
-											}
-											else {
-												this.$$("mileAgeChart").define("value", "#mileAge20#");
-												this.$$("mileAgeChart").define("label", "#mileAge20#");
-											}
-											this.$$("mileAgeChart").refresh();
+											this.setYearForChart("mileAgeChart", value, "#mileAge19#", "#mileAge20#");
 										}
 									}
 								}
@@ -197,9 +198,7 @@ export default class DashboardView extends JetView {
 								start: 0,
 								step: 2000,
 								end: 10000,
-								template: function (value) {
-									return (value % 20 ? "" : value);
-								}
+								template: value => (value % 20 ? "" : value)
 							}
 						},
 						{
@@ -215,15 +214,7 @@ export default class DashboardView extends JetView {
 									value: "2020",
 									on: {
 										onChange: (value) => {
-											if (value === "2019") {
-												this.$$("maintenanceChart").define("value", "#numOfMaintenance19#");
-												this.$$("maintenanceChart").define("label", "#numOfMaintenance19#");
-											}
-											else {
-												this.$$("maintenanceChart").define("value", "#numOfMaintenance20#");
-												this.$$("maintenanceChart").define("label", "#numOfMaintenance20#");
-											}
-											this.$$("maintenanceChart").refresh();
+											this.setYearForChart("maintenanceChart", value, "#numOfMaintenance19#", "#numOfMaintenance20#");
 										}
 									}
 								}
@@ -245,14 +236,24 @@ export default class DashboardView extends JetView {
 								start: 0,
 								step: 10,
 								end: 100,
-								template: function (value) {
-									return (value % 20 ? "" : value);
-								}
+								template: value => (value % 20 ? "" : value)
 							}
 						}
 					]
 				}
 			]
 		};
+	}
+
+	setYearForChart(id, year, dataFor19, dataFor20) {
+		if (year === "2019") {
+			this.$$(id).define("value", dataFor19);
+			this.$$(id).define("label", dataFor19);
+		}
+		else {
+			this.$$(id).define("value", dataFor20);
+			this.$$(id).define("label", dataFor20);
+		}
+		this.$$(id).refresh();
 	}
 }

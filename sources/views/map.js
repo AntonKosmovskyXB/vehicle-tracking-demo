@@ -82,24 +82,16 @@ webix.ui({
 							if (formValues.group === "") {
 								delete formValues.group;
 							}
-							if (formValues.route === "Все") {
-								delete formValues.route;
+							if (formValues.status === "Все") {
+								delete formValues.status;
 							}
 							if (formValues.tracker === "Все") {
 								delete formValues.tracker;
 							}
 							for (let i = 0; i < cards.length; i++) {
-								if ($$(`card${i}`)) {
-									$$(`card${i}`).show();
-								}
-								for (let key in formValues) {
-									if (formValues[key] !== cards[i][key]) {
-										if ($$(`card${i}`)) {
-											$$(`card${i}`).hide();	
-										}
-										continue;
-									}
-								}
+								$$(`card${i}`)?.show();
+								const keys = Object.keys(formValues);
+								keys.forEach(item => formValues[item] !== cards[i][item] ? $$(`card${i}`)?.hide() : "")
 							}
 						}
 					}
@@ -111,6 +103,7 @@ webix.ui({
 
 export default class MainView extends JetView {
 	config() {
+		const self = this;
 		const newDriver = {
 			css: "travelCards",
 			rows: [
@@ -149,17 +142,25 @@ export default class MainView extends JetView {
 								height: 300,
 								data: cards[0],
 								onClick: {
-									"mdi-delete": function() {
+									"mdi-delete": function () {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
 											this.destructor();
 											cards.splice(0, 1);
 										});
 									},
-									"mdi-pencil": function() {
-										const currentClass = this.$scope;
+									"mdi-pencil": function () {
 										if (this.data.status === "С маршрутом") {
-											currentClass.addRoutePopup.showPopup(0, "edit");
+											self.addRoutePopup.showPopup(0, "edit");
 										}
+									}
+								},
+								on: {
+									onFocus: function () {
+										self.$$("map").getMap(true).then((mapObj) => {
+											const mymap = mapObj.setView(this.data.startCoord, 7);
+											L.marker(this.data.startCoord).addTo(mymap);
+											L.marker(this.data.endCoord).addTo(mymap);
+										});
 									}
 								},
 								template: obj =>
@@ -209,10 +210,18 @@ export default class MainView extends JetView {
 										});
 									},
 									"mdi-pencil": function() {
-										const currentClass = this.$scope;
 										if (this.data.status === "С маршрутом") {
-											currentClass.addRoutePopup.showPopup(1, "edit");
+											self.addRoutePopup.showPopup(1, "edit");
 										}
+									}
+								},
+								on: {
+									onFocus: function () {
+										self.$$("map").getMap(true).then((mapObj) => {
+											const mymap = mapObj.setView(this.data.startCoord, 7);
+											L.marker(this.data.startCoord).addTo(mymap);
+											L.marker(this.data.endCoord).addTo(mymap);
+										});
 									}
 								},
 								template: obj =>
@@ -262,15 +271,13 @@ export default class MainView extends JetView {
 										});
 									},
 									"mdi-map-marker": function() {
-										const currentClass = this.$scope;
 										if (this.data.status === "Без маршрута") {
-											currentClass.addRoutePopup.showPopup(2);
+											self.addRoutePopup.showPopup(2);
 										}
 									},
 									"mdi-pencil": function() {
-										const currentClass = this.$scope;
 										if (this.data.status === "С маршрутом") {
-											currentClass.addRoutePopup.showPopup(2, "edit");
+											self.addRoutePopup.showPopup(2, "edit");
 										}
 									}
 								},
@@ -321,15 +328,13 @@ export default class MainView extends JetView {
 										});
 									},
 									"mdi-map-marker": function() {
-										const currentClass = this.$scope;
 										if (this.data.status === "Без маршрута") {
-											currentClass.addRoutePopup.showPopup(3);
+											self.addRoutePopup.showPopup(3);
 										}
 									},
 									"mdi-pencil": function() {
-										const currentClass = this.$scope;
 										if (this.data.status === "С маршрутом") {
-											currentClass.addRoutePopup.showPopup(3, "edit");
+											self.addRoutePopup.showPopup(3, "edit");
 										}
 									}
 								},
@@ -386,11 +391,6 @@ export default class MainView extends JetView {
 
 	init() {
 		this.editMode = false;
-		this.$$("map").getMap(true).then((mapObj) => {
-			const mymap = mapObj.setView([53.9, 27.56], 10);
-			L.marker([53.9, 27.56]).addTo(mymap);
-			L.marker([53.9, 29.06]).addTo(mymap);
-		});
 		this.addRoutePopup = this.ui(NewRoutePopup);
 		this.on(this.app, "onRouteAdd", (num, startCity, endCity) => {
 			this.$$(`card${num}`).setValues({
