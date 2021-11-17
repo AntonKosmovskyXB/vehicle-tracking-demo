@@ -19,36 +19,14 @@ webix.ui({
 				label: "Марка автомобиля",
 				name: "model",
 				labelPosition: "top",
-				options: ["Volvo", "Scania", "Man"],
-				on: {
-					onChange: (value) => {
-						// const cardsList = $$("scrollview").getChildViews()[0]._collection;
-						// for (let i = 0; i < cardsList.length; i++) {
-						// 	$$(`card${i}`).show();
-						// 	if (cardsList[i].data.model !== value) {
-						// 		$$(`card${i}`).hide();
-						// 	}
-						// }
-					}
-				}
+				options: ["Volvo", "Scania", "Man"]
 			},
 			{
 				view: "richselect",
 				label: "Группа",
 				labelPosition: "top",
 				name: "group",
-				options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"],
-				on: {
-					onChange: (value) => {
-						// const cardsList = $$("scrollview").getChildViews()[0]._collection;
-						// for (let i = 0; i < cardsList.length; i++) {
-						// 	$$(`card${i}`).show();
-						// 	if (cardsList[i].data.group !== value) {
-						// 		$$(`card${i}`).hide();
-						// 	}
-						// }
-					}
-				}
+				options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"]
 			},
 			{
 				view: "label",
