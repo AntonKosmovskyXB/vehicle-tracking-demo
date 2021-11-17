@@ -7,25 +7,28 @@ import NewRoutePopup from "./newRoutePopup";
 webix.ui({
 	view: "popup",
 	id: "addRoutePopup",
-	width: 220,
+	width: 230,
 	body: {
+		view: "form",
+		id: "filterForm",
 		paddingX: 10,
 		paddingY: 10,
 		rows: [
 			{
 				view: "richselect",
 				label: "Марка автомобиля",
+				name: "model",
 				labelPosition: "top",
 				options: ["Volvo", "Scania", "Man"],
 				on: {
 					onChange: (value) => {
-						const cardsList = $$("scrollview").getChildViews()[0]._collection;
-						for (let i = 0; i < cardsList.length; i++) {
-							$$(`card${i}`).show();
-							if (cardsList[i].data.model !== value) {
-								$$(`card${i}`).hide();
-							}
-						}
+						// const cardsList = $$("scrollview").getChildViews()[0]._collection;
+						// for (let i = 0; i < cardsList.length; i++) {
+						// 	$$(`card${i}`).show();
+						// 	if (cardsList[i].data.model !== value) {
+						// 		$$(`card${i}`).hide();
+						// 	}
+						// }
 					}
 				}
 			},
@@ -33,16 +36,17 @@ webix.ui({
 				view: "richselect",
 				label: "Группа",
 				labelPosition: "top",
+				name: "group",
 				options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"],
 				on: {
 					onChange: (value) => {
-						const cardsList = $$("scrollview").getChildViews()[0]._collection;
-						for (let i = 0; i < cardsList.length; i++) {
-							$$(`card${i}`).show();
-							if (cardsList[i].data.group !== value) {
-								$$(`card${i}`).hide();
-							}
-						}
+						// const cardsList = $$("scrollview").getChildViews()[0]._collection;
+						// for (let i = 0; i < cardsList.length; i++) {
+						// 	$$(`card${i}`).show();
+						// 	if (cardsList[i].data.group !== value) {
+						// 		$$(`card${i}`).hide();
+						// 	}
+						// }
 					}
 				}
 			},
@@ -51,57 +55,71 @@ webix.ui({
 				label: "Маршрут"
 			},
 			{
-				view: "checkbox",
-				labelWidth: 0,
-				labelRight: "В пути"
-			},
-			{
-				view: "checkbox",
-				labelWidth: 0,
-				labelRight: "С маршрутом"
-			},
-			{
-				view: "checkbox",
-				labelWidth: 0,
-				labelRight: "Отклонение от маршрута"
+				view: "radio",
+				vertical: true,
+				align: "left",
+				name: "route",
+				id: "routeOption",
+				options: ["Все", "В пути", "C маршрутом", "Отклонился от маршрута"],
+				value: "Все"
 			},
 			{
 				view: "label",
 				label: "Тип трекера"
 			},
 			{
-				view: "checkbox",
-				labelWidth: 0,
-				labelRight: "Глонасс",
-				id: "GlonassCheckbox",
-				on: {
-					onChange: (value) => {
-						const cardsList = $$("scrollview").getChildViews()[0]._collection;
-						for (let i = 0; i < cardsList.length; i++) {
-							$$(`card${i}`).show();
-							if (cardsList[i].data.tracker === "GPS" && value === 1) {
-								$$(`card${i}`).hide();
-							}
-						}
-					}
-				}
+				view: "radio",
+				vertical: true,
+				align: "left",
+				name: "tracker",
+				id: "trackerOption",
+				options: ["Все", "GPS", "Глонасс"],
+				value: "Все"
 			},
 			{
-				view: "checkbox",
-				labelWidth: 0,
-				labelRight: "GPS",
-				id: "GPSCheckbox",
-				on: {
-					onChange: (value) => {
-						const cardsList = $$("scrollview").getChildViews()[0]._collection;
-						for (let i = 0; i < cardsList.length; i++) {
-							$$(`card${i}`).show();
-							if (cardsList[i].data.tracker === "Глонасс" && value === 1) {
-								$$(`card${i}`).hide();
+				cols: [
+					{
+						view: "button",
+						label: "Сбросить",
+						click: () => {
+							$$("filterForm").clear();
+							$$("routeOption").setValue("Все");
+							$$("trackerOption").setValue("Все");
+							for (let i = 0; i < cards.length; i++) {
+								$$(`card${i}`).show();
+							}
+						}
+					},
+					{
+						view: "button",
+						css: "webix_primary",
+						label: "Применить",
+						click: () => {
+							const formValues = $$("filterForm").getValues();
+							if (formValues.model === "") {
+								delete formValues.model;
+							}
+							if (formValues.group === "") {
+								delete formValues.group;
+							}
+							if (formValues.route === "Все") {
+								delete formValues.route;
+							}
+							if (formValues.tracker === "Все") {
+								delete formValues.tracker;
+							}
+							for (let i = 0; i < cards.length; i++) {
+								$$(`card${i}`).show();
+								for (let key in formValues) {
+									if (formValues[key] !== cards[i][key]) {
+										$$(`card${i}`).hide();
+										continue;
+									}
+								}
 							}
 						}
 					}
-				}
+				]
 			}
 		]
 	}
@@ -208,9 +226,6 @@ export default class MainView extends JetView {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
 											this.$$("card1").destructor();
 										});
-									},
-									"mdi-pencil": () => {
-
 									}
 								},
 								template: obj =>
@@ -237,7 +252,7 @@ export default class MainView extends JetView {
 										<div class="routeLine">
 											<div class="routeDonePercent" style="width: ${(obj.doneDistance / obj.distance) * 100}%"></div>
 										</div>
-										<div class="cardRow"><b>Движется со скоростью:</b><span class="cardRowInfo speed"> ${obj.speed} км/ч </span></div>
+										<div class="cardRow"><b>Движется со скоростью:</b><span class="cardRowInfo outOfspeed"> ${obj.speed} км/ч </span></div>
 										<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} со скоростью ${obj.speed} км/ч </span></div>
 										<div class="cardRow"><b>Завершение маршрута:</b><span class="cardRowInfo"> через ${obj.restDistanceTime}</span></div>
 									</div>` : ""}

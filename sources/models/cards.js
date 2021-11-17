@@ -34,7 +34,7 @@ const cards = [
 		startCoord: [53.53, 27.34],
 		endCoord: [55.45, 37.36],
 		distance: 716,
-		speed: 90,
+		speed: 98,
 		doneDistance: 511,
 		fullDistanceTime: "10 ч 53 мин",
 		restDistanceTime: "3 ч 16 мин",

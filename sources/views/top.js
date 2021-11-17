@@ -40,6 +40,26 @@ export default class TopView extends JetView {
 									view: "label",
 									label: "Отслеживание транспорта",
 									css: "pageHeaderLabel"
+								},
+								{
+									view: "template",
+									css: "bell-icon",
+									type: "clean",
+									width: 50,
+									data: [{
+										carModel: "",
+										carStateNumber: "",
+										problem: ""
+									}],
+									template: `
+										<div>
+											<div class='mdi mdi-bell'></div>
+											<div class='tooltipAlert'>
+												<div class="tooltipLine">
+												
+												</div>
+											</div>
+										</div>`
 								}
 							]
 						},
