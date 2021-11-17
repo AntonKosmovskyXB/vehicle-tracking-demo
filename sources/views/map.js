@@ -149,19 +149,10 @@ export default class MainView extends JetView {
 								height: 300,
 								data: cards[0],
 								onClick: {
-									"mdi-delete": () => {
+									"mdi-delete": function() {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
-											this.$$("card0").destructor();
+											this.destructor();
 											cards.splice(0, 1);
-										});
-									}
-								},
-								on: {
-									focus: () => {
-										this.$$("map").getMap(true).then((mapObj) => {
-											const mymap = mapObj.setView([53.9, 27.56], 10);
-											L.marker([53.0, 27.56]).addTo(mymap);
-											L.marker([53.9, 29.06]).addTo(mymap);
 										});
 									}
 								},
@@ -205,9 +196,9 @@ export default class MainView extends JetView {
 								height: 300,
 								data: cards[1],
 								onClick: {
-									"mdi-delete": () => {
+									"mdi-delete": function() {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
-											this.$$("card1").destructor();
+											this.destructor();
 											cards.splice(1, 1);
 										});
 									}
@@ -252,9 +243,9 @@ export default class MainView extends JetView {
 								height: 150,
 								data: cards[2],
 								onClick: {
-									"mdi-delete": () => {
+									"mdi-delete": function() {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
-											this.$$("card2").destructor();
+											this.destructor();
 											cards.splice(2, 1);
 										});
 									},
@@ -302,9 +293,9 @@ export default class MainView extends JetView {
 								height: 150,
 								data: cards[3],
 								onClick: {
-									"mdi-delete": () => {
+									"mdi-delete": function() {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
-											this.$$("card3").destructor();
+											this.destructor();
 											cards.splice(3, 1);
 										});
 									},
