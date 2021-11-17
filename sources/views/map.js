@@ -64,7 +64,9 @@ webix.ui({
 							$$("routeOption").setValue("Все");
 							$$("trackerOption").setValue("Все");
 							for (let i = 0; i < cards.length; i++) {
-								$$(`card${i}`).show();
+								if ($$(`card${i}`)) {
+									$$(`card${i}`).show();
+								}
 							}
 						}
 					},
@@ -87,10 +89,14 @@ webix.ui({
 								delete formValues.tracker;
 							}
 							for (let i = 0; i < cards.length; i++) {
-								$$(`card${i}`).show();
+								if ($$(`card${i}`)) {
+									$$(`card${i}`).show();
+								}
 								for (let key in formValues) {
 									if (formValues[key] !== cards[i][key]) {
-										$$(`card${i}`).hide();
+										if ($$(`card${i}`)) {
+											$$(`card${i}`).hide();	
+										}
 										continue;
 									}
 								}
@@ -146,6 +152,7 @@ export default class MainView extends JetView {
 									"mdi-delete": () => {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
 											this.$$("card0").destructor();
+											cards.splice(0, 1);
 										});
 									}
 								},
@@ -201,6 +208,7 @@ export default class MainView extends JetView {
 									"mdi-delete": () => {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
 											this.$$("card1").destructor();
+											cards.splice(1, 1);
 										});
 									}
 								},
@@ -247,6 +255,7 @@ export default class MainView extends JetView {
 									"mdi-delete": () => {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
 											this.$$("card2").destructor();
+											cards.splice(2, 1);
 										});
 									},
 									"mdi-map-marker": () => {
@@ -296,6 +305,7 @@ export default class MainView extends JetView {
 									"mdi-delete": () => {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
 											this.$$("card3").destructor();
+											cards.splice(3, 1);
 										});
 									},
 									"mdi-map-marker": () => {
