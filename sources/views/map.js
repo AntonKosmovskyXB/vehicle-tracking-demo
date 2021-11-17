@@ -36,7 +36,7 @@ webix.ui({
 				view: "radio",
 				vertical: true,
 				align: "left",
-				name: "route",
+				name: "status",
 				id: "routeOption",
 				options: ["Все", "В пути", "C маршрутом", "Отклонился от маршрута"],
 				value: "Все"

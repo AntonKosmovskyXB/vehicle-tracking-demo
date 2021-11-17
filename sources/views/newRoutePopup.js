@@ -62,7 +62,6 @@ export default class NewRoutePopup extends JetView {
 	}
 
 	showPopup(cardNumber, editMode) {
-		console.log(editMode);
 		this.editMode = false;
 		this.$$("popupLabel").define("label", "Добавить маршрут");
 		this.$$("addRouteButton").define("label", "Добавить");
