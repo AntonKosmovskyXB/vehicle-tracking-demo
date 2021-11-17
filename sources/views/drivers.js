@@ -9,7 +9,7 @@ export default class DriversView extends JetView {
 			localId: "driverForm",
 			css: "newTrackerForm",
 			width: 300,
-			height: 1500,
+			height: 5000,
 			elements: [
 				{
 					view: "label",
