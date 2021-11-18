@@ -9,7 +9,7 @@ export default class CarsView extends JetView {
 			localId: "carsForm",
 			css: "newTrackerForm",
 			width: 300,
-			height: 1500,
+			height: 5000,
 			elements: [
 				{
 					view: "label",
@@ -41,7 +41,7 @@ export default class CarsView extends JetView {
 					}
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					options: ["Volvo", "Man", "Scania"],
 					label: "Марка автомобиля",
 					labelPosition: "top",
@@ -63,7 +63,7 @@ export default class CarsView extends JetView {
 					required: true
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"],
 					label: "Группа",
 					labelPosition: "top",
@@ -71,13 +71,13 @@ export default class CarsView extends JetView {
 					required: true
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					label: "Количество осей",
 					options: ["Двухосные", "Трехосные"],
 					labelPosition: "top"
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					label: "Состав",
 					options: ["Автомобиль-прицеп", "Одиночное транспортное средство"],
 					labelPosition: "top",
@@ -85,7 +85,7 @@ export default class CarsView extends JetView {
 					required: true
 				},
 				{
-					view: "combo",
+					view: "richselect",
 					label: "Грузоподъемность",
 					options: ["От 1,5 до 16 тонн", "Свыше 16 тонн"],
 					labelPosition: "top",
@@ -103,7 +103,7 @@ export default class CarsView extends JetView {
 						},
 						{
 							view: "button",
-							label: "Добавить",
+							label: "Сохранить",
 							css: "webix_primary",
 							click: () => {
 								if (this.form.validate()) {
@@ -202,28 +202,27 @@ export default class CarsView extends JetView {
 						{
 							header: "Марка",
 							id: "model",
-							minWidth: 150
+							minWidth: 100
 						},
 						{
 							header: "Гос.номер",
 							id: "stateNumber",
-							width: 150
+							width: 130
 						},
 						{
 							header: "Трекер",
 							id: "tracker",
-							width: 150
+							width: 110
 						},
 						{
 							header: "Масса",
 							id: "weight",
-							width: 150
+							width: 90
 						},
 						{
 							header: "Группа",
 							id: "group",
 							width: 150,
-							fillspace: true
 						},
 						{
 							header: "Состав",

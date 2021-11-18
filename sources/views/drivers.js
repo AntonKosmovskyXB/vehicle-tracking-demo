@@ -9,7 +9,7 @@ export default class DriversView extends JetView {
 			localId: "driverForm",
 			css: "newTrackerForm",
 			width: 300,
-			height: 1500,
+			height: 5000,
 			elements: [
 				{
 					view: "label",
@@ -42,7 +42,7 @@ export default class DriversView extends JetView {
 						},
 						{
 							view: "button",
-							label: "Добавить",
+							label: "Сохранить",
 							css: "webix_primary",
 							click: () => {
 								if (this.form.validate()) {
