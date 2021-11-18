@@ -349,13 +349,16 @@
     z-index: 1;
 }
 
-.bell-icon .webix_template {
+.bell-icon .webix_button {
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 20px;
     opacity: 0.5;
+    background: none;
 }
+
+
 
 .bell-icon-active .webix_template {
     color:rgb(93, 157, 241);

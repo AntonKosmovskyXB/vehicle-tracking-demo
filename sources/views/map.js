@@ -158,9 +158,8 @@ export default class MainView extends JetView {
 									onFocus: function () {
 										self.$$("map").getMap(true).then((mapObj) => {
 											const mymap = mapObj.setView(this.data.startCoord, 7);
-											const layer = L.marker(this.data.startCoord).addTo(mymap);
+											L.marker(this.data.startCoord).addTo(mymap);
 											L.marker(this.data.endCoord).addTo(mymap);
-											layer.remove();
 										});
 									}
 								},
@@ -222,6 +221,18 @@ export default class MainView extends JetView {
 											const mymap = mapObj.setView(this.data.startCoord, 7);
 											L.marker(this.data.startCoord).addTo(mymap);
 											L.marker(this.data.endCoord).addTo(mymap);
+										});
+										const cardData = this.data;
+										const timeFormat = webix.Date.dateToStr("%H.%i");
+										const currentTime = timeFormat(new Date());
+										console.log(this);
+										webix.message({
+											text: `
+											<span>${currentTime}</span><br>
+											<span class="cardCarName">${cardData.model}</span>
+											<span class="cardCarNumber">${cardData.stateNumber}</span><br>
+											<span style="color: #FD0000">Превышение скорости</span>`,
+											expire: 10000
 										});
 									}
 								},
@@ -415,23 +426,27 @@ export default class MainView extends JetView {
 			}, true);
 		});
 
+		// this.$$("map").getMap(true).then((mapObj) => {
+		// 	const mymap = mapObj.setView([55.75, 37.61], 7);
+		// 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		// 		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		// 	}).addTo(mymap);
+		// 	L.marker([55.75, 37.61]).addTo(mymap);
+		// 	L.marker([55.75, 37.91]).addTo(mymap);
+		// 	console.log(L);
+		// 	L.Routing.control({
+		// 		serviceUrl: 'http://127.0.0.1:5000/route/v1',
+		// 		waypoints: [
+		// 				L.latLng(55.75, 37.61),
+		// 				L.latLng(55.75, 37.91),
+		// 		],
+		// 		routeWhileDragging: true,
+		// 		show: false
+		// 	}).addTo(mymap);
+		// });
+
 		this.$$("map").getMap(true).then((mapObj) => {
-			const mymap = mapObj.setView([55.75, 37.61], 7);
-			L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-			}).addTo(mymap);
-			L.marker([55.75, 37.61]).addTo(mymap);
-			L.marker([55.75, 37.91]).addTo(mymap);
-			console.log(L);
-			L.Routing.control({
-				serviceUrl: 'http://127.0.0.1:5000/route/v1',
-				waypoints: [
-						L.latLng(55.75, 37.61),
-						L.latLng(55.75, 37.91),
-				],
-				routeWhileDragging: true,
-				show: false
-			}).addTo(mymap);
+			mapObj.setView([53.90, 27.56], 7);
 		});
 	}
 }
