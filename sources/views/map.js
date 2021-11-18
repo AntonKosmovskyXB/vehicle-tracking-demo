@@ -158,8 +158,9 @@ export default class MainView extends JetView {
 									onFocus: function () {
 										self.$$("map").getMap(true).then((mapObj) => {
 											const mymap = mapObj.setView(this.data.startCoord, 7);
-											L.marker(this.data.startCoord).addTo(mymap);
+											const layer = L.marker(this.data.startCoord).addTo(mymap);
 											L.marker(this.data.endCoord).addTo(mymap);
+											layer.remove();
 										});
 									}
 								},
@@ -412,6 +413,25 @@ export default class MainView extends JetView {
 				startPoint: startCity,
 				endPoint: endCity
 			}, true);
+		});
+
+		this.$$("map").getMap(true).then((mapObj) => {
+			const mymap = mapObj.setView([55.75, 37.61], 7);
+			L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+			}).addTo(mymap);
+			L.marker([55.75, 37.61]).addTo(mymap);
+			L.marker([55.75, 37.91]).addTo(mymap);
+			console.log(L);
+			L.Routing.control({
+				serviceUrl: 'http://127.0.0.1:5000/route/v1',
+				waypoints: [
+						L.latLng(55.75, 37.61),
+						L.latLng(55.75, 37.91),
+				],
+				routeWhileDragging: true,
+				show: false
+			}).addTo(mymap);
 		});
 	}
 }
