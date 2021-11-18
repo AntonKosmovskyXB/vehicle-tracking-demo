@@ -308,13 +308,15 @@
     margin-top: 5px;
 }
 
-.travelCard:hover {
+.travelCard .webix_template:hover {
     cursor: pointer;
     border: 2px solid #4b56f1;
+    padding: 2px 10px;
 }
 
-.travelCard:focus {
+.travelCard .webix_template:focus {
     border: 2px solid #4b56f1;
+    padding: 2px 10px;
 }
 
 .routeLine {

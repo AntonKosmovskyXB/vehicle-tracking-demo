@@ -6,7 +6,7 @@ import NewRoutePopup from "./newRoutePopup";
 
 webix.ui({
 	view: "popup",
-	id: "addRoutePopup",
+	id: "filterCardsPopup",
 	width: 230,
 	body: {
 		view: "form",
@@ -120,7 +120,7 @@ export default class MainView extends JetView {
 							type: "icon",
 							icon: "mdi mdi-filter-variant",
 							css: "webix_primary filter-button",
-							popup: "addRoutePopup",
+							popup: "filterCardsPopup",
 							width: 40
 						}
 					]
@@ -130,9 +130,10 @@ export default class MainView extends JetView {
 					view: "scrollview",
 					localId: "scrollview",
 					id: "scrollview",
-					width: 320,
+					width: 330,
 					scroll: "y",
 					body: {
+						width: 320,
 						rows: [
 							{
 								css: "travelCard",
@@ -188,7 +189,7 @@ export default class MainView extends JetView {
 											<div class="routeDonePercent" style="width: ${(obj.doneDistance / obj.distance) * 100}%"></div>
 										</div>
 										<div class="cardRow"><b>Движется со скоростью:</b><span class="cardRowInfo speed"> ${obj.speed} км/ч </span></div>
-										<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} со скоростью ${obj.speed} км/ч </span></div>
+										<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} км со скоростью ${obj.speed} км/ч </span></div>
 										<div class="cardRow"><b>Завершение маршрута:</b><span class="cardRowInfo"> через ${obj.restDistanceTime}</span></div>
 									</div>` : ""}
 										<div class="cardRow"><b>Водитель:</b><span class="cardRowInfo"> ${obj.driver}</span></div>
@@ -223,7 +224,7 @@ export default class MainView extends JetView {
 											L.marker(this.data.endCoord).addTo(mymap);
 										});
 										const cardData = this.data;
-										const timeFormat = webix.Date.dateToStr("%H.%i");
+										const timeFormat = webix.Date.dateToStr("%H:%i");
 										const currentTime = timeFormat(new Date());
 										console.log(this);
 										webix.message({
@@ -232,7 +233,7 @@ export default class MainView extends JetView {
 											<span class="cardCarName">${cardData.model}</span>
 											<span class="cardCarNumber">${cardData.stateNumber}</span><br>
 											<span style="color: #FD0000">Превышение скорости</span>`,
-											expire: 10000
+											expire: -1
 										});
 									}
 								},
@@ -261,7 +262,7 @@ export default class MainView extends JetView {
 											<div class="routeDonePercent" style="width: ${(obj.doneDistance / obj.distance) * 100}%"></div>
 										</div>
 										<div class="cardRow"><b>Движется со скоростью:</b><span class="cardRowInfo outOfspeed"> ${obj.speed} км/ч </span></div>
-										<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} со скоростью ${obj.speed} км/ч </span></div>
+										<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} км со скоростью ${obj.speed} км/ч </span></div>
 										<div class="cardRow"><b>Завершение маршрута:</b><span class="cardRowInfo"> через ${obj.restDistanceTime}</span></div>
 									</div>` : ""}
 										<div class="cardRow"><b>Водитель:</b><span class="cardRowInfo"> ${obj.driver}</span></div>
@@ -318,7 +319,7 @@ export default class MainView extends JetView {
 											<div class="routeDonePercent" style="width: ${(obj.doneDistance / obj.distance) * 100}%"></div>
 										</div>
 										<div class="cardRow"><b>Движется со скоростью:</b><span class="cardRowInfo"> ${obj.speed} км/ч </span></div>
-										<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} со скоростью ${obj.speed} км/ч </span></div>
+										<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} км со скоростью ${obj.speed} км/ч </span></div>
 										<div class="cardRow"><b>Завершение маршрута:</b><span class="cardRowInfo"> через ${obj.restDistanceTime}</span></div>
 									</div>` : ""}
 										<div class="cardRow"><b>Водитель:</b><span class="cardRowInfo"> ${obj.driver}</span></div>
@@ -375,7 +376,7 @@ export default class MainView extends JetView {
 											<div class="routeDonePercent" style="width: ${(obj.doneDistance / obj.distance) * 100}%"></div>
 										</div>
 										<div class="cardRow"><b>Движется со скоростью:</b><span class="cardRowInfo"> ${obj.speed} км/ч </span></div>
-										<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} со скоростью ${obj.speed} км/ч </span></div>
+										<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} км со скоростью ${obj.speed} км/ч </span></div>
 										<div class="cardRow"><b>Завершение маршрута:</b><span class="cardRowInfo"> через ${obj.restDistanceTime}</span></div>
 									</div>` : ""}
 										<div class="cardRow"><b>Водитель:</b><span class="cardRowInfo"> ${obj.driver}</span></div>
@@ -448,5 +449,11 @@ export default class MainView extends JetView {
 		this.$$("map").getMap(true).then((mapObj) => {
 			mapObj.setView([53.90, 27.56], 7);
 		});
+	}
+
+	ready() {
+		const templates = document.querySelectorAll(".travelCard .webix_template");
+		templates.forEach((elem) => elem.setAttribute("tabindex", "1"));
+		console.log(templates);
 	}
 }
