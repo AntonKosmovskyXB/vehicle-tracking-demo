@@ -162,14 +162,8 @@ export default class MainView extends JetView {
 											self.startMarker?.remove();
 											self.endMarker?.remove();
 											const mymap = mapObj.setView(this.data.startCoord, 7);
-<<<<<<< HEAD
 											self.startMarker = L.marker(this.data.startCoord).addTo(mymap);
 											self.endMarker = L.marker(this.data.endCoord).addTo(mymap);
-
-=======
-											L.marker(this.data.startCoord).addTo(mymap);
-											L.marker(this.data.endCoord).addTo(mymap);
->>>>>>> 4b761ef (add notication message imitation)
 										});
 									}
 								},
