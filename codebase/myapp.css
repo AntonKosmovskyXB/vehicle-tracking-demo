@@ -260,12 +260,14 @@
 .cardRow {
   margin-top: 5px;
 }
-.travelCard:hover {
+.travelCard .webix_template:hover {
   cursor: pointer;
   border: 2px solid #4b56f1;
+  padding: 2px 10px;
 }
-.travelCard:focus {
+.travelCard .webix_template:focus {
   border: 2px solid #4b56f1;
+  padding: 2px 10px;
 }
 .routeLine {
   margin-bottom: 15px;
@@ -293,12 +295,13 @@
 .webix_map_content {
   z-index: 1;
 }
-.bell-icon .webix_template {
+.bell-icon .webix_button {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 20px;
   opacity: 0.5;
+  background: none;
 }
 .bell-icon-active .webix_template {
   color: #5d9df1;
@@ -307,5 +310,40 @@
 .tooltipLine {
   display: flex;
   justify-content: space-between;
+}
+.tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  margin-top: -50px;
+  line-height: 20px;
+}
+.startCityTooltip {
+  margin-left: -165px;
+}
+.cityName:hover .tooltiptext {
+  cursor: pointer;
+  visibility: visible;
+  opacity: 1;
+}
+.cityName:hover {
+  font-weight: 500;
+}
+.tiltAngleCar .webix_template {
+  border: 2px solid #ec0404;
+  padding: 2px 10px;
+}
+.tiltAngleNotification {
+  color: #ec0404;
 }
 
