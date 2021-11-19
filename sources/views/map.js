@@ -158,9 +158,12 @@ export default class MainView extends JetView {
 								on: {
 									onFocus: function () {
 										self.$$("map").getMap(true).then((mapObj) => {
+											console.log(L);
+											self.startMarker?.remove();
+											self.endMarker?.remove();
 											const mymap = mapObj.setView(this.data.startCoord, 7);
-											L.marker(this.data.startCoord).addTo(mymap);
-											L.marker(this.data.endCoord).addTo(mymap);
+											self.startMarker = L.marker(this.data.startCoord).addTo(mymap);
+											self.endMarker = L.marker(this.data.endCoord).addTo(mymap);
 										});
 									}
 								},
@@ -180,7 +183,11 @@ export default class MainView extends JetView {
 											</div>
 										</div>
 										${obj.readyRoute ? `<div class="route-info">
-										<div class="route"><b>Маршрут: </b> ${obj.startPoint} - ${obj.endPoint}</div>
+										<div class="route">
+											<b>Маршрут: </b>
+											<span class="cityName">${obj.startPoint}<span class="tooltiptext startCityTooltip">${obj.startCountry}, г.${obj.startPoint}<br>Координаты: ${obj.startCoord[0]}, ${obj.startCoord[1]}</span></span>
+											 - <span class="cityName">${obj.endPoint}<span class="tooltiptext endCityTooltip">${obj.endCountry}, г.${obj.endPoint}<br>Координаты: ${obj.endCoord[0]}, ${obj.endCoord[1]}</span></span>
+										</div>
 										<div class="route-distance">
 											<div>${obj.distance} км</div>
 											<div>${obj.fullDistanceTime}</div>
@@ -219,20 +226,21 @@ export default class MainView extends JetView {
 								on: {
 									onFocus: function () {
 										self.$$("map").getMap(true).then((mapObj) => {
+											self.startMarker?.remove();
+											self.endMarker?.remove();
 											const mymap = mapObj.setView(this.data.startCoord, 7);
-											L.marker(this.data.startCoord).addTo(mymap);
-											L.marker(this.data.endCoord).addTo(mymap);
+											self.startMarker = L.marker(this.data.startCoord).addTo(mymap);
+											self.endMarker = L.marker(this.data.endCoord).addTo(mymap);
 										});
 										const cardData = this.data;
 										const timeFormat = webix.Date.dateToStr("%H:%i");
 										const currentTime = timeFormat(new Date());
-										console.log(this);
 										webix.message({
 											text: `
 											<span>${currentTime}</span><br>
 											<span class="cardCarName">${cardData.model}</span>
 											<span class="cardCarNumber">${cardData.stateNumber}</span><br>
-											<span style="color: #FD0000">Превышение скорости</span>`,
+											<span style="color: #FD0000">Отклонился от маршрута</span>`,
 											expire: -1
 										});
 									}
@@ -253,7 +261,11 @@ export default class MainView extends JetView {
 											</div>
 										</div>
 										${obj.readyRoute ? `<div class="route-info">
-										<div class="route"><b>Маршрут: </b> ${obj.startPoint} - ${obj.endPoint}</div>
+										<div class="route">
+											<b>Маршрут: </b>
+											<span class="cityName">${obj.startPoint}<span class="tooltiptext startCityTooltip">${obj.startCountry}, г.${obj.startPoint}<br>Координаты: ${obj.startCoord[0]}, ${obj.startCoord[1]}</span></span>
+											 - <span class="cityName">${obj.endPoint}<span class="tooltiptext endCityTooltip">${obj.endCountry}, г.${obj.endPoint}<br>Координаты: ${obj.endCoord[0]}, ${obj.endCoord[1]}</span></span>
+										</div>
 										<div class="route-distance">
 											<div>${obj.distance} км</div>
 											<div>${obj.fullDistanceTime}</div>
@@ -270,12 +282,81 @@ export default class MainView extends JetView {
 									</div>`
 							},
 							{
-								css: "travelCard",
+								css: "travelCard tiltAngleCar",
 								localId: "card2",
 								id: "card2",
 								width: 280,
-								height: 150,
+								height: 300,
 								data: cards[2],
+								onClick: {
+									"mdi-delete": function () {
+										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
+											this.destructor();
+											cards.splice(0, 1);
+										});
+									},
+									"mdi-pencil": function () {
+										if (this.data.status === "С маршрутом") {
+											self.addRoutePopup.showPopup(0, "edit");
+										}
+									}
+								},
+								on: {
+									onFocus: function () {
+										self.$$("map").getMap(true).then((mapObj) => {
+											console.log(L);
+											self.startMarker?.remove();
+											self.endMarker?.remove();
+											const mymap = mapObj.setView(this.data.startCoord, 7);
+											self.startMarker = L.marker(this.data.startCoord).addTo(mymap);
+											self.endMarker = L.marker(this.data.endCoord).addTo(mymap);
+										});
+									}
+								},
+								template: obj =>
+									`<div>
+										<div class="card-header">
+											<div class="carSmallCard"><img src=${obj.photo}></div>
+											<div class="carInfo">
+												<div class="cardCarName">${obj.model}</div>
+												<div class="cardCarNumber">${obj.stateNumber}</div>
+											</div>
+											<div class="cardTrackerGPS">${obj.tracker}</div>
+											<div class="card-icons">
+												<span class="mdi mdi-map-marker"></span>
+												<span class="mdi mdi-pencil"></span>
+												<span class="mdi mdi-delete"></span>
+											</div>
+										</div>
+										${obj.readyRoute ? `<div class="route-info">
+										<div class="route">
+											<b>Маршрут: </b>
+											<span class="cityName">${obj.startPoint}<span class="tooltiptext startCityTooltip">${obj.startCountry}, г.${obj.startPoint}<br>Координаты: ${obj.startCoord[0]}, ${obj.startCoord[1]}</span></span>
+											 - <span class="cityName">${obj.endPoint}<span class="tooltiptext endCityTooltip">${obj.endCountry}, г.${obj.endPoint}<br>Координаты: ${obj.endCoord[0]}, ${obj.endCoord[1]}</span></span>
+										</div>
+										<div class="route-distance">
+											<div>${obj.distance} км</div>
+											<div>${obj.fullDistanceTime}</div>
+										</div>
+										<div class="routeLine">
+											<div class="routeDonePercent" style="width: ${(obj.doneDistance / obj.distance) * 100}%"></div>
+										</div>
+										<div class="cardRow"><b>Движется со скоростью:</b><span class="cardRowInfo speed"> ${obj.speed} км/ч </span></div>
+										<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} км со скоростью ${obj.speed} км/ч </span></div>
+										<div class="cardRow"><b>Завершение маршрута:</b><span class="cardRowInfo"> через ${obj.restDistanceTime}</span></div>
+									</div>` : ""}
+										<div class="cardRow"><b>Водитель:</b><span class="cardRowInfo"> ${obj.driver}</span></div>
+										<div class="cardRow"><b>Номер телефона:</b><span class="cardRowInfo"> ${obj.phone}</span></div>
+										<div class="cardRow tiltAngleNotification">Превышен угол наклона автомобиля</div>
+									</div>`
+							},
+							{
+								css: "travelCard",
+								localId: "card3",
+								id: "card3",
+								width: 280,
+								height: 150,
+								data: cards[3],
 								onClick: {
 									"mdi-delete": function() {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
@@ -328,11 +409,11 @@ export default class MainView extends JetView {
 							},
 							{
 								css: "travelCard",
-								localId: "card3",
-								id: "card3",
+								localId: "card4",
+								id: "card4",
 								width: 280,
 								height: 150,
-								data: cards[3],
+								data: cards[4],
 								onClick: {
 									"mdi-delete": function() {
 										webix.confirm("Вы хотите удалить эту карточку?").then(() => {
@@ -454,6 +535,5 @@ export default class MainView extends JetView {
 	ready() {
 		const templates = document.querySelectorAll(".travelCard .webix_template");
 		templates.forEach((elem) => elem.setAttribute("tabindex", "1"));
-		console.log(templates);
 	}
 }
