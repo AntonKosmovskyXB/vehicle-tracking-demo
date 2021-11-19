@@ -246,14 +246,13 @@ export default class MainView extends JetView {
 										const cardData = this.data;
 										const timeFormat = webix.Date.dateToStr("%H.%i");
 										const currentTime = timeFormat(new Date());
-										console.log(this);
 										webix.message({
 											text: `
 											<span>${currentTime}</span><br>
 											<span class="cardCarName">${cardData.model}</span>
 											<span class="cardCarNumber">${cardData.stateNumber}</span><br>
-											<span style="color: #FD0000">Превышение скорости</span>`,
-											expire: 10000
+											<span style="color: #FD0000">Отклонился от маршрута</span>`,
+											expire: -1
 										});
 									}
 								},
