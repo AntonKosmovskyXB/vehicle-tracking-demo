@@ -11,8 +11,6 @@ webix.ui({
 	body: {
 		view: "form",
 		id: "filterForm",
-		paddingX: 10,
-		paddingY: 10,
 		rows: [
 			{
 				view: "richselect",
@@ -108,20 +106,21 @@ export default class MainView extends JetView {
 			css: "travelCards",
 			rows: [
 				{
+					height: 38,
 					cols: [
 						{
 							view: "search",
 							placeholder: "Поиск",
-							width: 315
+							width: 252
 						},
-						{width: 8},
+						{width: 10},
 						{
 							view: "button",
 							type: "icon",
 							icon: "mdi mdi-filter-variant",
 							css: "webix_primary filter-button",
 							popup: "filterCardsPopup",
-							width: 40
+							width: 36
 						}
 					]
 				},
