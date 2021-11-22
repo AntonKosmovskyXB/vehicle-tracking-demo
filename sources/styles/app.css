@@ -88,7 +88,7 @@
 
 .webix_menu .mdi {
     color: #ffffff;
-    font-size: 32px;
+    font-size: 24px;
     width: 40px;
 }
 
@@ -166,11 +166,11 @@
 }
 
 .webix_menu {
-    background: #2c5de2;
+    background: #0075BC;
 }
 
 .webix_menu.webix_view .webix_list_item.webix_selected {
-    background: #94b0fd; 
+    background: #029CDD; 
 }
 
 .webix_list_item.webix_selected {
@@ -178,25 +178,33 @@
 }
 
 .webix_menu .webix_list_item, .webix_menu-x .webix_list_item {
-    background: #2c5de2;
-    height: 60px !important;
+    background: #0075BC;
+    height: 55px !important;
 }
 
 .webix_menu.webix_view .webix_list_item:hover {
-    background: #94b0fd;
+    background: #029CDD;
 }
 
 .webix_toolbar .pageHeaderLabel .webix_el_box {
-    font-size: 20px;
+    font-size: 18px;
+    color: #2c2c2c;
+    padding-left: 17px;
 }
 
 .headLabel .webix_el_box,
 .webix_toolbar .headTableLabel .webix_el_box {
-    font-size: 20px;
+    font-size: 16px;
+    color: #313131;
+}
+
+.headLabel {
+    margin-left: 11px !important;
+    margin-top: 9px !important;
 }
 
 .webix_toolbar .headTableLabel .webix_el_box {
-    margin-left: 8px;
+    margin-left: 12px;
 }
 
 .webix_table_checkbox, .webix_hcell input[type="checkbox"] {
@@ -205,22 +213,22 @@
 }
 
 .car-photo img {
-    width: 260px;
-    height: 190px;
+    width: 230px;
+    height: 134px;
 }
 
 .carPhoto .webix_template {
-    padding: 4px;
+    padding: 2px;
 }
 
 .carSmallCard img {
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
 }
 
 .carSmallCard {
-    height: 45px;
+    height: 36px;
     width: 45px;
     display: flex;
     align-items: center;
@@ -411,4 +419,65 @@
 
 .tiltAngleNotification {
     color: #ec0404;
+}
+
+.carMenuScroll {
+    background: #ffffff;
+    padding: 0 16px;
+    margin-left: -3px !important;
+    border-width: 0 !important;
+}
+
+.webix_primary .webix_button {
+    background: #0075BC;
+}
+
+.webix_secondary .webix_button {
+    background: #F1F3F6;
+    color: #0075BC;
+}
+
+.webix_primary .webix_button:hover {
+    background: #029CDD;
+}
+
+.newTrackerForm {
+    border: 1px solid #D1D9DD;
+}
+
+.webix_inp_counter_next,
+.webix_inp_counter_prev {
+    color: #0075BC;
+}
+
+.carsTableToolbar {
+    border: 1px solid #D1D9DD;
+    height: 53px !important;
+    display: flex;
+    align-items: center;
+}
+
+.webix_dtable {
+    margin-top: 0 !important;
+}
+
+.webix_dtable .webix_ss_header .webix_hcolumn div.webix_last_row {
+    border-bottom: 1px solid #D1D9DD;
+}
+
+.webix_dtable .webix_ss_header .webix_hcolumn div.webix_last_row {
+    border-bottom: 1px solid #D1D9DD;
+}
+
+.webix_ss_header, .webix_hcolumn, .webix_ss_vscroll_header, .webix_dd_drag_column, .webix_hs_left, .webix_hs_center, .webix_hs_right {
+    background: #e9f1f4;
+}
+
+.carsDatatable .webix_hs_center,
+.carsDatatable .webix_ss_center {
+    border: 1px solid #D1D9DD;  
+}
+
+.webix_button {
+    border-radius: 2px;
 }
