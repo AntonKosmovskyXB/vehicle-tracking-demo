@@ -199,8 +199,8 @@
 }
 
 .headLabel {
-    margin-left: 11px !important;
-    margin-top: 9px !important;
+    /* margin-left: 17px !important;
+    margin-top: 9px !important; */
 }
 
 .webix_toolbar .headTableLabel .webix_el_box {
@@ -214,7 +214,7 @@
 
 .car-photo img {
     width: 230px;
-    height: 134px;
+    height: 132px;
 }
 
 .carPhoto .webix_template {
@@ -423,8 +423,8 @@
 
 .carMenuScroll {
     background: #ffffff;
-    padding: 0 16px;
-    margin-left: -3px !important;
+    padding: 0 14px;
+    margin-left: 0 !important;
     border-width: 0 !important;
 }
 
@@ -450,8 +450,9 @@
     color: #0075BC;
 }
 
-.carsTableToolbar {
+.datatableToolbar {
     border: 1px solid #D1D9DD;
+    border-bottom: none;
     height: 53px !important;
     display: flex;
     align-items: center;
@@ -459,14 +460,6 @@
 
 .webix_dtable {
     margin-top: 0 !important;
-}
-
-.webix_dtable .webix_ss_header .webix_hcolumn div.webix_last_row {
-    border-bottom: 1px solid #D1D9DD;
-}
-
-.webix_dtable .webix_ss_header .webix_hcolumn div.webix_last_row {
-    border-bottom: 1px solid #D1D9DD;
 }
 
 .webix_ss_header, .webix_hcolumn, .webix_ss_vscroll_header, .webix_dd_drag_column, .webix_hs_left, .webix_hs_center, .webix_hs_right {
@@ -480,4 +473,8 @@
 
 .webix_button {
     border-radius: 2px;
+}
+
+.webix_dtable .webix_select_mark > div.webix_row_select {
+    box-shadow: inset 2px 0 #0075BC;
 }

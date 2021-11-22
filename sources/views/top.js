@@ -51,7 +51,13 @@ export default class TopView extends JetView {
 			]
 		};
 
-		return ui;
+		return {
+			view: "scrollview",
+			scroll: "auto",
+			body: {
+				rows: [ui]
+			}
+		};
 	}
 
 	init() {
