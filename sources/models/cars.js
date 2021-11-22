@@ -2,7 +2,7 @@ const cars = new webix.DataCollection({
 	data: [
 		{id: 1, model: "Volvo", stateNumber: "C064MK78", tracker: "Глонасс", weight: 15, group: "Фургон", squad: "Одиночное транспортное средство", capacity: "От 1,5 до 16 тонн", photo: "../sources/assets/photo/volvo.jpg"},
 		{id: 2, model: "Scania", stateNumber: "C152MK34", tracker: "", weight: 18, group: "Рефрижератор", squad: "Автомобиль-прицеп", capacity: "Свыше 16 тонн", photo: "../sources/assets/photo/scania.jpg"},
-		{id: 3, model: "Man", stateNumber: "C478MK78", tracker: "GPS", weight: 15, group: "Контейнеровоз", squad: "Автомобиль-прицеп", capacity: "Свыше 16 тонн", photo: "../sources/assets/photo/man.jpg"},
+		{id: 3, model: "Man", stateNumber: "C478MK78", tracker: "GPS", weight: 15, group: "Цистерна", squad: "Автомобиль-прицеп", capacity: "Свыше 16 тонн", photo: "../sources/assets/photo/man.jpg"},
 		{id: 4, model: "Volvo", stateNumber: "C772MK34", tracker: "GPS", weight: 14, group: "Автоцистерна", squad: "Автомобиль-прицеп", capacity: "Свыше 16 тонн", photo: "../sources/assets/photo/volvo.jpg"},
 		{id: 5, model: "Scania", stateNumber: "C481MK78", tracker: "Глонасс", weight: 20, group: "Бортовой", squad: "Одиночное транспортное средство", capacity: "Свыше 16 тонн", photo: "../sources/assets/photo/scania.jpg"},
 		{id: 6, model: "Man", stateNumber: "C912MK78", tracker: "Глонасс", weight: 15, group: "Фургон", squad: "Одиночное транспортное средство", capacity: "От 1,5 до 16 тонн", photo: "../sources/assets/photo/man.jpg"},
