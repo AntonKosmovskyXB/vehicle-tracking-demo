@@ -2,66 +2,82 @@ import {JetView} from "webix-jet";
 
 import drivers from "../models/drivers";
 
+const editDriverText = "Редактировать водителя";
+const newDriverText = "Новый водитель";
+
 export default class DriversView extends JetView {
 	config() {
 		const newDriver = {
 			view: "form",
 			localId: "driverForm",
-			css: "newTrackerForm",
-			width: 300,
-			height: 5000,
+			css: "newCarsForm",
+			paddingY: 9,
+			paddingX: 13,
+			width: 262,
 			elements: [
 				{
 					view: "label",
 					label: "Новый водитель",
-					css: "headLabel"
+					css: "headLabel",
+					localId: "headLabel"
 				},
 				{
-					view: "text",
-					label: "Имя",
-					labelPosition: "top",
-					name: "name",
-					required: true
-				},
-				{
-					view: "text",
-					label: "Телефон",
-					labelPosition: "top",
-					name: "phone",
-					required: true
-				},
-				{
-					cols: [
-						{
-							view: "button",
-							label: "Отмена",
-							click: () => {
-								this.form.clear();
-								this.form.clearValidation();
-							}
+					view: "scrollview",
+					scroll: "y",
+					css: "carMenuScroll",
+					width: 290,
+					body: {
+						rows: [{
+							view: "text",
+							label: "Имя",
+							labelPosition: "top",
+							name: "name",
+							required: true
 						},
+						{height: 10},
 						{
-							view: "button",
-							label: "Сохранить",
-							css: "webix_primary",
-							click: () => {
-								if (this.form.validate()) {
-									const formValues = this.form.getValues();
-									if (formValues.id) {
-										this.driversList.updateItem(formValues.id, formValues);
+							view: "text",
+							label: "Телефон",
+							labelPosition: "top",
+							name: "phone",
+							required: true
+						},
+						{height: 20},
+						{
+							cols: [
+								{
+									view: "button",
+									label: "Отмена",
+									click: () => {
+										this.clearForm();
+										this.refreshLabels();
 									}
-									else {
-										drivers.add(formValues);
+								},
+								{width: 7},
+								{
+									view: "button",
+									label: "Сохранить",
+									css: "webix_primary",
+									click: () => {
+										if (this.form.validate()) {
+											const formValues = this.form.getValues();
+											if (formValues.id) {
+												this.driversList.updateItem(formValues.id, formValues);
+											}
+											else {
+												drivers.add(formValues);
+											}
+											this.clearForm();
+											this.refreshLabels();
+										}
+										else {
+											webix.message("Пожалуйста, заполните все необходимые поля");
+										}
 									}
-									this.form.clear();
-									this.form.clearValidation();
 								}
-								else {
-									webix.message("Пожалуйста, заполните все необходимые поля");
-								}
-							}
-						}
-					]
+							]
+						}]
+					}
 				}
 			]
 		};
@@ -71,6 +87,7 @@ export default class DriversView extends JetView {
 			rows: [
 				{
 					view: "toolbar",
+					css: "datatableToolbar",
 					cols: [
 						{
 							view: "label",
@@ -81,7 +98,7 @@ export default class DriversView extends JetView {
 						{
 							view: "button",
 							label: "Удалить",
-							width: 120,
+							width: 102,
 							click: () => {
 								const selectedDrivers = Array.from(this.selectedDrivers);
 								if (selectedDrivers.length) {
@@ -94,31 +111,39 @@ export default class DriversView extends JetView {
 										this.selectedDrivers.clear();
 									});
 								}
+								else {
+									webix.message("Пожалуйста, отметьте водителей, которых вы хотите удалить");
+								}
 							}
 						},
 						{
 							view: "button",
 							label: "Редактировать",
-							width: 200,
+							width: 154,
 							css: "webix_primary",
 							click: () => {
-								this.form.clear();
-								this.form.clearValidation();
+								this.clearForm();
 								const selectedDriver = this.driversList.getSelectedItem();
 								if (selectedDriver) {
 									this.form.parse(selectedDriver);
+									this.refreshLabels("edit");
+								}
+								else {
+									webix.message("Пожалуйста выберите водителя для редактирования");
 								}
 							}
-						}
+						},
+						{width: 7}
 					]
 				},
 				{
 					view: "datatable",
 					localId: "driversList",
+					css: "carsDatatable",
 					borderless: true,
 					select: true,
-					rowHeight: 45,
-					headerRowHeight: 40,
+					rowHeight: 36,
+					headerRowHeight: 44,
 					scroll: "y",
 					data: drivers,
 					columns: [
@@ -141,8 +166,8 @@ export default class DriversView extends JetView {
 		};
 
 		return {
-			paddingX: 15,
-			paddingY: 15,
+			paddingX: 16,
+			paddingY: 16,
 			cols: [newDriver, {width: 15}, driversList]
 		};
 	}
@@ -160,5 +185,21 @@ export default class DriversView extends JetView {
 				this.selectedDrivers.delete(rowId);
 			}
 		});
+	}
+
+	clearForm() {
+		this.form.clear();
+		this.form.clearValidation();
+	}
+
+	refreshLabels(editMode) {
+		if (editMode) {
+			this.$$("headLabel").define("label", editDriverText);
+			this.$$("headLabel").refresh();
+		}
+		else {
+			this.$$("headLabel").define("label", newDriverText);
+			this.$$("headLabel").refresh();
+		}
 	}
 }

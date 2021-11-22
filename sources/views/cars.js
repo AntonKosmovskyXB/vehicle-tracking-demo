@@ -10,7 +10,9 @@ export default class CarsView extends JetView {
 		const newTracker = {
 			view: "form",
 			localId: "carsForm",
-			css: "newTrackerForm",
+			css: "newCarsForm",
+			paddingY: 9,
+			paddingX: 13,
 			width: 262,
 			elements: [
 				{
@@ -127,6 +129,7 @@ export default class CarsView extends JetView {
 											this.refreshLabels();
 										}
 									},
+									{width: 7},
 									{
 										view: "button",
 										label: "Сохранить",
@@ -162,7 +165,7 @@ export default class CarsView extends JetView {
 			rows: [
 				{
 					view: "toolbar",
-					css: "carsTableToolbar",
+					css: "datatableToolbar",
 					cols: [
 						{
 							view: "label",
@@ -186,6 +189,9 @@ export default class CarsView extends JetView {
 										this.selectedCars.clear();
 									});
 								}
+								else {
+									webix.message("Пожалуйста, отметьте автомобили, которые вы хотите удалить");
+								}
 							}
 						},
 						{
@@ -203,7 +209,7 @@ export default class CarsView extends JetView {
 								else {
 									webix.message("Пожалуйста выберите автомобиль для редактирования");
 								}
-								this.$$("carPhoto").setValues({Photo: selectedCar.photo});
+								this.$$("carPhoto").setValues({Photo: selectedCar?.photo});
 							}
 						},
 						{width: 7}
@@ -211,12 +217,13 @@ export default class CarsView extends JetView {
 				},
 				{
 					view: "datatable",
+					minWidth: 1074,
 					localId: "carsList",
 					css: "carsDatatable",
 					borderless: true,
 					rowHeight: 36,
 					headerRowHeight: 44,
-					scroll: "y",
+					scroll: true,
 					data: cars,
 					select: true,
 					columns: [

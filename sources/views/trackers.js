@@ -3,94 +3,121 @@ import {JetView} from "webix-jet";
 import cars from "../models/cars";
 import trackers from "../models/trackers";
 
+const editTrackerText = "Редактировать трекер";
+const newTrackerText = "Новый трекер";
+
 export default class TrackersView extends JetView {
 	config() {
 		const newTracker = {
 			view: "form",
 			localId: "trackerForm",
 			css: "newTrackerForm",
-			width: 300,
-			height: 5000,
+			width: 262,
+			margin: 0,
+			paddingY: 9,
+			paddingX: 13,
 			elements: [
 				{
 					view: "label",
 					label: "Новый трекер",
-					css: "headLabel"
-				},
-				{
-					view: "richselect",
-					options: ["Глонасс", "GPS"],
-					label: "Тип",
-					labelPosition: "top",
-					name: "type",
-					required: true
-				},
-				{
-					view: "text",
-					label: "Модель",
-					labelPosition: "top",
-					name: "model",
-					required: true
-				},
-				{
-					view: "text",
-					label: "Серийный номер",
-					labelPosition: "top",
-					name: "serialNumber",
-					required: true
-				},
-				{
-					view: "label",
 					css: "headLabel",
-					label: "Прикрепить к транспорту"
+					localId: "headLabel"
 				},
 				{
-					view: "richselect",
-					options: ["Volvo", "Man", "Scania"],
-					label: "Марка автомобиля",
-					labelPosition: "top",
-					name: "brand",
-					required: true
-				},
-				{
-					view: "richselect",
-					options: [],
-					localId: "stateNumberSelect",
-					label: "Гос.номер",
-					labelPosition: "top",
-					name: "stateNumber",
-					required: true
-				},
-				{
-					cols: [
-						{
-							view: "button",
-							label: "Отмена",
-							click: () => {
-								this.clearForm();
-							}
-						},
-						{
-							view: "button",
-							label: "Сохранить",
-							css: "webix_primary",
-							click: () => {
-								if (this.form.validate()) {
-									const formValues = this.form.getValues();
-									if (formValues.id) {
-										this.trackersList.updateItem(formValues.id, formValues);
+					view: "scrollview",
+					scroll: "y",
+					css: "carMenuScroll",
+					width: 290,
+					body: {
+						rows: [
+							{height: 7},
+							{
+								view: "richselect",
+								options: ["Глонасс", "GPS"],
+								label: "Тип",
+								placeholder: "Выбрать",
+								labelPosition: "top",
+								name: "type",
+								required: true
+							},
+							{height: 10},
+							{
+								view: "text",
+								label: "Модель",
+								labelPosition: "top",
+								name: "model",
+								required: true
+							},
+							{height: 15},
+							{
+								view: "text",
+								label: "Серийный номер",
+								labelPosition: "top",
+								name: "serialNumber",
+								required: true
+							},
+							{height: 25},
+							{
+								view: "label",
+								css: "headLabel",
+								label: "Прикрепить к транспорту"
+							},
+							{height: 7},
+							{
+								view: "richselect",
+								options: ["Volvo", "Man", "Scania"],
+								label: "Марка автомобиля",
+								labelPosition: "top",
+								name: "brand",
+								required: true
+							},
+							{height: 10},
+							{
+								view: "richselect",
+								options: [],
+								localId: "stateNumberSelect",
+								label: "Гос.номер",
+								labelPosition: "top",
+								name: "stateNumber",
+								required: true
+							},
+							{height: 33},
+							{
+								cols: [
+									{
+										view: "button",
+										label: "Отмена",
+										click: () => {
+											this.clearForm();
+											this.refreshLabels();
+										}
+									},
+									{width: 7},
+									{
+										view: "button",
+										label: "Сохранить",
+										css: "webix_primary",
+										click: () => {
+											if (this.form.validate()) {
+												const formValues = this.form.getValues();
+												if (formValues.id) {
+													this.trackersList.updateItem(formValues.id, formValues);
+												}
+												else {
+													trackers.add(formValues);
+												}
+												this.clearForm();
+												this.refreshLabels();
+											}
+											else {
+												webix.message("Пожалуйста, заполните все необходимые поля");
+											}
+										}
 									}
-									else {
-										trackers.add(formValues);
-									}
-									this.form.clearForm();
-								}
-								else {
-									webix.message("Пожалуйста, заполните все необходимые поля");
-								}
+								]
 							}
-						}
-					]
+						]
+					}
 				}
 			]
 		};
@@ -100,6 +127,7 @@ export default class TrackersView extends JetView {
 			rows: [
 				{
 					view: "toolbar",
+					css: "datatableToolbar",
 					cols: [
 						{
 							view: "label",
@@ -110,7 +138,7 @@ export default class TrackersView extends JetView {
 						{
 							view: "button",
 							label: "Удалить",
-							width: 120,
+							width: 102,
 							click: () => {
 								const selectedTrackers = Array.from(this.selectedTrackers);
 								if (selectedTrackers.length) {
@@ -123,34 +151,40 @@ export default class TrackersView extends JetView {
 										this.selectedTrackers.clear();
 									});
 								}
+								else {
+									webix.message("Пожалуйста, отметьте трекеры, которые вы хотите удалить");
+								}
 							}
 						},
 						{
 							view: "button",
 							label: "Редактировать",
-							width: 200,
+							width: 154,
 							css: "webix_primary",
 							click: () => {
-								this.form.clearForm();
+								this.clearForm();
 								const selectedTracker = this.trackersList.getSelectedItem();
 								if (selectedTracker) {
 									this.form.parse(selectedTracker);
+									this.refreshLabels("edit");
 								}
 								else {
 									webix.message("Пожалуйста, выберите трекер для редактирования");
 								}
 							}
-						}
+						},
+						{width: 7}
 					]
 				},
 				{
 					view: "datatable",
 					localId: "trackersList",
+					css: "carsDatatable",
 					borderless: true,
 					select: true,
-					rowHeight: 45,
-					headerRowHeight: 40,
-					scroll: "y",
+					rowHeight: 36,
+					headerRowHeight: 44,
+					scroll: true,
 					data: trackers,
 					columns: [
 						{header: {content: "masterCheckbox", contentId: "selectAll"}, id: "ch", template: "{common.checkbox()}", width: 40},
@@ -190,8 +224,8 @@ export default class TrackersView extends JetView {
 		};
 
 		return {
-			paddingX: 15,
-			paddingY: 15,
+			paddingX: 16,
+			paddingY: 16,
 			cols: [newTracker, {width: 15}, trackersList]
 		};
 	}
@@ -217,5 +251,16 @@ export default class TrackersView extends JetView {
 	clearForm() {
 		this.form.clear();
 		this.form.clearValidation();
+	}
+
+	refreshLabels(editMode) {
+		if (editMode) {
+			this.$$("headLabel").define("label", editTrackerText);
+			this.$$("headLabel").refresh();
+		}
+		else {
+			this.$$("headLabel").define("label", newTrackerText);
+			this.$$("headLabel").refresh();
+		}
 	}
 }
