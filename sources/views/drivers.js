@@ -2,7 +2,7 @@ import {JetView} from "webix-jet";
 
 import drivers from "../models/drivers";
 
-const editDriverText = "Редактировать водителя";
+const editDriverText = "Редактировать данные";
 const newDriverText = "Новый водитель";
 
 export default class DriversView extends JetView {
