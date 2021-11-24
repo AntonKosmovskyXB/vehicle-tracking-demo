@@ -7,9 +7,11 @@ import NewRoutePopup from "./newRoutePopup";
 webix.ui({
 	view: "popup",
 	id: "filterCardsPopup",
-	width: 230,
+	width: 262,
+	height: 505,
 	body: {
 		view: "form",
+		paddingX: 16,
 		id: "filterForm",
 		rows: [
 			{
@@ -23,17 +25,20 @@ webix.ui({
 				view: "richselect",
 				label: "Группа",
 				labelPosition: "top",
+				css: "filterPopupElem",
 				name: "group",
 				options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"]
 			},
 			{
 				view: "label",
-				label: "Маршрут"
+				label: "Маршрут",
+				css: "filterPopupElem",
 			},
 			{
 				view: "radio",
 				vertical: true,
 				align: "left",
+				css: "filterPopupElem",
 				name: "status",
 				id: "routeOption",
 				options: ["Все", "В пути", "C маршрутом", "Отклонился от маршрута"],
@@ -41,18 +46,21 @@ webix.ui({
 			},
 			{
 				view: "label",
-				label: "Тип трекера"
+				label: "Тип трекера",
+				css: "filterPopupElem",
 			},
 			{
 				view: "radio",
 				vertical: true,
 				align: "left",
 				name: "tracker",
+				css: "filterPopupElem",
 				id: "trackerOption",
 				options: ["Все", "GPS", "Глонасс"],
 				value: "Все"
 			},
 			{
+				css: "filterPopupElem",
 				cols: [
 					{
 						view: "button",
@@ -110,10 +118,11 @@ export default class MainView extends JetView {
 					cols: [
 						{
 							view: "search",
+							css: "numberSearch",
 							placeholder: "Поиск",
-							width: 252
+							width: 256
 						},
-						{width: 10},
+						{width: 4},
 						{
 							view: "button",
 							type: "icon",
@@ -124,22 +133,20 @@ export default class MainView extends JetView {
 						}
 					]
 				},
-				{height: 10},
+				{height: 12},
 				{
 					view: "scrollview",
 					localId: "scrollview",
 					id: "scrollview",
-					width: 330,
+					css: "cardsScrollview",
 					scroll: "y",
 					body: {
-						width: 320,
 						rows: [
 							{
 								css: "travelCard",
 								localId: "card0",
 								id: "card0",
-								width: 280,
-								height: 300,
+								height: 268,
 								data: cards[0],
 								onClick: {
 									"mdi-delete": function () {
@@ -207,7 +214,7 @@ export default class MainView extends JetView {
 								localId: "card1",
 								id: "card1",
 								width: 280,
-								height: 300,
+								height: 268,
 								data: cards[1],
 								onClick: {
 									"mdi-delete": function() {
@@ -474,7 +481,7 @@ export default class MainView extends JetView {
 										<div class="cardRow"><b>Номер телефона:</b><span class="cardRowInfo"> ${obj.phone}</span></div>
 									</div>`
 							},
-							{height: cards.length * 5}
+							{height: cards.length * 10}
 						]
 					}
 				}
@@ -487,9 +494,9 @@ export default class MainView extends JetView {
 		};
 
 		return {
-			paddingX: 15,
-			paddingY: 15,
-			cols: [newDriver, {width: 15}, map]
+			paddingX: 16,
+			paddingY: 16,
+			cols: [newDriver, {width: 16}, map]
 		};
 	}
 
@@ -508,7 +515,7 @@ export default class MainView extends JetView {
 				fullDistanceTime: "8 ч 00 мин",
 				restDistanceTime: "8 ч 00 мин"
 			}, true);
-			this.$$(`card${num}`).define("height", 300);
+			this.$$(`card${num}`).define("height", 268);
 			this.$$(`card${num}`).resize();
 		});
 		this.on(this.app, "onRouteEdit", (num, startCity, endCity) => {

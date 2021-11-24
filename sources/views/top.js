@@ -30,8 +30,9 @@ export default class TopView extends JetView {
 					rows: [
 						{
 							view: "toolbar",
+							css: "mainToolbar",
 							borderless: true,
-							height: 57,
+							height: 56.5,
 							cols: [
 								{
 									view: "label",
