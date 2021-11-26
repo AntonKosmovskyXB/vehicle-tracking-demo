@@ -347,23 +347,31 @@
 }
 .tooltiptext {
   visibility: hidden;
-  width: 200px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
+  width: 180px;
+  height: 43px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #FFFFFF;
+  color: #313131;
+  border: 1px solid #D1D9DD;
+  box-shadow: 0px 1px 6px rgba(21, 46, 95, 0.19);
+  border-radius: 2px;
+  text-align: left;
+  padding: 7px 16px;
   position: absolute;
-  z-index: 1;
-  left: 50%;
-  margin-left: -60px;
+  z-index: 100;
+  left: 2%;
   opacity: 0;
   transition: opacity 0.3s;
-  margin-top: -50px;
+  margin-top: -60px;
   line-height: 20px;
 }
-.startCityTooltip {
-  margin-left: -165px;
+.endCityTooltip {
+  left: 25%;
+}
+.tooltipCoordinates {
+  font-weight: 400;
+  color: #798392;
 }
 .cityName:hover .tooltiptext {
   cursor: pointer;
@@ -446,5 +454,43 @@
 }
 .cardsScrollview {
   padding: 0 10px 0 0;
+}
+.markerTemplate .webix_template {
+  display: flex;
+  align-items: center;
+}
+.webix_alert .webix_popup_title,
+.webix_confirm .webix_popup_title,
+.webix_prompt .webix_popup_title,
+.webix_alert .webix_popup_text,
+.webix_confirm .webix_popup_text,
+.webix_prompt .webix_popup_text {
+  box-shadow: inset 0 4px #0075BC;
+}
+.webix_popup_button.confirm {
+  background: #0075BC;
+  border-color: #0075BC;
+}
+.webix_popup_button {
+  color: #0075BC;
+}
+.driverNameInput,
+.driverPhoneInput,
+.routeStartPointInput,
+.routeEndPointInput {
+  width: 130px;
+  margin-left: 10px;
+  height: 10px;
+  padding: 0;
+  font-size: 11px;
+  font-family: "Roboto", sans-serif;
+}
+.routeStartPointInput,
+.routeEndPointInput {
+  width: 90px;
+  margin-left: 3px;
+}
+.routeEndPointInput {
+  margin-left: 0;
 }
 

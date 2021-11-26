@@ -638,10 +638,10 @@ export default class MainView extends JetView {
 			}
 		}
 		else {
-			const newDriverName = card.$view.querySelector(".driverNameInput").value;
-			const newDriverPhone = card.$view.querySelector(".driverPhoneInput").value;
-			const newStartPoint = card.$view.querySelector(".routeStartPointInput").value;
-			const newEndPoint = card.$view.querySelector(".routeEndPointInput").value;
+			const newDriverName = card.$view.querySelector(".driverNameInput")?.value;
+			const newDriverPhone = card.$view.querySelector(".driverPhoneInput")?.value;
+			const newStartPoint = card.$view.querySelector(".routeStartPointInput")?.value;
+			const newEndPoint = card.$view.querySelector(".routeEndPointInput")?.value;
 			card.data.driver = newDriverName;
 			card.data.phone = newDriverPhone;
 			if (newStartPoint && newEndPoint) {
