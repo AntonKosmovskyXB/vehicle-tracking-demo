@@ -183,22 +183,25 @@ export default class MainView extends JetView {
 										});
 									},
 									"mdi-map-marker": function() {
+										self.checkIsCardEditing();
 										if (this.data.status === "В пути" || this.data.status === "С маршрутом") {
 											webix.message("Маршрут уже задан для данного автомобиля");
 										}
 										if (this.data.status === "Без маршрута") {
+											this.editMode = false;
+											this.refresh();
 											console.log(this.$view.querySelector(".mdi-map-marker").getBoundingClientRect())
 											self.setRoutePopupPosition(this.$view);
 											self.addRoutePopup.showPopup(0);
 										}
 									},
-									// "mdi-pencil": function () {
-									// 	if (this.data.status === "С маршрутом") {
-									// 		self.addRoutePopup.showPopup(0, "edit");
-									// 	}
-									// }
 									"mdi-pencil": function () {
-										self.editCard(this);
+										if (self.editMode && self.currentEditableCard !== this) {
+											webix.message("Пожалуйста, завершите редактирование другой карточки");
+										}
+										else {
+											self.editCard(this);
+										}
 									}
 								},
 								on: {
@@ -266,17 +269,24 @@ export default class MainView extends JetView {
 										});
 									},
 									"mdi-map-marker": function() {
+										self.checkIsCardEditing();
 										if (this.data.status === "В пути" || this.data.status === "С маршрутом") {
 											webix.message("Маршрут уже задан для данного автомобиля");
 										}
 										if (this.data.status === "Без маршрута") {
-											console.log(this.$view.querySelector(".mdi-map-marker").getBoundingClientRect())
+											this.editMode = false;
+											this.refresh();
 											self.setRoutePopupPosition(this.$view);
 											self.addRoutePopup.showPopup(1);
 										}
 									},
 									"mdi-pencil": function () {
-										self.editCard(this);
+										if (self.editMode && self.currentEditableCard !== this) {
+											webix.message("Пожалуйста, завершите редактирование другой карточки");
+										}
+										else {
+											self.editCard(this);
+										}
 									}
 								},
 								on: {
@@ -321,6 +331,7 @@ export default class MainView extends JetView {
 											<b>Маршрут: </b>
 											${this.editMode ? `<input type='text' class="routeStartPointInput">` : `<span class="cityName">${obj.startPoint}<span class="tooltiptext startCityTooltip">${obj.startCountry}, г.${obj.startPoint}<br><span class='tooltipCoordinates'>Координаты: ${obj.startCoord[0]}, ${obj.startCoord[1]}</span></span></span>` }
 											 - ${this.editMode ? `<input type='text' class="routeEndPointInput">` : `<span class="cityName">${obj.endPoint}<span class="tooltiptext startCityTooltip">${obj.endCountry}, г.${obj.endPoint}<br><span class='tooltipCoordinates'>Координаты: ${obj.endCoord[0]}, ${obj.endCoord[1]}</span></span></span>` }
+										</div>
 										<div class="route-distance">
 											<div>${obj.distance} км</div>
 											<div>${obj.fullDistanceTime}</div>
@@ -332,8 +343,8 @@ export default class MainView extends JetView {
 										<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} км со скоростью ${obj.speed} км/ч </span></div>
 										<div class="cardRow"><b>Завершение маршрута:</b><span class="cardRowInfo"> через ${obj.restDistanceTime}</span></div>
 									</div>` : ""}
-									<div class="cardRow"><b>Водитель:${this.editMode ? `<input type='text' class='driverNameInput'>` : `</b><span class="cardRowInfo"> ${obj.driver}</span></div>`}
-									<div class="cardRow"><b>Номер телефона:${this.editMode ? `<input type='text' class='driverPhoneInput'>` : `</b><span class="cardRowInfo"> ${obj.phone}</span></div>`}
+										<div class="cardRow"><b>Водитель:${this.editMode ? `<input type='text' class='driverNameInput'>` : `</b><span class="cardRowInfo"> ${obj.driver}</span></div>`}
+										<div class="cardRow"><b>Номер телефона:${this.editMode ? `<input type='text' class='driverPhoneInput'>` : `</b><span class="cardRowInfo"> ${obj.phone}</span></div>`}
 									</div>`
 							},
 							{
@@ -354,17 +365,25 @@ export default class MainView extends JetView {
 										});
 									},
 									"mdi-map-marker": function() {
+										self.checkIsCardEditing();
 										if (this.data.status === "В пути" || this.data.status === "С маршрутом") {
 											webix.message("Маршрут уже задан для данного автомобиля");
 										}
 										if (this.data.status === "Без маршрута") {
+											this.editMode = false;
+											this.refresh();
 											console.log(this.$view.querySelector(".mdi-map-marker").getBoundingClientRect())
 											self.setRoutePopupPosition(this.$view);
 											self.addRoutePopup.showPopup(2);
 										}
 									},
 									"mdi-pencil": function () {
-										self.editCard(this);
+										if (self.editMode && self.currentEditableCard !== this) {
+											webix.message("Пожалуйста, завершите редактирование другой карточки");
+										}
+										else {
+											self.editCard(this);
+										}
 									}
 								},
 								on: {
@@ -399,6 +418,7 @@ export default class MainView extends JetView {
 											<b>Маршрут: </b>
 											${this.editMode ? `<input type='text' class="routeStartPointInput">` : `<span class="cityName">${obj.startPoint}<span class="tooltiptext startCityTooltip">${obj.startCountry}, г.${obj.startPoint}<br><span class='tooltipCoordinates'>Координаты: ${obj.startCoord[0]}, ${obj.startCoord[1]}</span></span></span>` }
 											 - ${this.editMode ? `<input type='text' class="routeEndPointInput">` : `<span class="cityName">${obj.endPoint}<span class="tooltiptext startCityTooltip">${obj.endCountry}, г.${obj.endPoint}<br><span class='tooltipCoordinates'>Координаты: ${obj.endCoord[0]}, ${obj.endCoord[1]}</span></span></span>` }
+										</div>
 										<div class="route-distance">
 											<div>${obj.distance} км</div>
 											<div>${obj.fullDistanceTime}</div>
@@ -433,17 +453,25 @@ export default class MainView extends JetView {
 										});
 									},
 									"mdi-map-marker": function() {
+										self.checkIsCardEditing();
 										if (this.data.status === "В пути" || this.data.status === "С маршрутом") {
 											webix.message("Маршрут уже задан для данного автомобиля");
 										}
 										if (this.data.status === "Без маршрута") {
+											this.editMode = false;
+											this.refresh();
 											console.log(this.$view.querySelector(".mdi-map-marker").getBoundingClientRect())
 											self.setRoutePopupPosition(this.$view);
 											self.addRoutePopup.showPopup(3);
 										}
 									},
 									"mdi-pencil": function () {
-										self.editCard(this);
+										if (self.editMode && self.currentEditableCard !== this) {
+											webix.message("Пожалуйста, завершите редактирование другой карточки");
+										}
+										else {
+											self.editCard(this);
+										}
 									}
 								},
 								template: obj =>
@@ -462,8 +490,8 @@ export default class MainView extends JetView {
 											</div>
 										</div>
 										${obj.readyRoute ? `<div class="route-info">
-										${this.editMode ? `<input type='text' class="routeStartPointInput">` : `<span class="cityName">${obj.startPoint}<span class="tooltiptext startCityTooltip">${obj.startCountry}, г.${obj.startPoint}<br><span class='tooltipCoordinates'>Координаты: ${obj.startCoord[0]}, ${obj.startCoord[1]}</span></span></span>` }
-											 - ${this.editMode ? `<input type='text' class="routeEndPointInput">` : `<span class="cityName">${obj.endPoint}<span class="tooltiptext startCityTooltip">${obj.endCountry}, г.${obj.endPoint}<br><span class='tooltipCoordinates'>Координаты: ${obj.endCoord[0]}, ${obj.endCoord[1]}</span></span></span>` }
+										${this.editMode ? `<input type='text' class="routeStartPointInput">` : `<span class="cityName">${obj.startPoint}</span></span>` }
+											 - ${this.editMode ? `<input type='text' class="routeEndPointInput">` : `<span class="cityName">${obj.endPoint}</span></span>` }
 										<div class="route-distance">
 											<div>${obj.distance} км</div>
 											<div>${obj.fullDistanceTime}</div>
@@ -497,17 +525,24 @@ export default class MainView extends JetView {
 										});
 									},
 									"mdi-map-marker": function() {
+										self.checkIsCardEditing();
 										if (this.data.status === "В пути" || this.data.status === "С маршрутом") {
 											webix.message("Маршрут уже задан для данного автомобиля");
 										}
 										if (this.data.status === "Без маршрута") {
-											console.log(this.$view.querySelector(".mdi-map-marker").getBoundingClientRect())
+											this.editMode = false;
+											this.refresh();
 											self.setRoutePopupPosition(this.$view);
 											self.addRoutePopup.showPopup(4);
 										}
 									},
 									"mdi-pencil": function () {
-										self.editCard(this);
+										if (self.editMode && self.currentEditableCard !== this) {
+											webix.message("Пожалуйста, завершите редактирование другой карточки");
+										}
+										else {
+											self.editCard(this);
+										}
 									}
 								},
 								template: obj =>
@@ -526,8 +561,8 @@ export default class MainView extends JetView {
 											</div>
 										</div>
 										${obj.readyRoute ? `<div class="route-info">
-										${this.editMode ? `<input type='text' class="routeStartPointInput">` : `<span class="cityName">${obj.startPoint}<span class="tooltiptext startCityTooltip">${obj.startCountry}, г.${obj.startPoint}<br><span class='tooltipCoordinates'>Координаты: ${obj.startCoord[0]}, ${obj.startCoord[1]}</span></span></span>` }
-											 - ${this.editMode ? `<input type='text' class="routeEndPointInput">` : `<span class="cityName">${obj.endPoint}<span class="tooltiptext startCityTooltip">${obj.endCountry}, г.${obj.endPoint}<br><span class='tooltipCoordinates'>Координаты: ${obj.endCoord[0]}, ${obj.endCoord[1]}</span></span></span>` }
+										${this.editMode ? `<input type='text' class="routeStartPointInput">` : `<span class="cityName">${obj.startPoint}</span></span>` }
+											 - ${this.editMode ? `<input type='text' class="routeEndPointInput">` : `<span class="cityName">${obj.endPoint}</span></span>` }
 										<div class="route-distance">
 											<div>${obj.distance} км</div>
 											<div>${obj.fullDistanceTime}</div>
@@ -564,6 +599,7 @@ export default class MainView extends JetView {
 
 	init() {
 		this.editMode = false;
+		this.currentEditableCard = "";
 		this.addRoutePopup = this.ui(NewRoutePopup);
 		this.on(this.app, "onRouteAdd", (num, startCity, endCity) => {
 			this.$$(`card${num}`).setValues({
@@ -621,7 +657,15 @@ export default class MainView extends JetView {
 		this.addRoutePopup.setPosition(position.left, position.top);
 	}
 
+	checkIsCardEditing() {
+		if (this.editMode) {
+			webix.message("Пожалуйста, завершите редактирование карточки");
+			return;
+		}
+	}
+
 	editCard(card) {
+		this.currentEditableCard = card;
 		if (!this.editMode) {
 			this.editMode = true;
 			card.refresh();
@@ -631,7 +675,6 @@ export default class MainView extends JetView {
 			const endPointInput = card.$view.querySelector(".routeEndPointInput");
 			nameInput.setAttribute("value", card.data.driver);
 			phoneInput.setAttribute("value", card.data.phone);
-			console.log(startPointInput);
 			if (startPointInput && endPointInput) {
 				startPointInput.setAttribute("value", card.data.startPoint);
 				endPointInput.setAttribute("value", card.data.endPoint);
