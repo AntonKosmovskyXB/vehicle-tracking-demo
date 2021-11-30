@@ -640,6 +640,13 @@ export default class MainView extends JetView {
 				endPoint: endCity
 			}, true);
 		});
+		this.$$("map").getMap(true).then((map) => {
+			webix.delay(() => {
+			  H.ui.UI.createDefault(map, this.$$("map").getLayers());
+			  const mapEvents = new H.mapevents.MapEvents(map);
+			  const behavior = new H.mapevents.Behavior(mapEvents);
+			}, $$("map"), [], 100);
+		});
 	}
 
 	ready() {
@@ -661,11 +668,6 @@ export default class MainView extends JetView {
 
 	getRoute(card) {
 		this.$$("map").getMap(true).then((map) => {
-			webix.delay(() => {
-			  H.ui.UI.createDefault(map, this.$$("map").getLayers());
-			  const mapEvents = new H.mapevents.MapEvents(map);
-			  const behavior = new H.mapevents.Behavior(mapEvents);
-			}, $$("map"), [], 100);
 			const platform = new H.service.Platform({
 				app_id: '1ABRBQas40fithl31gWe',
     			app_code: 'RSz9AQaADwMmSf8oZYq8sA',
