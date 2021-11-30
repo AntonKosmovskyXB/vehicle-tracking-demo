@@ -11,3 +11,30 @@ const trackers = new webix.DataCollection({
 });
 
 export default trackers;
+
+// var platform = new H.service.Platform({
+// 	app_code: "RSz9AQaADwMmSf8oZYq8sA",
+// 	app_id: "1ABRBQas40fithl31gWe",
+// 	useHTTPS: "secure"
+// });
+
+// const params = {
+//    mode: 'fastest;car',
+//    origin: '53.90,27.56',
+//    destination: '55.75,37.61',
+//    waypoint0: '53.90,27.56',
+//    waypoint1: '55.75,37.61',
+//    representation: 'display',
+//    routeAttributes: 'summary'
+// }
+// function calcuateRouteFromAtoB(platform){
+
+// var routingService = platform.getRoutingService()
+//    routingService.calculateRoute(params, success => {
+// console.log(success);
+//    }, error => {
+// console.log(error);
+//    })
+// }
+// calcuateRouteFromAtoB(platform);
+// });

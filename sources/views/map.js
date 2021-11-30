@@ -190,7 +190,6 @@ export default class MainView extends JetView {
 										if (this.data.status === "Без маршрута") {
 											this.editMode = false;
 											this.refresh();
-											console.log(this.$view.querySelector(".mdi-map-marker").getBoundingClientRect())
 											self.setRoutePopupPosition(this.$view);
 											self.addRoutePopup.showPopup(0);
 										}
@@ -206,12 +205,16 @@ export default class MainView extends JetView {
 								},
 								on: {
 									onFocus: function () {
-										self.$$("map").getMap(true).then((mapObj) => {
-											self.startMarker?.remove();
-											self.endMarker?.remove();
-											const mymap = mapObj.setView(this.data.startCoord, 7);
-											self.startMarker = L.marker(this.data.startCoord).addTo(mymap);
-											self.endMarker = L.marker(this.data.endCoord).addTo(mymap);
+										self.$$("map").getMap(true).then((map) => {
+											// map.removeObject(self.startMarker);
+											// map.removeObject(self.endMarker);
+											map.removeObjects(map.getObjects(self.startMarker, self.endMarker))
+											map.setCenter({lat:this.data.startCoord[0], lng:this.data.startCoord[1]});
+											self.startMarker = new H.map.Marker({lat: this.data.startCoord[0], lng: this.data.startCoord[1]});
+											self.endMarker = new H.map.Marker({lat: this.data.endCoord[0], lng: this.data.endCoord[1]});
+											map.addObject(self.startMarker);
+											map.addObject(self.endMarker);
+											self.getRoute(this);
 										});
 									}
 								},
@@ -291,13 +294,18 @@ export default class MainView extends JetView {
 								},
 								on: {
 									onFocus: function () {
-										self.$$("map").getMap(true).then((mapObj) => {
-											self.startMarker?.remove();
-											self.endMarker?.remove();
-											const mymap = mapObj.setView(this.data.startCoord, 7);
-											self.startMarker = L.marker(this.data.startCoord).addTo(mymap);
-											self.endMarker = L.marker(this.data.endCoord).addTo(mymap);
+										self.$$("map").getMap(true).then((map) => {
+											// map.removeObject(self.startMarker);
+											// map.removeObject(self.endMarker);
+											map.removeObjects(map.getObjects(self.startMarker, self.endMarker))
+											map.setCenter({lat:this.data.startCoord[0], lng:this.data.startCoord[1]});
+											self.startMarker = new H.map.Marker({lat: this.data.startCoord[0], lng: this.data.startCoord[1]});
+											self.endMarker = new H.map.Marker({lat: this.data.endCoord[0], lng: this.data.endCoord[1]});
+											map.addObject(self.startMarker);
+											map.addObject(self.endMarker);
+											self.getRoute(this);
 										});
+
 										const cardData = this.data;
 										const timeFormat = webix.Date.dateToStr("%H:%i");
 										const currentTime = timeFormat(new Date());
@@ -372,7 +380,6 @@ export default class MainView extends JetView {
 										if (this.data.status === "Без маршрута") {
 											this.editMode = false;
 											this.refresh();
-											console.log(this.$view.querySelector(".mdi-map-marker").getBoundingClientRect())
 											self.setRoutePopupPosition(this.$view);
 											self.addRoutePopup.showPopup(2);
 										}
@@ -388,13 +395,16 @@ export default class MainView extends JetView {
 								},
 								on: {
 									onFocus: function () {
-										self.$$("map").getMap(true).then((mapObj) => {
-											console.log(L);
-											self.startMarker?.remove();
-											self.endMarker?.remove();
-											const mymap = mapObj.setView(this.data.startCoord, 7);
-											self.startMarker = L.marker(this.data.startCoord).addTo(mymap);
-											self.endMarker = L.marker(this.data.endCoord).addTo(mymap);
+										self.$$("map").getMap(true).then((map) => {
+											// map.removeObject(self.startMarker);
+											// map.removeObject(self.endMarker);
+											map.removeObjects(map.getObjects(self.startMarker, self.endMarker))
+											map.setCenter({lat:this.data.startCoord[0], lng:this.data.startCoord[1]});
+											self.startMarker = new H.map.Marker({lat: this.data.startCoord[0], lng: this.data.startCoord[1]});
+											self.endMarker = new H.map.Marker({lat: this.data.endCoord[0], lng: this.data.endCoord[1]});
+											map.addObject(self.startMarker);
+											map.addObject(self.endMarker);
+											self.getRoute(this);
 										});
 									}
 								},
@@ -460,7 +470,6 @@ export default class MainView extends JetView {
 										if (this.data.status === "Без маршрута") {
 											this.editMode = false;
 											this.refresh();
-											console.log(this.$view.querySelector(".mdi-map-marker").getBoundingClientRect())
 											self.setRoutePopupPosition(this.$view);
 											self.addRoutePopup.showPopup(3);
 										}
@@ -586,8 +595,17 @@ export default class MainView extends JetView {
 		};
 
 		const map = {
-			view: "open-map",
-			localId: "map"
+			view: "here-map",
+			localId: "map",
+			id: "map",
+			modules:["mapevents", "ui"],
+			center: [53.90, 27.56],
+    		zoom:7,
+			key: {
+				app_id: "1ABRBQas40fithl31gWe",
+				app_code: "RSz9AQaADwMmSf8oZYq8sA",
+				useHTTPS: true
+			}
 		};
 
 		return {
@@ -622,29 +640,6 @@ export default class MainView extends JetView {
 				endPoint: endCity
 			}, true);
 		});
-
-		// this.$$("map").getMap(true).then((mapObj) => {
-		// 	const mymap = mapObj.setView([55.75, 37.61], 7);
-		// 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-		// 		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-		// 	}).addTo(mymap);
-		// 	L.marker([55.75, 37.61]).addTo(mymap);
-		// 	L.marker([55.75, 37.91]).addTo(mymap);
-		// 	console.log(L);
-		// 	L.Routing.control({
-		// 		serviceUrl: 'http://127.0.0.1:5000/route/v1',
-		// 		waypoints: [
-		// 				L.latLng(55.75, 37.61),
-		// 				L.latLng(55.75, 37.91),
-		// 		],
-		// 		routeWhileDragging: true,
-		// 		show: false
-		// 	}).addTo(mymap);
-		// });
-
-		this.$$("map").getMap(true).then((mapObj) => {
-			mapObj.setView([53.90, 27.56], 7);
-		});
 	}
 
 	ready() {
@@ -662,6 +657,55 @@ export default class MainView extends JetView {
 			webix.message("Пожалуйста, завершите редактирование карточки");
 			return;
 		}
+	}
+
+	getRoute(card) {
+		this.$$("map").getMap(true).then((map) => {
+			webix.delay(() => {
+			  H.ui.UI.createDefault(map, this.$$("map").getLayers());
+			  const mapEvents = new H.mapevents.MapEvents(map);
+			  const behavior = new H.mapevents.Behavior(mapEvents);
+			}, $$("map"), [], 100);
+			const platform = new H.service.Platform({
+				app_id: '1ABRBQas40fithl31gWe',
+    			app_code: 'RSz9AQaADwMmSf8oZYq8sA',
+			});
+
+			const routingParameters = {
+				mode: 'balanced;truck',
+				waypoint0: card.data.startCoord,
+				waypoint1: card.data.endCoord,
+				representation: 'display',
+				routeAttributes: 'summary'
+			};
+
+			const onResult = function(result) {
+				if (result.response.route.length) {
+					const lineString = new H.geo.LineString();
+					result.response.route[0].shape.forEach(point => {
+						const [lat, lng] = point.split(",");
+						lineString.pushPoint({lat: lat, lng: lng});
+					});
+					const polyline = new H.map.Polyline(
+						lineString,
+						{
+							style: {
+								lineWidth: 5
+							}
+						}
+					);
+					map.addObject(polyline);
+				}
+			};
+			  
+			const router = platform.getRoutingService(null, 8);
+			router.calculateRoute(
+				routingParameters, 
+				onResult,
+				(error) => {
+				  console.log(error.message);
+			});
+		});
 	}
 
 	editCard(card) {
