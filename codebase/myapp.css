@@ -83,11 +83,7 @@
 }
 .webix_menu .mdi {
   color: #ffffff;
-<<<<<<< HEAD
-  font-size: 32px;
-=======
   font-size: 24px;
->>>>>>> 41419c6 (update codebase)
   width: 40px;
 }
 .webix_menu.webix_view .webix_icon {
@@ -149,40 +145,16 @@
   margin-left: 30px;
 }
 .webix_menu {
-<<<<<<< HEAD
-  background: #2c5de2;
-}
-.webix_menu.webix_view .webix_list_item.webix_selected {
-  background: #94b0fd;
-=======
   background: #0075BC;
 }
 .webix_menu.webix_view .webix_list_item.webix_selected {
   background: #029CDD;
->>>>>>> 41419c6 (update codebase)
 }
 .webix_list_item.webix_selected {
   box-shadow: none;
 }
 .webix_menu .webix_list_item,
 .webix_menu-x .webix_list_item {
-<<<<<<< HEAD
-  background: #2c5de2;
-  height: 60px !important;
-}
-.webix_menu.webix_view .webix_list_item:hover {
-  background: #94b0fd;
-}
-.webix_toolbar .pageHeaderLabel .webix_el_box {
-  font-size: 20px;
-}
-.headLabel .webix_el_box,
-.webix_toolbar .headTableLabel .webix_el_box {
-  font-size: 20px;
-}
-.webix_toolbar .headTableLabel .webix_el_box {
-  margin-left: 8px;
-=======
   background: #0075BC;
   height: 55px !important;
 }
@@ -205,7 +177,6 @@
 }
 .webix_toolbar .headTableLabel .webix_el_box {
   margin-left: 12px;
->>>>>>> 41419c6 (update codebase)
 }
 .webix_table_checkbox,
 .webix_hcell input[type="checkbox"] {
@@ -213,21 +184,6 @@
   height: 18px;
 }
 .car-photo img {
-<<<<<<< HEAD
-  width: 260px;
-  height: 190px;
-}
-.carPhoto .webix_template {
-  padding: 4px;
-}
-.carSmallCard img {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-}
-.carSmallCard {
-  height: 45px;
-=======
   width: 230px;
   height: 132px;
 }
@@ -245,53 +201,31 @@
 }
 .carSmallCard {
   height: 36px;
->>>>>>> 41419c6 (update codebase)
   width: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-<<<<<<< HEAD
-.travelCards {
-  padding: 10px;
-=======
 .card-header .carSmallCard {
   justify-content: flex-start;
   width: 41px;
->>>>>>> 41419c6 (update codebase)
 }
 .filter-button span {
   margin: 0;
 }
 .travelCard {
-<<<<<<< HEAD
-  margin-bottom: 5px;
-  background: #ffffff;
-}
-=======
   margin-bottom: 10px;
   background: #ffffff;
 }
 .travelCards {
   overflow: visible;
 }
->>>>>>> 41419c6 (update codebase)
 .travelCard:first-child {
   margin-top: 5px;
 }
 .card-header {
   display: flex;
   align-items: center;
-<<<<<<< HEAD
-  height: 60px;
-}
-.cardCarName {
-  font-size: 17px;
-}
-.cardCarNumber {
-  color: #a3a2a2;
-  font-size: 13px;
-=======
   height: 50px;
 }
 .cardCarName {
@@ -303,40 +237,21 @@
   color: #a3a2a2;
   font-weight: 400;
   font-size: 12px;
->>>>>>> 41419c6 (update codebase)
 }
 .cardRowInfo {
   color: #a3a2a2;
 }
 .speed {
-<<<<<<< HEAD
-  color: #31cf66;
-}
-.outOfspeed {
-  color: #f50000;
-=======
   color: #2DCE94;
 }
 .outOfspeed {
   color: #ff5c4c;
->>>>>>> 41419c6 (update codebase)
 }
 .cardTrackerGPS,
 .cardTrackerGlonass {
   display: flex;
   justify-content: center;
   align-items: center;
-<<<<<<< HEAD
-  width: 90px;
-  height: 30px;
-  margin-left: 10px;
-  background: #1fa04a;
-  border-radius: 20px;
-  color: #ffffff;
-}
-.cardTrackerGlonass {
-  background: #0f0cc5;
-=======
   width: 43px;
   height: 24px;
   margin-left: 10px;
@@ -355,44 +270,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
->>>>>>> 41419c6 (update codebase)
 }
 .card-icons {
   display: flex;
   justify-content: space-between;
   width: 70px;
-<<<<<<< HEAD
-  margin-left: 30px;
-}
-.card-icons .mdi {
-  font-size: 20px;
-}
-.card-icons .mdi:hover {
-  cursor: pointer;
-  opacity: 0.7;
-}
-.cardRow {
-  margin-top: 5px;
-}
-.travelCard .webix_template:hover {
-  cursor: pointer;
-  border: 2px solid #4b56f1;
-  padding: 2px 10px;
-}
-.travelCard .webix_template:focus {
-  border: 2px solid #4b56f1;
-  padding: 2px 10px;
-}
-.routeLine {
-  margin-bottom: 15px;
-  height: 10px;
-  width: 100%;
-  background: #bbbbbb;
-  border-radius: 20px;
-}
-.routeDonePercent {
-  background: #085cc9;
-=======
   margin-left: 44px;
 }
 .cardTrackerGlonass + .card-icons {
@@ -428,27 +310,18 @@
 }
 .routeDonePercent {
   background: #0075BC;
->>>>>>> 41419c6 (update codebase)
   border-radius: 20px;
   height: 10px;
 }
 .route-distance {
-<<<<<<< HEAD
-  margin-top: 10px;
-=======
   margin-top: 13px;
->>>>>>> 41419c6 (update codebase)
   display: flex;
   justify-content: space-between;
 }
 .route-info {
-<<<<<<< HEAD
-  margin-bottom: 30px;
-=======
   margin-top: 10px;
   margin-bottom: 18px;
   font-size: 12px;
->>>>>>> 41419c6 (update codebase)
 }
 .webix_scrollview {
   background: #f3f3f3;
@@ -509,13 +382,6 @@
   font-weight: 500;
 }
 .tiltAngleCar .webix_template {
-<<<<<<< HEAD
-  border: 2px solid #ec0404;
-  padding: 2px 10px;
-}
-.tiltAngleNotification {
-  color: #ec0404;
-=======
   border: 2px solid #FF5C4C;
   padding: 2px 10px;
 }
@@ -588,7 +454,6 @@
 }
 .cardsScrollview {
   padding: 0 10px 0 0;
->>>>>>> 41419c6 (update codebase)
 }
 .markerTemplate .webix_template {
   display: flex;

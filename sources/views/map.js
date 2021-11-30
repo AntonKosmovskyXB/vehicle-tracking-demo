@@ -317,17 +317,6 @@ export default class MainView extends JetView {
 											<span style="color: #FD0000">Отклонился от маршрута</span>`,
 											expire: -1
 										});
-										const cardData = this.data;
-										const timeFormat = webix.Date.dateToStr("%H.%i");
-										const currentTime = timeFormat(new Date());
-										webix.message({
-											text: `
-											<span>${currentTime}</span><br>
-											<span class="cardCarName">${cardData.model}</span>
-											<span class="cardCarNumber">${cardData.stateNumber}</span><br>
-											<span style="color: #FD0000">Отклонился от маршрута</span>`,
-											expire: -1
-										});
 									}
 								},
 								template: obj =>
