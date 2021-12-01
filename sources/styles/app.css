@@ -591,3 +591,11 @@
 .routeEndPointInput {
     margin-left: 0;
 }
+
+.cardsScrollview .webix_scroll_cont .webix_layout_line:first-child {
+    height: 0 !important;
+}
+
+.cardsScrollview .cardRow:last-child {
+    margin-bottom: 18px;
+}

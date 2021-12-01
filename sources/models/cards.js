@@ -20,6 +20,7 @@ const cards = [
 		fullDistanceTime: "11 ч 45 мин",
 		restDistanceTime: "6 ч 13 мин",
 		readyRoute: true,
+		tiltAngle: false,
 		photo: "../sources/assets/photo/volvo.jpg"
 	},
 	{
@@ -43,6 +44,7 @@ const cards = [
 		fullDistanceTime: "10 ч 53 мин",
 		restDistanceTime: "3 ч 16 мин",
 		readyRoute: true,
+		tiltAngle: false,
 		photo: "../sources/assets/photo/scania.jpg"
 	},
 	{
@@ -66,6 +68,7 @@ const cards = [
 		fullDistanceTime: "5 ч 13 мин",
 		restDistanceTime: "3 ч 35 мин",
 		readyRoute: true,
+		tiltAngle: true,
 		photo: "../sources/assets/photo/man.jpg"
 	},
 	{
@@ -78,6 +81,7 @@ const cards = [
 		phone: "(929) 498-012-3",
 		group: "Рефрижератор",
 		readyRoute: false,
+		tiltAngle: false,
 		photo: "../sources/assets/photo/man.jpg"
 	},
 	{
@@ -90,6 +94,7 @@ const cards = [
 		phone: "(929) 433-300-2",
 		group: "Автоцистерна",
 		readyRoute: false,
+		tiltAngle: false,
 		photo: "../sources/assets/photo/scania.jpg"
 	}
 ];

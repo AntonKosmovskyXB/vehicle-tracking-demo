@@ -302,16 +302,29 @@
   padding: 2px 10px;
 }
 .routeLine {
+  margin-top: 7px;
   margin-bottom: 21px;
-  height: 10px;
+  height: 3px;
   width: 100%;
   background: #B5BCC8;
-  border-radius: 20px;
 }
 .routeDonePercent {
+  display: flex;
+  justify-content: space-between;
   background: #0075BC;
-  border-radius: 20px;
-  height: 10px;
+  height: 3px;
+}
+.routeDonePercent::before,
+.routeDonePercent::after {
+  content: "";
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 50%;
+  margin-top: -5px;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border: 2px solid #0075BC;
 }
 .route-distance {
   margin-top: 13px;
@@ -479,7 +492,7 @@
 .routeStartPointInput,
 .routeEndPointInput {
   width: 130px;
-  margin-left: 10px;
+  margin-left: 5px;
   height: 10px;
   padding: 0;
   font-size: 11px;

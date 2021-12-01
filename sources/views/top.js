@@ -54,6 +54,7 @@ export default class TopView extends JetView {
 
 		return {
 			view: "scrollview",
+			localId: "scrollview",
 			scroll: "auto",
 			body: {
 				rows: [ui]
