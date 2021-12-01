@@ -206,15 +206,7 @@ export default class MainView extends JetView {
 								on: {
 									onFocus: function () {
 										self.$$("map").getMap(true).then((map) => {
-											// map.removeObject(self.startMarker);
-											// map.removeObject(self.endMarker);
-											map.removeObjects(map.getObjects(self.startMarker, self.endMarker))
-											map.setCenter({lat:this.data.startCoord[0], lng:this.data.startCoord[1]});
-											self.startMarker = new H.map.Marker({lat: this.data.startCoord[0], lng: this.data.startCoord[1]});
-											self.endMarker = new H.map.Marker({lat: this.data.endCoord[0], lng: this.data.endCoord[1]});
-											map.addObject(self.startMarker);
-											map.addObject(self.endMarker);
-											self.getRoute(this);
+											self.setMarkersForRoute(map, this);
 										});
 									}
 								},
@@ -295,15 +287,7 @@ export default class MainView extends JetView {
 								on: {
 									onFocus: function () {
 										self.$$("map").getMap(true).then((map) => {
-											// map.removeObject(self.startMarker);
-											// map.removeObject(self.endMarker);
-											map.removeObjects(map.getObjects(self.startMarker, self.endMarker))
-											map.setCenter({lat:this.data.startCoord[0], lng:this.data.startCoord[1]});
-											self.startMarker = new H.map.Marker({lat: this.data.startCoord[0], lng: this.data.startCoord[1]});
-											self.endMarker = new H.map.Marker({lat: this.data.endCoord[0], lng: this.data.endCoord[1]});
-											map.addObject(self.startMarker);
-											map.addObject(self.endMarker);
-											self.getRoute(this);
+											self.setMarkersForRoute(map, this);
 										});
 
 										const cardData = this.data;
@@ -396,15 +380,7 @@ export default class MainView extends JetView {
 								on: {
 									onFocus: function () {
 										self.$$("map").getMap(true).then((map) => {
-											// map.removeObject(self.startMarker);
-											// map.removeObject(self.endMarker);
-											map.removeObjects(map.getObjects(self.startMarker, self.endMarker))
-											map.setCenter({lat:this.data.startCoord[0], lng:this.data.startCoord[1]});
-											self.startMarker = new H.map.Marker({lat: this.data.startCoord[0], lng: this.data.startCoord[1]});
-											self.endMarker = new H.map.Marker({lat: this.data.endCoord[0], lng: this.data.endCoord[1]});
-											map.addObject(self.startMarker);
-											map.addObject(self.endMarker);
-											self.getRoute(this);
+											self.setMarkersForRoute(map, this);
 										});
 									}
 								},
@@ -664,6 +640,18 @@ export default class MainView extends JetView {
 			webix.message("Пожалуйста, завершите редактирование карточки");
 			return;
 		}
+	}
+
+	setMarkersForRoute(map, card) {
+		map.removeObjects(map.getObjects(this.startMarker, this.endMarker))
+		map.setCenter({lat:card.data.startCoord[0], lng:card.data.startCoord[1]});
+		const startIcon = new H.map.Icon("../../sources/assets/icons/redMapMarker.svg");
+		const endIcon = new H.map.Icon("../../sources/assets/icons/greenMapMarker.svg");
+		this.startMarker = new H.map.Marker({lat: card.data.startCoord[0], lng: card.data.startCoord[1]}, {icon: startIcon});
+		this.endMarker = new H.map.Marker({lat: card.data.endCoord[0], lng: card.data.endCoord[1]}, {icon: endIcon});
+		map.addObject(this.startMarker);
+		map.addObject(this.endMarker);
+		this.getRoute(card);
 	}
 
 	getRoute(card) {
