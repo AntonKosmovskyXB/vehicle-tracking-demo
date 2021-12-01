@@ -24,8 +24,9 @@ function filterCards() {
 	}
 
 	for (let i = 0; i < cards.length; i++) {
-		console.log(cards);
-		$$(`card${i}`)?.show();
+		if (!cards[i].deleted) {
+			$$(`card${i}`).show();
+		}
 		const keys = Object.keys(formValues);
 		keys.forEach(item => {
 			if (item === "stateNumber") {
@@ -107,7 +108,7 @@ webix.ui({
 							$$("trackerOption").setValue("Все");
 							$$("numberSearch").setValue("");
 							for (let i = 0; i < cards.length; i++) {
-								if ($$(`card${i}`)) {
+								if (!cards[i].deleted) {
 									$$(`card${i}`).show();
 								}
 							}
@@ -253,9 +254,8 @@ export default class MainView extends JetView {
 							cancel: "Отменить",
 							text: "Вы хотите удалить эту карточку?"
 						}).then(() => {
-							this.destructor();
-							this.$$("scrollview").resize();
-							cards.splice(0, 1);
+							this.hide();
+							cards[i].deleted = true;
 						});
 					},
 					"mdi-map-marker": function() {
