@@ -176,7 +176,7 @@ export default class DriversView extends JetView {
 		this.selectedDrivers = new Set();
 		this.form = this.$$("driverForm");
 		this.driversList = this.$$("driversList");
-
+		this.headLabel = this.$$("headLabel");
 		this.driversList.attachEvent("onCheck", (rowId, colId, state) => {
 			if (state === 1) {
 				this.selectedDrivers.add(rowId);
@@ -194,12 +194,12 @@ export default class DriversView extends JetView {
 
 	refreshLabels(editMode) {
 		if (editMode) {
-			this.$$("headLabel").define("label", editDriverText);
-			this.$$("headLabel").refresh();
+			this.headLabel.define("label", editDriverText);
 		}
 		else {
-			this.$$("headLabel").define("label", newDriverText);
-			this.$$("headLabel").refresh();
+			this.headLabel.define("label", newDriverText);
 		}
+
+		this.headLabel.refresh();
 	}
 }

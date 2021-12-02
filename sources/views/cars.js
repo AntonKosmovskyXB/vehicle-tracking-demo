@@ -50,10 +50,10 @@ export default class CarsView extends JetView {
 										const reader = new FileReader();
 										reader.readAsDataURL(obj.file);
 										reader.onloadend = () => {
-											this.$$("carPhoto").setValues({Photo: reader.result});
+											D.setValues({Photo: reader.result});
 										};
-										this.$$("photoUploader").define("value", "Сменить фото");
-										this.$$("photoUploader").refresh();
+										this.photoUploader.define("value", "Сменить фото");
+										this.photoUploader.refresh();
 
 										return false;
 									}
@@ -137,7 +137,7 @@ export default class CarsView extends JetView {
 										click: () => {
 											if (this.form.validate()) {
 												const formValues = this.form.getValues();
-												formValues.photo = this.$$("carPhoto").getValues().Photo;
+												formValues.photo = this.carPhoto.getValues().Photo;
 												if (formValues.id) {
 													this.carsList.updateItem(formValues.id, formValues);
 												}
@@ -209,7 +209,7 @@ export default class CarsView extends JetView {
 								else {
 									webix.message("Пожалуйста выберите автомобиль для редактирования");
 								}
-								this.$$("carPhoto").setValues({Photo: selectedCar?.photo});
+								this.carPhoto.setValues({Photo: selectedCar?.photo});
 							}
 						},
 						{width: 7}
@@ -292,7 +292,9 @@ export default class CarsView extends JetView {
 		this.selectedCars = new Set();
 		this.form = this.$$("carsForm");
 		this.carsList = this.$$("carsList");
-
+		this.photoUploader = this.$$("photoUploader");
+		this.headLabel = this.$$("headLabel");
+		this.carPhoto = this.$$("carPhoto");
 		this.carsList.attachEvent("onCheck", (rowId, colId, state) => {
 			if (state === 1) {
 				this.selectedCars.add(rowId);
@@ -306,21 +308,19 @@ export default class CarsView extends JetView {
 	clearForm() {
 		this.form.clear();
 		this.form.clearValidation();
-		this.$$("carPhoto").setValues({Photo: "../sources/assets/photo/default.png"});
+		this.carPhoto.setValues({Photo: "../sources/assets/photo/default.png"});
 	}
 
 	refreshLabels(editMode) {
 		if (editMode) {
-			this.$$("headLabel").define("label", editCarText);
-			this.$$("photoUploader").define("value", "Сменить фото");
-			this.$$("photoUploader").refresh();
-			this.$$("headLabel").refresh();
+			this.headLabel.define("label", editCarText);
+			this.photoUploader.define("value", "Сменить фото");
 		}
 		else {
-			this.$$("headLabel").define("label", newCarText);
-			this.$$("photoUploader").define("value", "Загрузить фото");
-			this.$$("photoUploader").refresh();
-			this.$$("headLabel").refresh();
+			this.headLabel.define("label", newCarText);
+			this.photoUploader.define("value", "Загрузить фото");
 		}
+		this.photoUploader.refresh();
+		this.headLabel.refresh();
 	}
 }

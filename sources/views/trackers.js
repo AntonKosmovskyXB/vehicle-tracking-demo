@@ -260,6 +260,9 @@ export default class TrackersView extends JetView {
 		this.selectedTrackers = new Set();
 		this.form = this.$$("trackerForm");
 		this.trackersList = this.$$("trackersList");
+		this.headLabel = this.$$("headLabel");
+		this.modelSelect = this.$$("modelSelect");
+		this.stateNumbersSelect = this.$$("stateNumberSelect")
 		this.trackersList.attachEvent("onCheck", (rowId, colId, state) => {
 			if (state === 1) {
 				this.selectedTrackers.add(rowId);
@@ -282,32 +285,31 @@ export default class TrackersView extends JetView {
 
 	refreshLabels(editMode) {
 		if (editMode) {
-			this.$$("headLabel").define("label", editTrackerText);
-			this.$$("headLabel").refresh();
-			this.$$("modelSelect").disable();
-			this.$$("stateNumberSelect").disable();
+			this.headLabel.define("label", editTrackerText);
+			this.modelSelect.disable();
+			this.stateNumbersSelect.disable();
 		}
 		else {
-			this.$$("headLabel").define("label", newTrackerText);
-			this.$$("headLabel").refresh();
-			this.$$("modelSelect").enable();
-			this.$$("stateNumberSelect").enable();
+			this.headLabel.define("label", newTrackerText);
+			this.modelSelect.enable();
+			this.stateNumbersSelect.enable();
 		}
+		this.headLabel.refresh();
 	}
 
 	defineDefaultCarOptions(model, number) {
 		if (model) {
-			this.$$("modelSelect").define("options", model);
+			this.modelSelect.define("options", model);
 		}
 		if (number) {
-			this.$$("stateNumberSelect").define("options", number);
+			this.stateNumbersSelect.define("options", number);
 		}
 		if (!model && !number) {
-			this.$$("modelSelect").define("options", []);
-			this.$$("stateNumberSelect").define("options", []);
+			this.modelSelect.define("options", []);
+			this.stateNumbersSelect.define("options", []);
 		}
-		this.$$("modelSelect").refresh();
-		this.$$("stateNumberSelect").refresh();
+		this.modelSelect.refresh();
+		this.stateNumbersSelect.refresh();
 	}
 
 	getCurrentCarsInfo() {

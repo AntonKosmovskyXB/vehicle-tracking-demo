@@ -1,6 +1,6 @@
-export default function filterCards() {
-	const formValues = $$("filterForm").getValues();
-	const searchValue = $$("numberSearch").getValue()
+import cards from "../models/cards";
+
+export default function filterCards(formValues, searchValue) {
 	if (formValues.model === "") {
 		delete formValues.model;
 	}
@@ -17,21 +17,23 @@ export default function filterCards() {
 		formValues.stateNumber = searchValue;
 	}
 
+	const cardsIds = {
+		show: [],
+		hide: []
+	};
+
 	for (let i = 0; i < cards.length; i++) {
-		if (!cards[i].deleted) {
-			$$(`card${i}`).show();
-		}
 		const keys = Object.keys(formValues);
-		keys.forEach(item => {
-			if (item === "stateNumber") {
-				cards[i].stateNumber.indexOf(searchValue) === -1 ? $$(`card${i}`)?.hide() : "";
+		keys.forEach((item) => {
+			if ((item === "stateNumber" && cards[i].stateNumber.indexOf(searchValue) === -1) || formValues[item] !== cards[i][item]) {
+				cardsIds.hide.push(i);
 			}
-			else {
-				if (formValues[item] !== cards[i][item]) {
-					$$(`card${i}`)?.hide();
-				}
+			else if (!cards[i].deleted) {
+				cardsIds.show.push(i);
 			}
 		});
 	}
-}
 
+	cardsIds.show.forEach(i => $$(`card${i}`).show());
+	cardsIds.hide.forEach(i => $$(`card${i}`).hide());
+}

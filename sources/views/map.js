@@ -21,7 +21,7 @@ export default class MainView extends JetView {
 							width: 256,
 							on: {
 								onTimedKeyPress: () => {
-									filterCards();
+									filterCards($$("filterForm").getValues(), $$("numberSearch").getValue());
 								}
 							}
 						},
@@ -386,7 +386,7 @@ webix.ui({
 						css: "webix_primary",
 						label: "Применить",
 						click: () => {
-							filterCards();
+							filterCards($$("filterForm").getValues(), $$("numberSearch").getValue());
 						}
 					}
 				]
