@@ -1,132 +1,8 @@
 import L from "leaflet";
 import {JetView} from "webix-jet";
-
+import filterCards from "../helpers/cardsFilter";
 import cards from "../models/cards";
 import NewRoutePopup from "./newRoutePopup";
-
-function filterCards() {
-	const formValues = $$("filterForm").getValues();
-	const searchValue = $$("numberSearch").getValue()
-	if (formValues.model === "") {
-		delete formValues.model;
-	}
-	if (formValues.group === "") {
-		delete formValues.group;
-	}
-	if (formValues.status === "Все") {
-		delete formValues.status;
-	}
-	if (formValues.tracker === "Все") {
-		delete formValues.tracker;
-	}
-	if (searchValue) {
-		formValues.stateNumber = searchValue;
-	}
-
-	for (let i = 0; i < cards.length; i++) {
-		if (!cards[i].deleted) {
-			$$(`card${i}`).show();
-		}
-		const keys = Object.keys(formValues);
-		keys.forEach(item => {
-			if (item === "stateNumber") {
-				cards[i].stateNumber.indexOf(searchValue) === -1 ? $$(`card${i}`)?.hide() : "";
-			}
-			else {
-				if (formValues[item] !== cards[i][item]) {
-					$$(`card${i}`)?.hide();
-				}
-			}
-		});
-	}
-}
-
-webix.ui({
-	view: "popup",
-	id: "filterCardsPopup",
-	width: 262,
-	height: 505,
-	body: {
-		view: "form",
-		paddingX: 16,
-		id: "filterForm",
-		rows: [
-			{
-				view: "richselect",
-				label: "Марка автомобиля",
-				name: "model",
-				labelPosition: "top",
-				options: ["Volvo", "Scania", "Man"]
-			},
-			{
-				view: "richselect",
-				label: "Группа",
-				labelPosition: "top",
-				css: "filterPopupElem",
-				name: "group",
-				options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"]
-			},
-			{
-				view: "label",
-				label: "Маршрут",
-				css: "filterPopupElem",
-			},
-			{
-				view: "radio",
-				vertical: true,
-				align: "left",
-				css: "filterPopupElem",
-				name: "status",
-				id: "routeOption",
-				options: ["Все", "В пути", "C маршрутом", "Отклонился от маршрута"],
-				value: "Все"
-			},
-			{
-				view: "label",
-				label: "Тип трекера",
-				css: "filterPopupElem",
-			},
-			{
-				view: "radio",
-				vertical: true,
-				align: "left",
-				name: "tracker",
-				css: "filterPopupElem",
-				id: "trackerOption",
-				options: ["Все", "GPS", "Глонасс"],
-				value: "Все"
-			},
-			{
-				css: "filterPopupElem",
-				cols: [
-					{
-						view: "button",
-						label: "Сбросить",
-						click: () => {
-							$$("filterForm").clear();
-							$$("routeOption").setValue("Все");
-							$$("trackerOption").setValue("Все");
-							$$("numberSearch").setValue("");
-							for (let i = 0; i < cards.length; i++) {
-								if (!cards[i].deleted) {
-									$$(`card${i}`).show();
-								}
-							}
-						}
-					},
-					{
-						view: "button",
-						css: "webix_primary",
-						label: "Применить",
-						click: () => {
-							filterCards();
-						}
-					}
-				]
-			}
-		]
-	}
-});
 
 export default class MainView extends JetView {
 	config() {
@@ -432,3 +308,90 @@ export default class MainView extends JetView {
 		}
 	}
 }
+
+webix.ui({
+	view: "popup",
+	id: "filterCardsPopup",
+	width: 262,
+	height: 505,
+	body: {
+		view: "form",
+		paddingX: 16,
+		id: "filterForm",
+		rows: [
+			{
+				view: "richselect",
+				label: "Марка автомобиля",
+				name: "model",
+				labelPosition: "top",
+				options: ["Volvo", "Scania", "Man"]
+			},
+			{
+				view: "richselect",
+				label: "Группа",
+				labelPosition: "top",
+				css: "filterPopupElem",
+				name: "group",
+				options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"]
+			},
+			{
+				view: "label",
+				label: "Маршрут",
+				css: "filterPopupElem",
+			},
+			{
+				view: "radio",
+				vertical: true,
+				align: "left",
+				css: "filterPopupElem",
+				name: "status",
+				id: "routeOption",
+				options: ["Все", "В пути", "C маршрутом", "Отклонился от маршрута"],
+				value: "Все"
+			},
+			{
+				view: "label",
+				label: "Тип трекера",
+				css: "filterPopupElem",
+			},
+			{
+				view: "radio",
+				vertical: true,
+				align: "left",
+				name: "tracker",
+				css: "filterPopupElem",
+				id: "trackerOption",
+				options: ["Все", "GPS", "Глонасс"],
+				value: "Все"
+			},
+			{
+				css: "filterPopupElem",
+				cols: [
+					{
+						view: "button",
+						label: "Сбросить",
+						click: () => {
+							$$("filterForm").clear();
+							$$("routeOption").setValue("Все");
+							$$("trackerOption").setValue("Все");
+							$$("numberSearch").setValue("");
+							for (let i = 0; i < cards.length; i++) {
+								if (!cards[i].deleted) {
+									$$(`card${i}`).show();
+								}
+							}
+						}
+					},
+					{
+						view: "button",
+						css: "webix_primary",
+						label: "Применить",
+						click: () => {
+							filterCards();
+						}
+					}
+				]
+			}
+		]
+	}
+});
