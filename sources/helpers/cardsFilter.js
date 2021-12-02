@@ -34,6 +34,5 @@ export default function filterCards(formValues, searchValue) {
 		});
 	}
 
-	cardsIds.show.forEach(i => $$(`card${i}`).show());
-	cardsIds.hide.forEach(i => $$(`card${i}`).hide());
+	return cardsIds;
 }
