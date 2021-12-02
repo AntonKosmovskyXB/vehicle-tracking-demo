@@ -1,4 +1,3 @@
-import L from "leaflet";
 import {JetView} from "webix-jet";
 import filterCards from "../helpers/cardsFilter";
 import cards from "../models/cards";
