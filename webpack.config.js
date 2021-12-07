@@ -1,5 +1,6 @@
 let path = require("path");
 let webpack = require("webpack");
+require("babel-polyfill");
 
 module.exports = function (env) {
 	let pack = require("./package.json");
@@ -16,7 +17,7 @@ module.exports = function (env) {
 	let config = {
 		mode: production ? "production" : "development",
 		entry: {
-			myapp: "./sources/myapp.js"
+			myapp: ["babel-polyfill", "./sources/myapp.js"]
 		},
 		output: {
 			path: path.join(__dirname, "codebase"),

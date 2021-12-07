@@ -80,25 +80,28 @@ export default class MainView extends JetView {
 		this.currentEditableCard = "";
 		this.addRoutePopup = this.ui(NewRoutePopup);
 		this.on(this.app, "onRouteAdd", (num, startCity, endCity) => {
-			this.$$(`card${num}`).setValues({
-				readyRoute: true,
-				startPoint: startCity,
-				endPoint: endCity,
-				status: "С маршрутом",
-				speed: "-",
-				distance: 400,
-				doneDistance: 0,
-				fullDistanceTime: "8 ч 00 мин",
-				restDistanceTime: "8 ч 00 мин"
-			}, true);
-			this.$$(`card${num}`).define("height", 268);
-			this.$$(`card${num}`).resize();
-		});
-		this.on(this.app, "onRouteEdit", (num, startCity, endCity) => {
-			this.$$(`card${num}`).setValues({
-				startPoint: startCity,
-				endPoint: endCity
-			}, true);
+			this.setMarkersForRoute(startCity, endCity);
+			this.getRoutePoints(startCity, endCity).then((res) => {
+				this.getDistanceBetweenCities(res).then((result) => {
+					const fullDistanceTime = result / 90;
+					const hours = Math.trunc(fullDistanceTime);
+					const minutes = ((fullDistanceTime - hours) * 60).toFixed();
+					this.$$(`card${num}`).setValues({
+						readyRoute: true,
+						startPoint: startCity,
+						endPoint: endCity,
+						status: "С маршрутом",
+						speed: "-",
+						distance: result,
+						doneDistance: 0,
+						fullDistanceTime: `${hours} ч ${minutes} мин`,
+						restDistanceTime: `${hours} ч ${minutes} мин`
+					}, true);
+		
+					this.$$(`card${num}`).define("height", 268);
+					this.$$(`card${num}`).resize();
+				})
+			});
 		});
 		this.$$("map").getMap(true).then((map) => {
 			webix.delay(() => {
@@ -113,6 +116,15 @@ export default class MainView extends JetView {
 	ready() {
 		const templates = document.querySelectorAll(".travelCard .webix_template");
 		templates.forEach((elem) => elem.setAttribute("tabindex", "1"));
+	}
+
+	async getRoutePoints(startCity, endCity) {
+		const startPoint = await webix.ajax().get(`https://geocoder.api.here.com/6.2/geocode.json?searchtext=${startCity}&gen=9&app_id=1ABRBQas40fithl31gWe&app_code=RSz9AQaADwMmSf8oZYq8sA&language=RU`);
+		const endPoint = await webix.ajax().get(`https://geocoder.api.here.com/6.2/geocode.json?searchtext=${endCity}&gen=9&app_id=1ABRBQas40fithl31gWe&app_code=RSz9AQaADwMmSf8oZYq8sA&language=RU`);
+		return {
+			startCoord: startPoint.json().Response.View[0].Result[0].Location.NavigationPosition[0],
+			endCoord: endPoint.json().Response.View[0].Result[0].Location.NavigationPosition[0]
+		}
 	}
 
 	getCards() {
@@ -158,9 +170,26 @@ export default class MainView extends JetView {
 				},
 				on: {
 					onFocus: function () {
-						self.$$("map").getMap(true).then((map) => {
-							self.setMarkersForRoute(map, this);
-						});
+						if (this.data.startPoint && this.data.endPoint) {
+							self.setMarkersForRoute(this.data.startPoint, this.data.endPoint);
+						}
+						else {
+							self.setMarkersForRoute();
+						}
+
+						if (this.data.wrongRoute) {
+							const cardData = this.data;
+							const timeFormat = webix.Date.dateToStr("%H:%i");
+							const currentTime = timeFormat(new Date());
+							webix.message({
+								text: `
+								<span>${currentTime}</span><br>
+								<span class="cardCarName">${cardData.model}</span>
+								<span class="cardCarNumber">${cardData.stateNumber}</span><br>
+								<span style="color: #FD0000">Отклонился от маршрута</span>`,
+								expire: -1
+							});
+						}
 					}
 				},
 				template: obj =>
@@ -185,8 +214,8 @@ export default class MainView extends JetView {
 							 - ${this.editMode ? `<input type='text' class="routeEndPointInput">` : `<span class="cityName">${obj.endPoint}</span></span>` }
 						</div>
 						<div class="route-distance">
-							<div>${obj.distance} км</div>
-							<div>${obj.fullDistanceTime}</div>
+							<div class="fullDistance">${obj.distance} км</div>
+							<div class="fullTime">${obj.fullDistanceTime}</div>
 						</div>
 						<div class="routeLine">
 							${obj.status === "В пути" ? `<div class='routeDonePercent' style='width: ${(obj.doneDistance / obj.distance) * 100}%'></div>` : ""}
@@ -217,20 +246,58 @@ export default class MainView extends JetView {
 		}
 	}
 
-	setMarkersForRoute(map, card) {
-		map.removeObjects(map.getObjects(this.startMarker, this.endMarker))
-		map.setCenter({lat:card.data.startCoord[0], lng:card.data.startCoord[1]});
-		const startIcon = new H.map.Icon("../../sources/assets/icons/redMapMarker.svg");
-		const endIcon = new H.map.Icon("../../sources/assets/icons/greenMapMarker.svg");
-		this.startMarker = new H.map.Marker({lat: card.data.startCoord[0], lng: card.data.startCoord[1]}, {icon: startIcon});
-		this.endMarker = new H.map.Marker({lat: card.data.endCoord[0], lng: card.data.endCoord[1]}, {icon: endIcon});
-		map.addObject(this.startMarker);
-		map.addObject(this.endMarker);
-		this.getRoute(card);
+	setMarkersForRoute(startCity, endCity) {
+		this.$$("map").getMap(true).then((map) => {
+			if (startCity && endCity) {
+				this.getRoutePoints(startCity, endCity).then((res) => {
+					map.removeObjects(map.getObjects(this.startMarker, this.endMarker))
+					map.setCenter({lat: res.startCoord.Latitude, lng: res.startCoord.Longitude});
+					const startIcon = new H.map.Icon("../../sources/assets/icons/redMapMarker.svg");
+					const endIcon = new H.map.Icon("../../sources/assets/icons/greenMapMarker.svg");
+					this.startMarker = new H.map.Marker({lat: res.startCoord.Latitude, lng: res.startCoord.Longitude}, {icon: startIcon});
+					this.endMarker = new H.map.Marker({lat: res.endCoord.Latitude, lng: res.endCoord.Longitude}, {icon: endIcon});
+					map.addObject(this.startMarker);
+					map.addObject(this.endMarker);
+					this.getRouteData(res);
+				});	
+			}
+			else if (this.startMarker && this.endMarker) {
+				map.removeObjects(map.getObjects(this.startMarker, this.endMarker));
+			}
+		});
 	}
 
-	getRoute(card) {
+	drawRoute(result, map) {
+		const lineString = new H.geo.LineString();
+		result.response.route[0].shape.forEach(point => {
+			const [lat, lng] = point.split(",");
+			lineString.pushPoint({lat: lat, lng: lng});
+		});
+		const polyline = new H.map.Polyline(
+			lineString,
+			{
+				style: {
+					lineWidth: 5
+				}
+			}
+		);
+		map.addObject(polyline);
+	}
+
+	async getDistanceBetweenCities(routePoints) {
+		const routeData = await webix.ajax().get(`https://route.api.here.com/routing/7.2/calculateroute.json
+		?waypoint0=${[[routePoints.startCoord.Latitude, routePoints.startCoord.Longitude]]}
+		&waypoint1=${[[routePoints.endCoord.Latitude, routePoints.endCoord.Longitude]]}
+		&mode=fastest%3Bcar%3Btraffic%3Aenabled&departure=now
+		&app_id=1ABRBQas40fithl31gWe
+		&app_code=RSz9AQaADwMmSf8oZYq8sA`);
+		const distance = (routeData.json().response.route[0].summary.distance / 1000).toFixed()
+		return distance;
+	}
+
+	getRouteData(routePoints) {
 		this.$$("map").getMap(true).then((map) => {
+
 			const platform = new H.service.Platform({
 				app_id: '1ABRBQas40fithl31gWe',
     			app_code: 'RSz9AQaADwMmSf8oZYq8sA',
@@ -238,31 +305,18 @@ export default class MainView extends JetView {
 
 			const routingParameters = {
 				mode: 'balanced;truck',
-				waypoint0: card.data.startCoord,
-				waypoint1: card.data.endCoord,
+				waypoint0: [routePoints.startCoord.Latitude, routePoints.startCoord.Longitude],
+				waypoint1: [routePoints.endCoord.Latitude, routePoints.endCoord.Longitude],
 				representation: 'display',
 				routeAttributes: 'summary'
 			};
 
-			const onResult = function(result) {
+			const onResult = (result) => {
 				if (result.response.route.length) {
-					const lineString = new H.geo.LineString();
-					result.response.route[0].shape.forEach(point => {
-						const [lat, lng] = point.split(",");
-						lineString.pushPoint({lat: lat, lng: lng});
-					});
-					const polyline = new H.map.Polyline(
-						lineString,
-						{
-							style: {
-								lineWidth: 5
-							}
-						}
-					);
-					map.addObject(polyline);
+					this.drawRoute(result, map);
 				}
 			};
-			  
+
 			const router = platform.getRoutingService(null, 8);
 			router.calculateRoute(
 				routingParameters, 
@@ -294,18 +348,32 @@ export default class MainView extends JetView {
 			const newDriverPhone = card.$view.querySelector(".driverPhoneInput")?.value;
 			const newStartPoint = card.$view.querySelector(".routeStartPointInput")?.value;
 			const newEndPoint = card.$view.querySelector(".routeEndPointInput")?.value;
+			
 			card.data.driver = newDriverName;
 			card.data.phone = newDriverPhone;
+
 			if (newStartPoint && newEndPoint) {
-				card.data.startPoint = newStartPoint;
-				card.data.endPoint = newEndPoint;
+				this.setMarkersForRoute(newStartPoint, newEndPoint);
+				this.getRoutePoints(newStartPoint, newEndPoint).then((res) => {
+					this.getDistanceBetweenCities(res).then((result) => {
+						const fullDistanceTime = result / 90;
+						const hours = Math.trunc(fullDistanceTime);
+						const minutes = ((fullDistanceTime - hours) * 60).toFixed();
+	
+						card.data.startPoint = newStartPoint;
+						card.data.endPoint = newEndPoint;
+						card.data.fullDistanceTime = `${hours} ч ${minutes} мин`;
+						card.data.restDistanceTime = `${hours} ч ${minutes} мин`;
+						card.data.distance = result;
+
+						this.editMode = false;
+						card.refresh();
+					})
+				});
 			}
+			
 			this.editMode = false;
 			card.refresh();
-			const tooltips = card.$view.querySelectorAll(".tooltiptext");
-			if (tooltips.length) {
-				tooltips.forEach(item => item.remove())
-			}
 		}
 	}
 }
