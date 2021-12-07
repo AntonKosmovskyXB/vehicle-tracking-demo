@@ -2,15 +2,15 @@ const cards = [
 	{
 		id: 1,
 		model: "Volvo",
-		stateNumber: "C064MK78",
+		stateNumber: "C772MK34",
 		tracker: "GPS",
+		group: "Автоцистерна",
 		driver: "Сергей Иванов",
 		phone: "(929) 777-55-77",
 		startCountry: "Россия",
 		endCountry: "Россия",
 		startPoint: "Москва",
 		endPoint: "Волгоград",
-		group: "Фургон",
 		status: "В пути",
 		startCoord: [55.75, 37.61],
 		endCoord: [48.43, 44.30],
@@ -20,12 +20,13 @@ const cards = [
 		fullDistanceTime: "11 ч 45 мин",
 		restDistanceTime: "6 ч 13 мин",
 		readyRoute: true,
+		tiltAngle: false,
 		photo: "../sources/assets/photo/volvo.jpg"
 	},
 	{
 		id: 2,
 		model: "Scania",
-		stateNumber: "C152MK34",
+		stateNumber: "C481MK78",
 		tracker: "Глонасс",
 		driver: "Андрей Давыдов",
 		phone: "(929) 109-675-1",
@@ -43,12 +44,13 @@ const cards = [
 		fullDistanceTime: "10 ч 53 мин",
 		restDistanceTime: "3 ч 16 мин",
 		readyRoute: true,
+		tiltAngle: false,
 		photo: "../sources/assets/photo/scania.jpg"
 	},
 	{
 		id: 3,
 		model: "Man",
-		stateNumber: "C912MK78",
+		stateNumber: "C478MK78",
 		tracker: "GPS",
 		driver: "Алексей Фролов",
 		phone: "(929) 478-632-8",
@@ -66,6 +68,7 @@ const cards = [
 		fullDistanceTime: "5 ч 13 мин",
 		restDistanceTime: "3 ч 35 мин",
 		readyRoute: true,
+		tiltAngle: true,
 		photo: "../sources/assets/photo/man.jpg"
 	},
 	{
@@ -78,6 +81,7 @@ const cards = [
 		phone: "(929) 498-012-3",
 		group: "Рефрижератор",
 		readyRoute: false,
+		tiltAngle: false,
 		photo: "../sources/assets/photo/man.jpg"
 	},
 	{
@@ -90,6 +94,7 @@ const cards = [
 		phone: "(929) 433-300-2",
 		group: "Автоцистерна",
 		readyRoute: false,
+		tiltAngle: false,
 		photo: "../sources/assets/photo/scania.jpg"
 	}
 ];

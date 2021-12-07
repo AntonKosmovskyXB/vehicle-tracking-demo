@@ -83,7 +83,7 @@
 }
 .webix_menu .mdi {
   color: #ffffff;
-  font-size: 32px;
+  font-size: 24px;
   width: 40px;
 }
 .webix_menu.webix_view .webix_icon {
@@ -145,31 +145,38 @@
   margin-left: 30px;
 }
 .webix_menu {
-  background: #2c5de2;
+  background: #0075BC;
 }
 .webix_menu.webix_view .webix_list_item.webix_selected {
-  background: #94b0fd;
+  background: #029CDD;
 }
 .webix_list_item.webix_selected {
   box-shadow: none;
 }
 .webix_menu .webix_list_item,
 .webix_menu-x .webix_list_item {
-  background: #2c5de2;
-  height: 60px !important;
+  background: #0075BC;
+  height: 55px !important;
 }
 .webix_menu.webix_view .webix_list_item:hover {
-  background: #94b0fd;
+  background: #029CDD;
 }
 .webix_toolbar .pageHeaderLabel .webix_el_box {
-  font-size: 20px;
+  font-size: 18px;
+  color: #2c2c2c;
+  padding-left: 17px;
 }
 .headLabel .webix_el_box,
 .webix_toolbar .headTableLabel .webix_el_box {
-  font-size: 20px;
+  font-size: 16px;
+  color: #313131;
+}
+.headLabel {
+  /* margin-left: 17px !important;
+    margin-top: 9px !important; */
 }
 .webix_toolbar .headTableLabel .webix_el_box {
-  margin-left: 8px;
+  margin-left: 12px;
 }
 .webix_table_checkbox,
 .webix_hcell input[type="checkbox"] {
@@ -177,33 +184,41 @@
   height: 18px;
 }
 .car-photo img {
-  width: 260px;
-  height: 190px;
+  width: 230px;
+  height: 132px;
 }
 .carPhoto .webix_template {
-  padding: 4px;
+  padding: 2px;
 }
 .carSmallCard img {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
 }
+.card-header .carSmallCard img {
+  width: 32px;
+  height: 32px;
+}
 .carSmallCard {
-  height: 45px;
+  height: 36px;
   width: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.travelCards {
-  padding: 10px;
+.card-header .carSmallCard {
+  justify-content: flex-start;
+  width: 41px;
 }
 .filter-button span {
   margin: 0;
 }
 .travelCard {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   background: #ffffff;
+}
+.travelCards {
+  overflow: visible;
 }
 .travelCard:first-child {
   margin-top: 5px;
@@ -211,83 +226,115 @@
 .card-header {
   display: flex;
   align-items: center;
-  height: 60px;
+  height: 50px;
 }
 .cardCarName {
-  font-size: 17px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #313131;
 }
 .cardCarNumber {
   color: #a3a2a2;
-  font-size: 13px;
+  font-weight: 400;
+  font-size: 12px;
 }
 .cardRowInfo {
   color: #a3a2a2;
 }
 .speed {
-  color: #31cf66;
+  color: #2DCE94;
 }
 .outOfspeed {
-  color: #f50000;
+  color: #ff5c4c;
 }
 .cardTrackerGPS,
 .cardTrackerGlonass {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 90px;
-  height: 30px;
+  width: 43px;
+  height: 24px;
   margin-left: 10px;
-  background: #1fa04a;
-  border-radius: 20px;
+  font-size: 14px;
+  background: #2DCE94;
+  border-radius: 70px;
   color: #ffffff;
 }
 .cardTrackerGlonass {
-  background: #0f0cc5;
+  background: #6070FF;
+  width: 69px;
+  height: 24px;
+}
+.carInfo {
+  height: 34px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .card-icons {
   display: flex;
   justify-content: space-between;
   width: 70px;
-  margin-left: 30px;
+  margin-left: 44px;
+}
+.cardTrackerGlonass + .card-icons {
+  margin-left: 17px;
 }
 .card-icons .mdi {
-  font-size: 20px;
+  font-size: 18px;
+  color: #B5BCC8;
 }
 .card-icons .mdi:hover {
   cursor: pointer;
-  opacity: 0.7;
+  color: #afb0b3;
 }
 .cardRow {
-  margin-top: 5px;
+  margin-top: 7px;
+  font-size: 12px;
 }
 .travelCard .webix_template:hover {
   cursor: pointer;
-  border: 2px solid #4b56f1;
+  border: 2px solid #029CDD;
   padding: 2px 10px;
 }
 .travelCard .webix_template:focus {
-  border: 2px solid #4b56f1;
+  border: 2px solid #029CDD;
   padding: 2px 10px;
 }
 .routeLine {
-  margin-bottom: 15px;
-  height: 10px;
+  margin-top: 7px;
+  margin-bottom: 21px;
+  height: 3px;
   width: 100%;
-  background: #bbbbbb;
-  border-radius: 20px;
+  background: #B5BCC8;
 }
 .routeDonePercent {
-  background: #085cc9;
-  border-radius: 20px;
-  height: 10px;
+  display: flex;
+  justify-content: space-between;
+  background: #0075BC;
+  height: 3px;
+}
+.routeDonePercent::before,
+.routeDonePercent::after {
+  content: "";
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 50%;
+  margin-top: -5px;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border: 2px solid #0075BC;
 }
 .route-distance {
-  margin-top: 10px;
+  margin-top: 13px;
   display: flex;
   justify-content: space-between;
 }
 .route-info {
-  margin-bottom: 30px;
+  margin-top: 10px;
+  margin-bottom: 18px;
+  font-size: 12px;
 }
 .webix_scrollview {
   background: #f3f3f3;
@@ -313,23 +360,31 @@
 }
 .tooltiptext {
   visibility: hidden;
-  width: 200px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
+  width: 180px;
+  height: 43px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #FFFFFF;
+  color: #313131;
+  border: 1px solid #D1D9DD;
+  box-shadow: 0px 1px 6px rgba(21, 46, 95, 0.19);
+  border-radius: 2px;
+  text-align: left;
+  padding: 7px 16px;
   position: absolute;
-  z-index: 1;
-  left: 50%;
-  margin-left: -60px;
+  z-index: 100;
+  left: 2%;
   opacity: 0;
   transition: opacity 0.3s;
-  margin-top: -50px;
+  margin-top: -60px;
   line-height: 20px;
 }
-.startCityTooltip {
-  margin-left: -165px;
+.endCityTooltip {
+  left: 25%;
+}
+.tooltipCoordinates {
+  font-weight: 400;
+  color: #798392;
 }
 .cityName:hover .tooltiptext {
   cursor: pointer;
@@ -340,10 +395,121 @@
   font-weight: 500;
 }
 .tiltAngleCar .webix_template {
-  border: 2px solid #ec0404;
+  border: 2px solid #FF5C4C;
   padding: 2px 10px;
 }
+.carMenuScroll {
+  background: #ffffff;
+  padding: 0 14px;
+  margin-left: 0 !important;
+  border-width: 0 !important;
+}
+.webix_primary .webix_button {
+  background: #0075BC;
+}
+.webix_secondary .webix_button {
+  background: #F1F3F6;
+  color: #0075BC;
+}
+.webix_primary .webix_button:hover {
+  background: #029CDD;
+}
+.newTrackerForm {
+  border: 1px solid #D1D9DD;
+}
+.webix_inp_counter_next,
+.webix_inp_counter_prev {
+  color: #0075BC;
+}
+.datatableToolbar {
+  border: 1px solid #D1D9DD;
+  border-bottom: none;
+  height: 53px !important;
+  display: flex;
+  align-items: center;
+}
+.webix_dtable,
+.filterPopupElem {
+  margin-top: 0 !important;
+}
+.webix_ss_header,
+.webix_hcolumn,
+.webix_ss_vscroll_header,
+.webix_dd_drag_column,
+.webix_hs_left,
+.webix_hs_center,
+.webix_hs_right {
+  background: #e9f1f4;
+}
+.carsDatatable .webix_hs_center,
+.carsDatatable .webix_ss_center {
+  border: 1px solid #D1D9DD;
+}
+.webix_button {
+  border-radius: 3px;
+}
+.webix_dtable .webix_select_mark > div.webix_row_select {
+  box-shadow: inset 2px 0 #0075BC;
+}
+.numberSearch .webix_el_box {
+  padding: 3px 0;
+}
+.mainToolbar .webix_scroll_cont {
+  border-bottom: 1px solid #D1D9DD;
+}
+.filter-button {
+  margin-left: 1px !important;
+}
 .tiltAngleNotification {
-  color: #ec0404;
+  margin-top: 16px;
+  font-weight: 500;
+  color: #FF5C4C;
+}
+.cardsScrollview {
+  padding: 0 10px 0 0;
+}
+.markerTemplate .webix_template {
+  display: flex;
+  align-items: center;
+}
+.webix_alert .webix_popup_title,
+.webix_confirm .webix_popup_title,
+.webix_prompt .webix_popup_title,
+.webix_alert .webix_popup_text,
+.webix_confirm .webix_popup_text,
+.webix_prompt .webix_popup_text {
+  box-shadow: inset 0 4px #0075BC;
+}
+.webix_popup_button.confirm {
+  background: #0075BC;
+  border-color: #0075BC;
+}
+.webix_popup_button {
+  color: #0075BC;
+}
+.driverNameInput,
+.driverPhoneInput,
+.routeStartPointInput,
+.routeEndPointInput {
+  width: 130px;
+  margin-left: 5px;
+  height: 10px;
+  padding: 0;
+  font-size: 11px;
+  font-family: "Roboto", sans-serif;
+}
+.routeStartPointInput,
+.routeEndPointInput {
+  width: 90px;
+  margin-left: 3px;
+}
+.routeEndPointInput {
+  margin-left: 0;
+}
+.cardsScrollview .webix_scroll_cont .webix_layout_line:first-child {
+  height: 0 !important;
+}
+.cardsScrollview .cardRow:last-child {
+  margin-bottom: 18px;
 }
 

@@ -6,35 +6,33 @@ export default class TopView extends JetView {
 			view: "menu",
 			id: "top:menu",
 			css: "app_menu",
-			width: 100,
+			width: 56,
 			layout: "y",
 			select: true,
 			template: "<span class='webix_icon #icon#'></span> #value# ",
 			data: [
-				{value: "", id: "map", icon: "mdi mdi-flag"},
+				{value: "", id: "map", icon: "mdi mdi-map"},
 				{value: "", id: "trackers", icon: "mdi mdi-crosshairs-gps"},
 				{value: "", id: "cars", icon: "mdi mdi-truck"},
 				{value: "", id: "drivers", icon: "mdi mdi-account"},
-				{value: "", id: "dashboard", icon: "mdi mdi-chart-box"}
+				{value: "", id: "dashboard", icon: "mdi mdi-view-dashboard"}
 			]
 		};
 
 		const ui = {
 			type: "clean",
-			paddingX: 5,
 			css: "app_layout",
 			cols: [
 				{
-					paddingX: 5,
-					paddingY: 10,
 					rows: [menu]
 				},
 				{
 					rows: [
 						{
 							view: "toolbar",
+							css: "mainToolbar",
 							borderless: true,
-							height: 60,
+							height: 56.5,
 							cols: [
 								{
 									view: "label",
@@ -45,8 +43,6 @@ export default class TopView extends JetView {
 						},
 						{
 							type: "wide",
-							paddingY: 10,
-							paddingX: 5,
 							rows: [
 								{$subview: true}
 							]
@@ -56,10 +52,18 @@ export default class TopView extends JetView {
 			]
 		};
 
-		return ui;
+		return {
+			view: "scrollview",
+			localId: "scrollview",
+			scroll: "auto",
+			body: {
+				rows: [ui]
+			}
+		};
 	}
 
 	init() {
 		this.use(plugins.Menu, "top:menu");
+		webix.CustomScroll.init();
 	}
 }

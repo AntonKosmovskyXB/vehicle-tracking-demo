@@ -2,127 +2,160 @@ import {JetView} from "webix-jet";
 
 import cars from "../models/cars";
 
+const editCarText = "Редактировать автомобиль";
+const newCarText = "Новый автомобиль";
+
 export default class CarsView extends JetView {
 	config() {
 		const newTracker = {
 			view: "form",
 			localId: "carsForm",
-			css: "newTrackerForm",
-			width: 300,
-			height: 5000,
+			css: "newCarsForm",
+			paddingY: 9,
+			paddingX: 13,
+			width: 262,
 			elements: [
 				{
 					view: "label",
+					localId: "headLabel",
 					label: "Новый автомобиль",
 					css: "headLabel"
 				},
 				{
-					localId: "carPhoto",
-					css: "carPhoto",
-					width: 270,
-					height: 200,
-					borderless: true,
-					template: obj => `<div class="car-photo"><img src=${obj.Photo || "../sources/assets/photo/default.png"}></div>`
-				},
-				{
-					view: "uploader",
-					localId: "photoUploader",
-					value: "Загрузить фото",
-					autosend: false,
-					on: {
-						onBeforeFileAdd: (obj) => {
-							const reader = new FileReader();
-							reader.readAsDataURL(obj.file);
-							reader.onloadend = () => {
-								this.$$("carPhoto").setValues({Photo: reader.result});
-							};
-							return false;
-						}
+					view: "scrollview",
+					scroll: "y",
+					css: "carMenuScroll",
+					width: 290,
+					body: {
+						rows: [
+							{
+								localId: "carPhoto",
+								css: "carPhoto",
+								width: 230,
+								height: 134,
+								borderless: true,
+								template: obj => `<div class="car-photo"><img src=${obj.Photo || "../sources/assets/photo/default.png"}></div>`
+							},
+							{height: 10},
+							{
+								view: "uploader",
+								localId: "photoUploader",
+								width: 234,
+								height: 38,
+								value: "Загрузить фото",
+								css: "webix_primary",
+								autosend: false,
+								on: {
+									onBeforeFileAdd: (obj) => {
+										const reader = new FileReader();
+										reader.readAsDataURL(obj.file);
+										reader.onloadend = () => {
+											D.setValues({Photo: reader.result});
+										};
+										this.photoUploader.define("value", "Сменить фото");
+										this.photoUploader.refresh();
+
+										return false;
+									}
+								}
+							},
+							{height: 30},
+							{
+								view: "richselect",
+								options: ["Volvo", "Man", "Scania"],
+								label: "Марка автомобиля",
+								labelPosition: "top",
+								name: "model",
+								required: true
+							},
+							{height: 14},
+							{
+								view: "text",
+								label: "Гос. номер",
+								labelPosition: "top",
+								name: "stateNumber",
+								required: true
+							},
+							{height: 10},
+							{
+								view: "counter",
+								label: "Масса (т)",
+								name: "weight",
+								labelWidth: 128,
+								required: true
+							},
+							{height: 26},
+							{
+								view: "richselect",
+								options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"],
+								label: "Группа",
+								labelPosition: "top",
+								name: "group",
+								required: true
+							},
+							{height: 13},
+							{
+								view: "richselect",
+								label: "Количество осей",
+								options: ["Двухосные", "Трехосные"],
+								labelPosition: "top"
+							},
+							{height: 13},
+							{
+								view: "richselect",
+								label: "Состав",
+								options: ["Автомобиль-прицеп", "Одиночное транспортное средство"],
+								labelPosition: "top",
+								name: "squad",
+								required: true
+							},
+							{height: 15},
+							{
+								view: "richselect",
+								label: "Грузоподъемность",
+								options: ["От 1,5 до 16 тонн", "Свыше 16 тонн"],
+								labelPosition: "top",
+								name: "capacity",
+								required: true
+							},
+							{height: 21},
+							{
+								cols: [
+									{
+										view: "button",
+										label: "Отмена",
+										click: () => {
+											this.clearForm();
+											this.refreshLabels();
+										}
+									},
+									{width: 7},
+									{
+										view: "button",
+										label: "Сохранить",
+										css: "webix_primary",
+										click: () => {
+											if (this.form.validate()) {
+												const formValues = this.form.getValues();
+												formValues.photo = this.carPhoto.getValues().Photo;
+												if (formValues.id) {
+													this.carsList.updateItem(formValues.id, formValues);
+												}
+												else {
+													cars.add(formValues);
+												}
+												this.clearForm();
+												this.refreshLabels();
+											}
+											else {
+												webix.message("Пожалуйста, заполните все необходимые поля");
+											}
+										}
+									}
+								]
+							}
+						]
 					}
-				},
-				{
-					view: "richselect",
-					options: ["Volvo", "Man", "Scania"],
-					label: "Марка автомобиля",
-					labelPosition: "top",
-					name: "model",
-					required: true
-				},
-				{
-					view: "text",
-					label: "Гос.номер",
-					labelPosition: "top",
-					name: "stateNumber",
-					required: true
-				},
-				{
-					view: "counter",
-					label: "Масса (т)",
-					name: "weight",
-					labelWidth: 90,
-					required: true
-				},
-				{
-					view: "richselect",
-					options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"],
-					label: "Группа",
-					labelPosition: "top",
-					name: "group",
-					required: true
-				},
-				{
-					view: "richselect",
-					label: "Количество осей",
-					options: ["Двухосные", "Трехосные"],
-					labelPosition: "top"
-				},
-				{
-					view: "richselect",
-					label: "Состав",
-					options: ["Автомобиль-прицеп", "Одиночное транспортное средство"],
-					labelPosition: "top",
-					name: "squad",
-					required: true
-				},
-				{
-					view: "richselect",
-					label: "Грузоподъемность",
-					options: ["От 1,5 до 16 тонн", "Свыше 16 тонн"],
-					labelPosition: "top",
-					name: "capacity",
-					required: true
-				},
-				{
-					cols: [
-						{
-							view: "button",
-							label: "Отмена",
-							click: () => {
-								this.clearForm();
-							}
-						},
-						{
-							view: "button",
-							label: "Сохранить",
-							css: "webix_primary",
-							click: () => {
-								if (this.form.validate()) {
-									const formValues = this.form.getValues();
-									formValues.photo = this.$$("carPhoto").getValues().Photo;
-									if (formValues.id) {
-										this.carsList.updateItem(formValues.id, formValues);
-									}
-									else {
-										cars.add(formValues);
-									}
-									this.clearForm();
-								}
-								else {
-									webix.message("Пожалуйста, заполните все необходимые поля");
-								}
-							}
-						}
-					]
 				}
 			]
 		};
@@ -132,6 +165,7 @@ export default class CarsView extends JetView {
 			rows: [
 				{
 					view: "toolbar",
+					css: "datatableToolbar",
 					cols: [
 						{
 							view: "label",
@@ -142,7 +176,7 @@ export default class CarsView extends JetView {
 						{
 							view: "button",
 							label: "Удалить",
-							width: 120,
+							width: 102,
 							click: () => {
 								const selectedCars = Array.from(this.selectedCars);
 								if (selectedCars.length) {
@@ -155,35 +189,41 @@ export default class CarsView extends JetView {
 										this.selectedCars.clear();
 									});
 								}
+								else {
+									webix.message("Пожалуйста, отметьте автомобили, которые вы хотите удалить");
+								}
 							}
 						},
 						{
 							view: "button",
 							label: "Редактировать",
-							width: 200,
+							width: 154,
 							css: "webix_primary",
 							click: () => {
 								this.clearForm();
 								const selectedCar = this.carsList.getSelectedItem();
 								if (selectedCar) {
 									this.form.parse(selectedCar);
+									this.refreshLabels("edit");
 								}
 								else {
 									webix.message("Пожалуйста выберите автомобиль для редактирования");
 								}
-
-								this.$$("carPhoto").setValues({Photo: selectedCar.photo});
+								this.carPhoto.setValues({Photo: selectedCar?.photo});
 							}
-						}
+						},
+						{width: 7}
 					]
 				},
 				{
 					view: "datatable",
+					minWidth: 1074,
 					localId: "carsList",
+					css: "carsDatatable",
 					borderless: true,
-					rowHeight: 45,
-					headerRowHeight: 40,
-					scroll: "y",
+					rowHeight: 36,
+					headerRowHeight: 44,
+					scroll: true,
 					data: cars,
 					select: true,
 					columns: [
@@ -197,32 +237,32 @@ export default class CarsView extends JetView {
 							header: "",
 							id: "photo",
 							template: obj => `<div class='carSmallCard'><img src='${obj.photo}'></div>`,
-							width: 55
+							width: 65
 						},
 						{
 							header: "Марка",
 							id: "model",
-							minWidth: 100
+							width: 80
 						},
 						{
 							header: "Гос.номер",
 							id: "stateNumber",
-							width: 130
+							width: 110
 						},
 						{
 							header: "Трекер",
 							id: "tracker",
-							width: 110
+							width: 90
 						},
 						{
-							header: "Масса",
+							header: "Масса (т)",
 							id: "weight",
 							width: 90
 						},
 						{
 							header: "Группа",
 							id: "group",
-							width: 150,
+							width: 150
 						},
 						{
 							header: "Состав",
@@ -242,8 +282,8 @@ export default class CarsView extends JetView {
 		};
 
 		return {
-			paddingX: 15,
-			paddingY: 15,
+			paddingX: 16,
+			paddingY: 16,
 			cols: [newTracker, {width: 15}, carsList]
 		};
 	}
@@ -252,7 +292,9 @@ export default class CarsView extends JetView {
 		this.selectedCars = new Set();
 		this.form = this.$$("carsForm");
 		this.carsList = this.$$("carsList");
-
+		this.photoUploader = this.$$("photoUploader");
+		this.headLabel = this.$$("headLabel");
+		this.carPhoto = this.$$("carPhoto");
 		this.carsList.attachEvent("onCheck", (rowId, colId, state) => {
 			if (state === 1) {
 				this.selectedCars.add(rowId);
@@ -266,6 +308,19 @@ export default class CarsView extends JetView {
 	clearForm() {
 		this.form.clear();
 		this.form.clearValidation();
-		this.$$("carPhoto").setValues({Photo: "../sources/assets/photo/default.png"});
+		this.carPhoto.setValues({Photo: "../sources/assets/photo/default.png"});
+	}
+
+	refreshLabels(editMode) {
+		if (editMode) {
+			this.headLabel.define("label", editCarText);
+			this.photoUploader.define("value", "Сменить фото");
+		}
+		else {
+			this.headLabel.define("label", newCarText);
+			this.photoUploader.define("value", "Загрузить фото");
+		}
+		this.photoUploader.refresh();
+		this.headLabel.refresh();
 	}
 }
