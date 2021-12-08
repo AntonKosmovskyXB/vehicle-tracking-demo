@@ -220,7 +220,7 @@ export default class MainView extends JetView {
 						<div class="routeLine">
 							${obj.status === "В пути" ? `<div class='routeDonePercent' style='width: ${(obj.doneDistance / obj.distance) * 100}%'></div>` : ""}
 						</div>
-						<div class="cardRow"><b>Движется со скоростью:</b><span class="cardRowInfo speed"> ${obj.speed} км/ч </span></div>
+						<div class="cardRow"><b>Движется со скоростью:</b><span class="cardRowInfo speed ${obj.speed > 90 ? "outOfspeed" : ""}"> ${obj.speed} км/ч </span></div>
 						<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} км со скоростью ${obj.speed} км/ч </span></div>
 						<div class="cardRow"><b>Завершение маршрута:</b><span class="cardRowInfo"> через ${obj.restDistanceTime}</span></div>
 					</div>` : ""}
@@ -365,6 +365,12 @@ export default class MainView extends JetView {
 						card.data.fullDistanceTime = `${hours} ч ${minutes} мин`;
 						card.data.restDistanceTime = `${hours} ч ${minutes} мин`;
 						card.data.distance = result;
+						card.data.doneDistance = 0;
+						card.data.speed = "-";
+						card.data.status = "С маршрутом"
+						if (card.data.wrongRoute) {
+							card.data.wrongRoute = false;
+						}
 
 						this.editMode = false;
 						card.refresh();
