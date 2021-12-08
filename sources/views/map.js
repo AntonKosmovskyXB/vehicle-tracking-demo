@@ -359,19 +359,19 @@ export default class MainView extends JetView {
 						const fullDistanceTime = result / 90;
 						const hours = Math.trunc(fullDistanceTime);
 						const minutes = ((fullDistanceTime - hours) * 60).toFixed();
-	
-						card.data.startPoint = newStartPoint;
-						card.data.endPoint = newEndPoint;
 						card.data.fullDistanceTime = `${hours} ч ${minutes} мин`;
 						card.data.restDistanceTime = `${hours} ч ${minutes} мин`;
 						card.data.distance = result;
-						card.data.doneDistance = 0;
-						card.data.speed = "-";
-						card.data.status = "С маршрутом"
-						if (card.data.wrongRoute) {
-							card.data.wrongRoute = false;
+						if (card.data.startPoint !== newStartPoint || card.data.endPoint !== newEndPoint) {
+							card.data.startPoint = newStartPoint;
+							card.data.endPoint = newEndPoint;
+							card.data.doneDistance = 0;
+							card.data.speed = "-";
+							card.data.status = "С маршрутом"
+							if (card.data.wrongRoute) {
+								card.data.wrongRoute = false;
+							}	
 						}
-
 						this.editMode = false;
 						card.refresh();
 					})
