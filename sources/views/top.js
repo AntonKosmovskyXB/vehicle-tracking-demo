@@ -38,6 +38,24 @@ export default class TopView extends JetView {
 									view: "label",
 									label: "Отслеживание транспорта",
 									css: "pageHeaderLabel"
+								},
+								{},
+								{
+									view: "button",
+									label: "Выйти",
+									width: 100,
+									css: "webix_primary",
+									click: () => {
+										webix.confirm({
+											text: "Вы уверены, что хотите выйти из учетной записи?",
+											ok: "ОК",
+											cancel: "Отменить"
+										}).then(() => {
+											const user = this.app.getService("user");
+											this.show("/login");
+											user.logout();
+										});
+									}
 								}
 							]
 						},
@@ -65,5 +83,11 @@ export default class TopView extends JetView {
 	init() {
 		this.use(plugins.Menu, "top:menu");
 		webix.CustomScroll.init();
+		webix.attachEvent("onBeforeAjax", (mode, url, data, request, headers, files, promise) => {
+			const token = webix.storage.session.get("token");
+			if (token) {
+				headers.Authorization = `Bearer ${token}`;
+			}
+		});
 	}
 }

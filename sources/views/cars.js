@@ -1,6 +1,5 @@
 import {JetView} from "webix-jet";
-
-import cars from "../models/cars";
+import serverUrl from "../constants/server";
 
 const editCarText = "Редактировать автомобиль";
 const newCarText = "Новый автомобиль";
@@ -28,41 +27,40 @@ export default class CarsView extends JetView {
 					width: 290,
 					body: {
 						rows: [
-							{
-								localId: "carPhoto",
-								css: "carPhoto",
-								width: 230,
-								height: 134,
-								borderless: true,
-								template: obj => `<div class="car-photo"><img src=${obj.Photo || "../sources/assets/photo/default.png"}></div>`
-							},
-							{height: 10},
-							{
-								view: "uploader",
-								localId: "photoUploader",
-								width: 234,
-								height: 38,
-								value: "Загрузить фото",
-								css: "webix_primary",
-								autosend: false,
-								on: {
-									onBeforeFileAdd: (obj) => {
-										const reader = new FileReader();
-										reader.readAsDataURL(obj.file);
-										reader.onloadend = () => {
-											D.setValues({Photo: reader.result});
-										};
-										this.photoUploader.define("value", "Сменить фото");
-										this.photoUploader.refresh();
+							// {
+							// 	localId: "carPhoto",
+							// 	css: "carPhoto",
+							// 	width: 230,
+							// 	height: 134,
+							// 	borderless: true,
+							// 	template: obj => `<div class="car-photo"><img src=${obj.Photo || "../sources/assets/photo/default.png"}></div>`
+							// },
+							// {height: 10},
+							// {
+							// 	view: "uploader",
+							// 	localId: "photoUploader",
+							// 	width: 234,
+							// 	height: 38,
+							// 	value: "Загрузить фото",
+							// 	css: "webix_primary",
+							// 	autosend: false,
+							// 	on: {
+							// 		onBeforeFileAdd: (obj) => {
+							// 			const reader = new FileReader();
+							// 			reader.readAsDataURL(obj.file);
+							// 			reader.onloadend = () => {
+							// 				D.setValues({Photo: reader.result});
+							// 			};
+							// 			this.photoUploader.define("value", "Сменить фото");
+							// 			this.photoUploader.refresh();
 
-										return false;
-									}
-								}
-							},
+							// 			return false;
+							// 		}
+							// 	}
+							// },
 							{height: 30},
 							{
-								view: "richselect",
-								options: ["Volvo", "Man", "Scania"],
+								view: "text",
 								label: "Марка автомобиля",
 								labelPosition: "top",
 								name: "model",
@@ -73,52 +71,52 @@ export default class CarsView extends JetView {
 								view: "text",
 								label: "Гос. номер",
 								labelPosition: "top",
-								name: "stateNumber",
+								name: "state_number",
 								required: true
 							},
-							{height: 10},
-							{
-								view: "counter",
-								label: "Масса (т)",
-								name: "weight",
-								labelWidth: 128,
-								required: true
-							},
-							{height: 26},
-							{
-								view: "richselect",
-								options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"],
-								label: "Группа",
-								labelPosition: "top",
-								name: "group",
-								required: true
-							},
-							{height: 13},
-							{
-								view: "richselect",
-								label: "Количество осей",
-								options: ["Двухосные", "Трехосные"],
-								labelPosition: "top"
-							},
-							{height: 13},
-							{
-								view: "richselect",
-								label: "Состав",
-								options: ["Автомобиль-прицеп", "Одиночное транспортное средство"],
-								labelPosition: "top",
-								name: "squad",
-								required: true
-							},
-							{height: 15},
-							{
-								view: "richselect",
-								label: "Грузоподъемность",
-								options: ["От 1,5 до 16 тонн", "Свыше 16 тонн"],
-								labelPosition: "top",
-								name: "capacity",
-								required: true
-							},
-							{height: 21},
+							// {height: 10},
+							// {
+							// 	view: "counter",
+							// 	label: "Масса (т)",
+							// 	name: "weight",
+							// 	labelWidth: 128,
+							// 	required: true
+							// },
+							// {height: 26},
+							// {
+							// 	view: "richselect",
+							// 	options: ["Автоцистерна", "Фургон", "Рефрижератор", "Бортовой"],
+							// 	label: "Группа",
+							// 	labelPosition: "top",
+							// 	name: "group",
+							// 	required: true
+							// },
+							// {height: 13},
+							// {
+							// 	view: "richselect",
+							// 	label: "Количество осей",
+							// 	options: ["Двухосные", "Трехосные"],
+							// 	labelPosition: "top"
+							// },
+							// {height: 13},
+							// {
+							// 	view: "richselect",
+							// 	label: "Состав",
+							// 	options: ["Автомобиль-прицеп", "Одиночное транспортное средство"],
+							// 	labelPosition: "top",
+							// 	name: "squad",
+							// 	required: true
+							// },
+							// {height: 15},
+							// {
+							// 	view: "richselect",
+							// 	label: "Грузоподъемность",
+							// 	options: ["От 1,5 до 16 тонн", "Свыше 16 тонн"],
+							// 	labelPosition: "top",
+							// 	name: "capacity",
+							// 	required: true
+							// },
+							// {height: 21},
 							{
 								cols: [
 									{
@@ -137,12 +135,14 @@ export default class CarsView extends JetView {
 										click: () => {
 											if (this.form.validate()) {
 												const formValues = this.form.getValues();
-												formValues.photo = this.carPhoto.getValues().Photo;
 												if (formValues.id) {
 													this.carsList.updateItem(formValues.id, formValues);
 												}
 												else {
-													cars.add(formValues);
+													webix.ajax().post(`${serverUrl}cars`, formValues).then((res) => {
+														const result = res.json();
+														this.carsList.add(result);
+													});
 												}
 												this.clearForm();
 												this.refreshLabels();
@@ -209,7 +209,7 @@ export default class CarsView extends JetView {
 								else {
 									webix.message("Пожалуйста выберите автомобиль для редактирования");
 								}
-								this.carPhoto.setValues({Photo: selectedCar?.photo});
+								// this.carPhoto.setValues({Photo: selectedCar?.photo});
 							}
 						},
 						{width: 7}
@@ -224,7 +224,6 @@ export default class CarsView extends JetView {
 					rowHeight: 36,
 					headerRowHeight: 44,
 					scroll: true,
-					data: cars,
 					select: true,
 					columns: [
 						{
@@ -233,49 +232,50 @@ export default class CarsView extends JetView {
 							template: "{common.checkbox()}",
 							width: 40
 						},
-						{
-							header: "",
-							id: "photo",
-							template: obj => `<div class='carSmallCard'><img src='${obj.photo}'></div>`,
-							width: 65
-						},
+						// {
+						// 	header: "",
+						// 	id: "photo",
+						// 	template: obj => `<div class='carSmallCard'><img src='${obj.photo}'></div>`,
+						// 	width: 65
+						// },
 						{
 							header: "Марка",
 							id: "model",
-							width: 80
+							fillspace: true
 						},
 						{
 							header: "Гос.номер",
-							id: "stateNumber",
-							width: 110
+							id: "state_number",
+							fillspace: true
 						},
 						{
 							header: "Трекер",
 							id: "tracker",
-							width: 90
-						},
-						{
-							header: "Масса (т)",
-							id: "weight",
-							width: 90
-						},
-						{
-							header: "Группа",
-							id: "group",
-							width: 150
-						},
-						{
-							header: "Состав",
-							id: "squad",
-							width: 150,
-							fillspace: true
-						},
-						{
-							header: "Грузоподъемность",
-							id: "capacity",
-							width: 150,
-							fillspace: true
+							fillspace: true,
+							template: obj => obj.track ? obj.track.type : ""
 						}
+						// {
+						// 	header: "Масса (т)",
+						// 	id: "weight",
+						// 	width: 90
+						// },
+						// {
+						// 	header: "Группа",
+						// 	id: "group",
+						// 	width: 150
+						// },
+						// {
+						// 	header: "Состав",
+						// 	id: "squad",
+						// 	width: 150,
+						// 	fillspace: true
+						// },
+						// {
+						// 	header: "Грузоподъемность",
+						// 	id: "capacity",
+						// 	width: 150,
+						// 	fillspace: true
+						// }
 					]
 				}
 			]
@@ -303,24 +303,28 @@ export default class CarsView extends JetView {
 				this.selectedCars.delete(rowId);
 			}
 		});
+		webix.ajax().get(`${serverUrl}cars`).then((res) => {
+			const cars = res.json();
+			this.carsList.parse(cars);
+		});
 	}
 
 	clearForm() {
 		this.form.clear();
 		this.form.clearValidation();
-		this.carPhoto.setValues({Photo: "../sources/assets/photo/default.png"});
+		// this.carPhoto.setValues({Photo: "../sources/assets/photo/default.png"});
 	}
 
 	refreshLabels(editMode) {
 		if (editMode) {
 			this.headLabel.define("label", editCarText);
-			this.photoUploader.define("value", "Сменить фото");
+			// this.photoUploader.define("value", "Сменить фото");
 		}
 		else {
 			this.headLabel.define("label", newCarText);
-			this.photoUploader.define("value", "Загрузить фото");
+			// this.photoUploader.define("value", "Загрузить фото");
 		}
-		this.photoUploader.refresh();
+		// this.photoUploader.refresh();
 		this.headLabel.refresh();
 	}
 }

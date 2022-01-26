@@ -1,6 +1,5 @@
 import {JetView} from "webix-jet";
-
-import drivers from "../models/drivers";
+import serverUrl from "../constants/server";
 
 const editDriverText = "Редактировать данные";
 const newDriverText = "Новый водитель";
@@ -14,6 +13,9 @@ export default class DriversView extends JetView {
 			paddingY: 9,
 			paddingX: 13,
 			width: 262,
+			rules: {
+				email: webix.rules.isEmail
+			},
 			elements: [
 				{
 					view: "label",
@@ -31,7 +33,15 @@ export default class DriversView extends JetView {
 							view: "text",
 							label: "Имя",
 							labelPosition: "top",
-							name: "name",
+							name: "firstName",
+							required: true
+						},
+						{height: 10},
+						{
+							view: "text",
+							label: "Фамилия",
+							labelPosition: "top",
+							name: "lastName",
 							required: true
 						},
 						{height: 10},
@@ -39,7 +49,24 @@ export default class DriversView extends JetView {
 							view: "text",
 							label: "Телефон",
 							labelPosition: "top",
-							name: "phone",
+							name: "phoneNumber",
+							required: true
+						},
+						{height: 10},
+						{
+							view: "text",
+							label: "Почта",
+							labelPosition: "top",
+							name: "email",
+							required: true
+						},
+						{height: 10},
+						{
+							view: "text",
+							label: "Пароль",
+							type: "password",
+							labelPosition: "top",
+							name: "password",
 							required: true
 						},
 						{height: 20},
@@ -61,11 +88,16 @@ export default class DriversView extends JetView {
 									click: () => {
 										if (this.form.validate()) {
 											const formValues = this.form.getValues();
+											formValues.role = "Driver";
+											formValues.companyId = 1;
 											if (formValues.id) {
 												this.driversList.updateItem(formValues.id, formValues);
 											}
 											else {
-												drivers.add(formValues);
+												webix.ajax().post(`${serverUrl}users`, formValues).then((res) => {
+													const result = res.json();
+													this.driversList.add(result);
+												});
 											}
 											this.clearForm();
 											this.refreshLabels();
@@ -145,18 +177,24 @@ export default class DriversView extends JetView {
 					rowHeight: 36,
 					headerRowHeight: 44,
 					scroll: "y",
-					data: drivers,
 					columns: [
 						{header: {content: "masterCheckbox", contentId: "selectAll"}, id: "ch", template: "{common.checkbox()}", width: 40},
 						{
 							header: "Имя",
 							id: "name",
 							minWidth: 200,
-							fillspace: true
+							fillspace: true,
+							template: obj => `${obj.firstName} ${obj.lastName}`
 						},
 						{
 							header: "Телефон",
-							id: "phone",
+							id: "phoneNumber",
+							width: 150,
+							fillspace: true
+						},
+						{
+							header: "Почта",
+							id: "email",
 							width: 150,
 							fillspace: true
 						}
@@ -184,6 +222,11 @@ export default class DriversView extends JetView {
 			if (state === 0) {
 				this.selectedDrivers.delete(rowId);
 			}
+		});
+		webix.ajax().get(`${serverUrl}users`).then((res) => {
+			const result = res.json();
+			const drivers = result.filter(item => item.role === "Driver");
+			this.driversList.parse(drivers);
 		});
 	}
 

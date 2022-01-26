@@ -496,8 +496,15 @@
 }
 
 .webix_inp_counter_next,
-.webix_inp_counter_prev {
+.webix_inp_counter_prev,
+.blueLabel .webix_el_box {
     color: #0075BC;
+}
+
+.loginLabel .webix_el_box {
+    color: #0075BC;
+    font-size: 18px;
+    text-align: center;
 }
 
 .datatableToolbar {
