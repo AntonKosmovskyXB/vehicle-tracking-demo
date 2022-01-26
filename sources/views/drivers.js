@@ -69,6 +69,16 @@ export default class DriversView extends JetView {
 							name: "password",
 							required: true
 						},
+						{height: 10},
+						{
+							view: "richselect",
+							label: "Закрепленный автомобиль",
+							labelPosition: "top",
+							name: "password",
+							localId: "relatedCar",
+							options: [],
+							required: true
+						},
 						{height: 20},
 						{
 							cols: [
@@ -138,7 +148,9 @@ export default class DriversView extends JetView {
 										text: "Удалить всех выбранных водителей?"
 									}).then(() => {
 										for (let i = 0; i < selectedDrivers.length; i++) {
-											drivers.remove(selectedDrivers[i]);
+											webix.ajax().del(`${serverUrl}users/${selectedDrivers[i]}`).then(() => {
+												this.driversList.remove(selectedDrivers[i]);
+											});
 										}
 										this.selectedDrivers.clear();
 									});
@@ -214,6 +226,7 @@ export default class DriversView extends JetView {
 		this.selectedDrivers = new Set();
 		this.form = this.$$("driverForm");
 		this.driversList = this.$$("driversList");
+		this.relatedCarSelect = this.$$("relatedCar");
 		this.headLabel = this.$$("headLabel");
 		this.driversList.attachEvent("onCheck", (rowId, colId, state) => {
 			if (state === 1) {
@@ -227,6 +240,18 @@ export default class DriversView extends JetView {
 			const result = res.json();
 			const drivers = result.filter(item => item.role === "Driver");
 			this.driversList.parse(drivers);
+		});
+		webix.ajax().get(`${serverUrl}cars`).then((res) => {
+			const result = res.json();
+			const trackedCars = result.filter(car => car.track);
+			this.relatedCarSelect.define("options", {
+				view: "suggest",
+				body: {
+					view: "list",
+					data: trackedCars,
+					template: "#model#, #state_number#"
+				}
+			});
 		});
 	}
 

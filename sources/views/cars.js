@@ -74,7 +74,7 @@ export default class CarsView extends JetView {
 								name: "state_number",
 								required: true
 							},
-							// {height: 10},
+							{height: 20},
 							// {
 							// 	view: "counter",
 							// 	label: "Масса (т)",
@@ -184,8 +184,11 @@ export default class CarsView extends JetView {
 										text: "Удалить все выбранные автомобили?"
 									}).then(() => {
 										for (let i = 0; i < selectedCars.length; i++) {
-											cars.remove(selectedCars[i]);
+											webix.ajax().del(`${serverUrl}cars/${selectedCars[i]}`).then(() => {
+												this.carsList.remove(selectedCars[i]);
+											});
 										}
+										this.selectedDrivers.clear();
 										this.selectedCars.clear();
 									});
 								}

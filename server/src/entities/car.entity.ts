@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
 import { Track } from "./track.entity";
+import { User } from "./user.entity";
 
 @Entity()
 export class Car {
@@ -24,4 +25,8 @@ export class Car {
   @OneToOne(() => Track, (track) => track.car)
   @JoinColumn()
   track: Track;
+
+  @OneToOne(() => User, (user) => user.car)
+  @JoinColumn()
+  user: User;
 }

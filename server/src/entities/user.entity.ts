@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToOne } from "typeorm";
 import { IsEmail, IsNotEmpty } from "class-validator";
 import { Company } from "./company.entity";
 import { UserRole } from "src/enums/user-role.enum";
+import { Car } from "./car.entity";
 
 @Entity()
 export class User {
@@ -37,4 +38,7 @@ export class User {
 
   @ManyToOne(() => Company, (company) => company.users)
   company: Company;
+
+  @OneToOne(() => Car, (car) => car.user)
+  car: Car;
 }

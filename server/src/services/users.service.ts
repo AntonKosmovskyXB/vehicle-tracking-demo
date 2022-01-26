@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { User } from "src/entities/user.entity";
+import { Car } from "src/entities/car.entity";
 import { UserRole } from "src/enums/user-role.enum";
 import { Company } from "src/entities/company.entity";
 import { CreateUserDto } from "src/dto/create-user.dto";
@@ -13,7 +14,9 @@ export class UsersService {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     @InjectRepository(Company)
-    private readonly companiesRepository: Repository<Company>
+    private readonly companiesRepository: Repository<Company>,
+    @InjectRepository(Car)
+    private readonly carsRepository: Repository<Car>
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -21,9 +24,14 @@ export class UsersService {
       createUserDto.companyId
     );
 
+    const car = await this.carsRepository.findOneOrFail(
+      createUserDto.carId
+    );
+
     const user = new User();
     user.role = createUserDto.role;
     user.company = company;
+    user.car = car;
     user.email = createUserDto.email;
     user.password = createUserDto.password;
     user.firstName = createUserDto.firstName;
@@ -34,11 +42,11 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+    return this.usersRepository.find({ relations: ["car", "company"] });
   }
 
   findOne(id: string): Promise<User> {
-    return this.usersRepository.findOneOrFail(id);
+    return this.usersRepository.findOneOrFail(id, { relations: ["car", "company"] });
   }
 
   async remove(id: string): Promise<void> {

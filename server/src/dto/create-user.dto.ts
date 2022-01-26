@@ -23,6 +23,9 @@ export class CreateUserDto {
     type: Number,
   })
   companyId: number;
+  
+  @ApiProperty()
+  carId: number;
 
   @ApiProperty({
     enum: UserRole,

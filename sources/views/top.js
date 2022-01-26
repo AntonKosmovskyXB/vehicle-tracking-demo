@@ -85,7 +85,7 @@ export default class TopView extends JetView {
 		webix.CustomScroll.init();
 		webix.attachEvent("onBeforeAjax", (mode, url, data, request, headers, files, promise) => {
 			const token = webix.storage.session.get("token");
-			if (token) {
+			if (token && !url.includes("geocoder.api.here.com")) {
 				headers.Authorization = `Bearer ${token}`;
 			}
 		});

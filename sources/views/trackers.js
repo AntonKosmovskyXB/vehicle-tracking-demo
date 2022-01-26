@@ -139,7 +139,9 @@ export default class TrackersView extends JetView {
 										text: "Удалить все выбранные трекеры?"
 									}).then(() => {
 										for (let i = 0; i < selectedTrackers.length; i++) {
-											trackers.remove(selectedTrackers[i]);
+											webix.ajax().del(`${serverUrl}tracks/${selectedTrackers[i]}`).then(() => {
+												this.trackersList.remove(selectedTrackers[i]);
+											});
 										}
 										this.selectedTrackers.clear();
 									});
@@ -202,14 +204,14 @@ export default class TrackersView extends JetView {
 							header: "Марка",
 							width: 150,
 							fillspace: true,
-							template: obj => obj.car.model
+							template: obj => obj.car ? obj.car.model : ""
 						},
 						{
 							header: "Гос.номер",
 							id: "stateNumber",
 							width: 150,
 							fillspace: true,
-							template: obj => obj.car.state_number
+							template: obj => obj.car ? obj.car.state_number : ""
 						}
 					]
 				}
