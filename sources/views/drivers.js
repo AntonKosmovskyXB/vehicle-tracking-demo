@@ -46,6 +46,16 @@ export default class DriversView extends JetView {
 						},
 						{height: 10},
 						{
+							view: "richselect",
+							label: "Закрепленный автомобиль",
+							labelPosition: "top",
+							name: "carId",
+							localId: "relatedCar",
+							options: [],
+							required: true
+						},
+						{height: 10},
+						{
 							view: "text",
 							label: "Телефон",
 							labelPosition: "top",
@@ -67,16 +77,6 @@ export default class DriversView extends JetView {
 							type: "password",
 							labelPosition: "top",
 							name: "password",
-							required: true
-						},
-						{height: 10},
-						{
-							view: "richselect",
-							label: "Закрепленный автомобиль",
-							labelPosition: "top",
-							name: "password",
-							localId: "relatedCar",
-							options: [],
 							required: true
 						},
 						{height: 20},
@@ -107,10 +107,10 @@ export default class DriversView extends JetView {
 												webix.ajax().post(`${serverUrl}users`, formValues).then((res) => {
 													const result = res.json();
 													this.driversList.add(result);
+													this.clearForm();
+													this.refreshLabels();
 												});
 											}
-											this.clearForm();
-											this.refreshLabels();
 										}
 										else {
 											webix.message("Пожалуйста, заполните все необходимые поля");
@@ -209,6 +209,12 @@ export default class DriversView extends JetView {
 							id: "email",
 							width: 150,
 							fillspace: true
+						},
+						{
+							header: "Автомобиль",
+							id: "car",
+							fillspace: true,
+							template: obj => obj.car ? `${obj.car.model}, ${obj.car.state_number}` : ""
 						}
 					]
 				}
@@ -243,11 +249,12 @@ export default class DriversView extends JetView {
 		});
 		webix.ajax().get(`${serverUrl}cars`).then((res) => {
 			const result = res.json();
-			const trackedCars = result.filter(car => car.track);
+			const trackedCars = result.filter(car => car.track && !car.user);
 			this.relatedCarSelect.define("options", {
 				view: "suggest",
 				body: {
 					view: "list",
+					localId: "availableCarsList",
 					data: trackedCars,
 					template: "#model#, #state_number#"
 				}

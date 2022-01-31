@@ -20,11 +20,11 @@ export class CarsService {
   }
 
   findAll(): Promise<Car[]> {
-    return this.carsRepository.find({ relations: ["track"] });
+    return this.carsRepository.find({ relations: ["track", "user"] });
   }
 
   findOne(id: string): Promise<Car> {
-    return this.carsRepository.findOneOrFail(id, { relations: ["track"] });
+    return this.carsRepository.findOneOrFail(id, { relations: ["track", "user"] });
   }
 
   remove(id: string): Promise<DeleteResult> {

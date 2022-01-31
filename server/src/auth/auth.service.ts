@@ -26,14 +26,12 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { username: user.email, sub: user.userId };
-    const { email, firstName, lastName, role } = user;
+    const userData = await this.usersRepository.findOne({
+      where: { id: user.id },
+      relations: ["company"]
+    });
     return {
-      user: {
-        email,
-        firstName,
-        lastName,
-        role,
-      },
+      userData,
       access_token: this.jwtService.sign(payload),
     };
   }

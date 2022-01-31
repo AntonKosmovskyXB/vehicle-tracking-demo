@@ -16,13 +16,13 @@ function login(user, pass) {
 			username: user, password: pass
 		})
 		.then(a => a.json())
-		.then((userData) => {
-			if (userData) {
-				webix.storage.session.put("token", userData.access_token);
-				webix.storage.session.put("role", userData.user.role);
+		.then((data) => {
+			if (data) {
+				webix.storage.session.put("token", data.access_token);
+				webix.storage.session.put("role", data.userData.role);
 				return {
-					token: userData.access_token,
-					role: userData.user.role
+					token: data.access_token,
+					role: data.userData.role
 				};
 			}
 		});
