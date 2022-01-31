@@ -1,14 +1,22 @@
-import { Body, Controller, Get, Post, Delete, Param, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Param,
+  UseGuards,
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-
-import { Track } from "src/entities/track.entity";
-import { CreateTrackDto } from "src/dto/create-track.dto";
-import { TracksService } from "src/services/tracks.service";
+import { DeleteResult } from "typeorm";
 
 import { Roles } from "src/auth/roles.decorator";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { UserRole } from "src/enums/user-role.enum";
-import { DeleteResult } from "typeorm";
+
+import { Track } from "src/entities/track.entity";
+import { CreateTrackDto } from "src/dto/create-track.dto";
+import { TracksService } from "src/services/tracks.service";
 
 @ApiBearerAuth("JWT-auth")
 @ApiTags("tracks")

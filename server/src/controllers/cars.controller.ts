@@ -1,14 +1,25 @@
-import { Body, Controller, Get, Post, Param, UseGuards, Delete } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-
-import { Car } from "src/entities/car.entity";
-import { CreateCarDto } from "src/dto/create-car.dto";
-import { CarsService } from "src/services/cars.service";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Param,
+  UseGuards,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
+} from "@nestjs/common";
+import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { DeleteResult } from "typeorm";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 import { Roles } from "src/auth/roles.decorator";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { UserRole } from "src/enums/user-role.enum";
-import { DeleteResult } from "typeorm";
+
+import { Car } from "src/entities/car.entity";
+import { CreateCarDto } from "src/dto/create-car.dto";
+import { CarsService } from "src/services/cars.service";
 
 @ApiBearerAuth("JWT-auth")
 @ApiTags("cars")
@@ -30,9 +41,15 @@ export class CarsController {
   }
 
   @Post()
+  @ApiConsumes("multipart/form-data")
+  @UseInterceptors(FileInterceptor("image"))
   @Roles(UserRole.Admin)
-  addCar(@Body() createCarDto: CreateCarDto): Promise<Car> {
-    return this.carsService.create(createCarDto);
+  addCar(
+    @Body() createCarDto: CreateCarDto,
+    @UploadedFile() image: Express.Multer.File
+  ): Promise<Car> {
+    console.log(image);
+    return this.carsService.create(createCarDto, image);
   }
 
   @Delete(":id")

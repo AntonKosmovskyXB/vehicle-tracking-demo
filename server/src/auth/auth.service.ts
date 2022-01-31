@@ -5,6 +5,12 @@ import { JwtService } from "@nestjs/jwt";
 
 import { User } from "src/entities/user.entity";
 
+type UserData = {
+  id: string;
+  email: string;
+  userId: string;
+};
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -24,11 +30,11 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
+  async login(user: UserData) {
     const payload = { username: user.email, sub: user.userId };
     const userData = await this.usersRepository.findOne({
       where: { id: user.id },
-      relations: ["company"]
+      relations: ["car", "company"],
     });
     return {
       userData,

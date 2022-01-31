@@ -20,6 +20,7 @@ function login(user, pass) {
 			if (data) {
 				webix.storage.session.put("token", data.access_token);
 				webix.storage.session.put("role", data.userData.role);
+				webix.storage.session.put("userName", {firstName: data.userData.firstName, lastName: data.userData.lastName});
 				return {
 					token: data.access_token,
 					role: data.userData.role

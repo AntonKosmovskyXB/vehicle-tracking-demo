@@ -6,4 +6,10 @@ export class CreateCarDto {
 
   @ApiProperty()
   state_number: string;
+
+  @ApiProperty({
+    type: String,
+    format: "binary",
+  })
+  image: Express.Multer.File;
 }

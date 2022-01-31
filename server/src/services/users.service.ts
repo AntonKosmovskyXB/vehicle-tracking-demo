@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { DeleteResult, Repository } from "typeorm";
 
 import { User } from "src/entities/user.entity";
 import { Car } from "src/entities/car.entity";
@@ -24,9 +24,7 @@ export class UsersService {
       createUserDto.companyId
     );
 
-    const car = await this.carsRepository.findOneOrFail(
-      createUserDto.carId
-    );
+    const car = await this.carsRepository.findOneOrFail(createUserDto.carId);
 
     const user = new User();
     user.role = createUserDto.role;
@@ -46,10 +44,12 @@ export class UsersService {
   }
 
   findOne(id: string): Promise<User> {
-    return this.usersRepository.findOneOrFail(id, { relations: ["car", "company"] });
+    return this.usersRepository.findOneOrFail(id, {
+      relations: ["car", "company"],
+    });
   }
 
-  async remove(id: string): Promise<void> {
-    await this.usersRepository.delete(id);
+  async remove(id: string): Promise<DeleteResult> {
+    return this.usersRepository.delete(id);
   }
 }

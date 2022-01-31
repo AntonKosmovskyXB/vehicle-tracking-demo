@@ -39,24 +39,57 @@ export default class TopView extends JetView {
 									label: "Отслеживание транспорта",
 									css: "pageHeaderLabel"
 								},
-								{},
 								{
-									view: "button",
-									label: "Выйти",
-									width: 100,
-									css: "webix_primary",
-									click: () => {
-										webix.confirm({
-											text: "Вы уверены, что хотите выйти из учетной записи?",
-											ok: "ОК",
-											cancel: "Отменить"
-										}).then(() => {
-											const user = this.app.getService("user");
-											this.show("/login");
-											user.logout();
-										});
+									localId: "notificationColumn",
+									css: "notificationIcon",
+									type: "clean",
+									width: 35,
+									height: 21,
+									template: "<div><img src='../../sources/assets/icons/notifications.svg'></div>"
+								},
+								{
+									css: "userIconColumn",
+									localId: "personalAccountButton",
+									type: "clean",
+									width: 35,
+									height: 21,
+									template: obj => `
+										<div class="personalAccountButton">
+											<div class="userIcon" style="width:22px; height:22px">${obj.icon || ""}</div>
+										</div>`,
+									onClick: {
+										personalAccountButton: () => {
+											webix.confirm({
+												text: "Вы уверены, что хотите выйти из учетной записи?",
+												ok: "ОК",
+												cancel: "Отменить"
+											}).then(() => {
+												const user = this.app.getService("user");
+												this.show("/login");
+												user.logout();
+											});
+										}
 									}
-								}
+								},
+								{width: 15}
+								// {
+								// 	view: "button",
+								// 	type: "icon",
+								// 	icon: "mdi mdi-account-circle",
+								// 	width: 20,
+								// 	css: "webix_primary",
+								// 	click: () => {
+								// webix.confirm({
+								// 	text: "Вы уверены, что хотите выйти из учетной записи?",
+								// 	ok: "ОК",
+								// 	cancel: "Отменить"
+								// }).then(() => {
+								// 	const user = this.app.getService("user");
+								// 	this.show("/login");
+								// 	user.logout();
+								// });
+								// 	}
+								// }
 							]
 						},
 						{
@@ -89,5 +122,10 @@ export default class TopView extends JetView {
 				headers.Authorization = `Bearer ${token}`;
 			}
 		});
+		const userName = webix.storage.session.get("userName");
+		console.log(`${userName.firstName[0].toUpperCase()} ${userName.lastName[0].toUpperCase()}`);
+		if (userName) {
+			this.$$("personalAccountButton").setValues({icon: `${userName.firstName[0].toUpperCase()}${userName.lastName[0].toUpperCase()}`});
+		}
 	}
 }

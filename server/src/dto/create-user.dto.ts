@@ -23,8 +23,10 @@ export class CreateUserDto {
     type: Number,
   })
   companyId: number;
-  
-  @ApiProperty()
+
+  @ApiProperty({
+    type: Number,
+  })
   carId: number;
 
   @ApiProperty({

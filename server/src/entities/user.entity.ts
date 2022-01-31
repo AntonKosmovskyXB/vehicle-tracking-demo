@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToOne } from "typeorm";
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToOne,
+} from "typeorm";
 import { IsEmail, IsNotEmpty } from "class-validator";
 import { Company } from "./company.entity";
 import { UserRole } from "src/enums/user-role.enum";
