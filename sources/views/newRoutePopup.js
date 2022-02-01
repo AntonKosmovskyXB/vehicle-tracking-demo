@@ -65,12 +65,7 @@ export default class NewRoutePopup extends JetView {
 								label: "Добавить",
 								css: "webix_primary",
 								click: () => {
-									if (this.editMode) {
-										this.app.callEvent("onRouteEdit", [this.cardNumber, this.$$("routeFrom").getValue(), this.$$("routeTo").getValue()]);
-									}
-									else {
-										this.app.callEvent("onRouteAdd", [this.cardNumber, this.$$("routeFrom").getValue(), this.$$("routeTo").getValue()]);
-									}
+									this.app.callEvent("onRouteAdd", [this.cardNumber, this.$$("routeFrom").getValue(), this.$$("routeTo").getValue()]);
 									this.closePopup();
 								}
 							}
@@ -85,17 +80,9 @@ export default class NewRoutePopup extends JetView {
 		this.popup = this.getRoot();
 	}
 
-	showPopup(cardNumber, editMode) {
-		this.editMode = false;
+	showPopup(cardNumber) {
 		this.$$("popupLabel").define("label", "Добавить маршрут");
 		this.$$("addRouteButton").define("label", "Добавить");
-		if (editMode) {
-			this.editMode = true;
-			this.$$("popupLabel").define("label", "Изменить маршрут");
-			this.$$("addRouteButton").define("label", "Сохранить");
-			this.$$("popupLabel").refresh();
-			this.$$("addRouteButton").refresh();
-		}
 		this.cardNumber = cardNumber;
 		this.popup.show();
 	}

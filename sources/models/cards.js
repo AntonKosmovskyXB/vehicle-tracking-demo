@@ -14,13 +14,14 @@ const cards = [
 		status: "В пути",
 		startCoord: [55.75, 37.61],
 		endCoord: [48.43, 44.30],
-		distance: 976,
+		distance: 996,
 		speed: 86,
 		doneDistance: 312,
-		fullDistanceTime: "11 ч 45 мин",
+		fullDistanceTime: "11 ч 4 мин",
 		restDistanceTime: "6 ч 13 мин",
 		readyRoute: true,
 		tiltAngle: false,
+		wrongRoute: false,
 		photo: "../sources/assets/photo/volvo.jpg"
 	},
 	{
@@ -41,10 +42,11 @@ const cards = [
 		distance: 716,
 		speed: 98,
 		doneDistance: 511,
-		fullDistanceTime: "10 ч 53 мин",
+		fullDistanceTime: "7 ч 58 мин",
 		restDistanceTime: "3 ч 16 мин",
 		readyRoute: true,
 		tiltAngle: false,
+		wrongRoute: true,
 		photo: "../sources/assets/photo/scania.jpg"
 	},
 	{
@@ -62,13 +64,14 @@ const cards = [
 		status: "В пути",
 		startCoord: [55.75, 37.61],
 		endCoord: [54.78, 32.04],
-		distance: 398,
-		speed: 80,
+		distance: 399,
+		speed: 90,
 		doneDistance: 124,
-		fullDistanceTime: "5 ч 13 мин",
-		restDistanceTime: "3 ч 35 мин",
+		fullDistanceTime: "4 ч 26 мин",
+		restDistanceTime: "3 ч 19 мин",
 		readyRoute: true,
 		tiltAngle: true,
+		wrongRoute: false,
 		photo: "../sources/assets/photo/man.jpg"
 	},
 	{
@@ -82,6 +85,7 @@ const cards = [
 		group: "Рефрижератор",
 		readyRoute: false,
 		tiltAngle: false,
+		wrongRoute: false,
 		photo: "../sources/assets/photo/man.jpg"
 	},
 	{
@@ -95,6 +99,7 @@ const cards = [
 		group: "Автоцистерна",
 		readyRoute: false,
 		tiltAngle: false,
+		wrongRoute: false,
 		photo: "../sources/assets/photo/scania.jpg"
 	}
 ];

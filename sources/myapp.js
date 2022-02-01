@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
-import {JetApp, EmptyRouter, HashRouter} from "webix-jet";
+import {JetApp, EmptyRouter, HashRouter, plugins} from "webix-jet";
+
 import "./styles/app.css";
+import session from "./models/session";
 
 export default class MyApp extends JetApp {
 	constructor(config) {
@@ -13,6 +15,7 @@ export default class MyApp extends JetApp {
 		};
 
 		super({...defaults, ...config});
+		this.use(plugins.User, {model: session});
 	}
 }
 

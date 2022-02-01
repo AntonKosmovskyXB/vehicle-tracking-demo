@@ -496,8 +496,15 @@
 }
 
 .webix_inp_counter_next,
-.webix_inp_counter_prev {
+.webix_inp_counter_prev,
+.blueLabel .webix_el_box {
     color: #0075BC;
+}
+
+.loginLabel .webix_el_box {
+    color: #0075BC;
+    font-size: 18px;
+    text-align: center;
 }
 
 .datatableToolbar {
@@ -598,4 +605,51 @@
 
 .cardsScrollview .cardRow:last-child {
     margin-bottom: 18px;
+}
+
+.personalAccountButton{
+    display: flex;
+    padding: 0 13px;
+    align-items: center;
+    line-height: 22.6px;
+    text-align: center;
+}
+
+.personalAccountButton .userIcon {
+    border-radius: 50%;
+    background: #0075BC;
+    border: 1px solid #0075BC;
+    color: #fff;
+    font-weight: normal;
+    font-size: 15px;
+    padding: 4px;
+}
+
+
+.userIcon:hover{
+    background: #029CDD;
+    border: 1px solid #029CDD;
+    cursor: pointer;
+    
+}
+
+.userIcon {
+    margin-left: -12px !important;
+    margin-right: 12px;
+}
+
+
+.userIcon .webix_el_box {
+    height: 32px !important;
+    margin-top: 10px;
+}
+
+.userIconColumn .webix_template {
+    display: flex;
+    align-items: center;
+}
+
+.notificationIcon .webix_template {
+    display: flex;
+    align-items: center;
 }

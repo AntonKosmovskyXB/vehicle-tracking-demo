@@ -1,7 +1,6 @@
 import {JetView} from "webix-jet";
 
-import cars from "../models/cars";
-import trackers from "../models/trackers";
+import serverUrl from "../constants/server";
 
 const editTrackerText = "Редактировать трекер";
 const newTrackerText = "Новый трекер";
@@ -53,7 +52,7 @@ export default class TrackersView extends JetView {
 								view: "text",
 								label: "Серийный номер",
 								labelPosition: "top",
-								name: "serialNumber",
+								name: "serial_number",
 								required: true
 							},
 							{height: 25},
@@ -66,39 +65,13 @@ export default class TrackersView extends JetView {
 							{
 								view: "richselect",
 								options: [],
-								label: "Марка автомобиля",
+								label: "Автомобиль",
 								labelPosition: "top",
 								localId: "modelSelect",
-								name: "brand",
-								required: true,
-								on: {
-									onChange: (value) => {
-										let numbersList;
-										if (value) {
-											numbersList = cars.serialize()
-												.filter(elem => elem.model === value && !elem.tracker)
-												.map(elem => elem.stateNumber);
-										}
-										else {
-											numbersList = cars.serialize().filter(elem => !elem.tracker)
-												.map(elem => elem.stateNumber);
-										}
-
-										this.defineDefaultCarOptions(null, numbersList);
-									}
-								}
-							},
-							{height: 10},
-							{
-								view: "richselect",
-								options: [],
-								localId: "stateNumberSelect",
-								label: "Гос.номер",
-								labelPosition: "top",
-								name: "stateNumber",
+								name: "carId",
 								required: true
 							},
-							{height: 33},
+							{height: 10},
 							{
 								cols: [
 									{
@@ -107,7 +80,6 @@ export default class TrackersView extends JetView {
 										click: () => {
 											this.clearForm();
 											this.refreshLabels();
-											this.getCurrentCarsInfo();
 										}
 									},
 									{width: 7},
@@ -122,18 +94,14 @@ export default class TrackersView extends JetView {
 													this.trackersList.updateItem(formValues.id, formValues);
 												}
 												else {
-													trackers.add(formValues);
-												}
-												const selectedCar = cars
-													.find(elem => elem.stateNumber === formValues.stateNumber);
-
-												if (selectedCar) {
-													selectedCar[0].tracker = formValues.type;
+													webix.ajax().post(`${serverUrl}tracks`, formValues).then((res) => {
+														const result = res.json();
+														this.trackersList.add(result);
+													});
 												}
 
 												this.clearForm();
 												this.refreshLabels();
-												this.getCurrentCarsInfo();
 											}
 											else {
 												webix.message("Пожалуйста, заполните все необходимые поля");
@@ -172,7 +140,9 @@ export default class TrackersView extends JetView {
 										text: "Удалить все выбранные трекеры?"
 									}).then(() => {
 										for (let i = 0; i < selectedTrackers.length; i++) {
-											trackers.remove(selectedTrackers[i]);
+											webix.ajax().del(`${serverUrl}tracks/${selectedTrackers[i]}`).then(() => {
+												this.trackersList.remove(selectedTrackers[i]);
+											});
 										}
 										this.selectedTrackers.clear();
 									});
@@ -211,7 +181,6 @@ export default class TrackersView extends JetView {
 					rowHeight: 36,
 					headerRowHeight: 44,
 					scroll: true,
-					data: trackers,
 					columns: [
 						{header: {content: "masterCheckbox", contentId: "selectAll"}, id: "ch", template: "{common.checkbox()}", width: 40},
 						{
@@ -228,21 +197,22 @@ export default class TrackersView extends JetView {
 						},
 						{
 							header: "Серийный номер",
-							id: "serialNumber",
+							id: "serial_number",
 							width: 150,
 							fillspace: true
 						},
 						{
 							header: "Марка",
-							id: "brand",
 							width: 150,
-							fillspace: true
+							fillspace: true,
+							template: obj => obj.car ? obj.car.model : ""
 						},
 						{
 							header: "Гос.номер",
 							id: "stateNumber",
 							width: 150,
-							fillspace: true
+							fillspace: true,
+							template: obj => obj.car ? obj.car.state_number : ""
 						}
 					]
 				}
@@ -262,7 +232,7 @@ export default class TrackersView extends JetView {
 		this.trackersList = this.$$("trackersList");
 		this.headLabel = this.$$("headLabel");
 		this.modelSelect = this.$$("modelSelect");
-		this.stateNumbersSelect = this.$$("stateNumberSelect")
+		this.stateNumbersSelect = this.$$("stateNumberSelect");
 		this.trackersList.attachEvent("onCheck", (rowId, colId, state) => {
 			if (state === 1) {
 				this.selectedTrackers.add(rowId);
@@ -272,10 +242,22 @@ export default class TrackersView extends JetView {
 			}
 		});
 
-		const modelsList = cars.serialize().filter(elem => !elem.tracker).map(elem => elem.model);
-		const stateNumbersList = cars.serialize()
-			.filter(elem => !elem.tracker).map(elem => elem.stateNumber);
-		this.defineDefaultCarOptions(modelsList, stateNumbersList);
+		webix.ajax().get(`${serverUrl}tracks`).then((res) => {
+			const trackers = res.json();
+			this.trackersList.parse(trackers);
+		});
+		webix.ajax().get(`${serverUrl}cars`).then((res) => {
+			const cars = res.json();
+			const untrackedCars = cars.filter(car => !car.track);
+			this.modelSelect.define("options", {
+				view: "suggest",
+				body: {
+					view: "list",
+					data: untrackedCars,
+					template: "#model#, #state_number#"
+				}
+			});
+		});
 	}
 
 	clearForm() {
@@ -287,35 +269,21 @@ export default class TrackersView extends JetView {
 		if (editMode) {
 			this.headLabel.define("label", editTrackerText);
 			this.modelSelect.disable();
-			this.stateNumbersSelect.disable();
 		}
 		else {
 			this.headLabel.define("label", newTrackerText);
 			this.modelSelect.enable();
-			this.stateNumbersSelect.enable();
 		}
 		this.headLabel.refresh();
 	}
 
-	defineDefaultCarOptions(model, number) {
+	defineDefaultCarOptions(model) {
 		if (model) {
 			this.modelSelect.define("options", model);
 		}
-		if (number) {
-			this.stateNumbersSelect.define("options", number);
-		}
-		if (!model && !number) {
+		else {
 			this.modelSelect.define("options", []);
-			this.stateNumbersSelect.define("options", []);
 		}
 		this.modelSelect.refresh();
-		this.stateNumbersSelect.refresh();
-	}
-
-	getCurrentCarsInfo() {
-		const modelsList = cars.serialize().filter(elem => !elem.tracker).map(elem => elem.model);
-		const stateNumbersList = cars.serialize()
-			.filter(elem => !elem.tracker).map(elem => elem.stateNumber);
-		this.defineDefaultCarOptions(modelsList, stateNumbersList);
 	}
 }
