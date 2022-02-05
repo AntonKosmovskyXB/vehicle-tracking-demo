@@ -123,7 +123,6 @@ export default class TopView extends JetView {
 			}
 		});
 		const userName = webix.storage.session.get("userName");
-		console.log(`${userName.firstName[0].toUpperCase()} ${userName.lastName[0].toUpperCase()}`);
 		if (userName) {
 			this.$$("personalAccountButton").setValues({icon: `${userName.firstName[0].toUpperCase()}${userName.lastName[0].toUpperCase()}`});
 		}

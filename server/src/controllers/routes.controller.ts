@@ -18,19 +18,19 @@ export class RoutesController {
 
   @Get()
   @Roles(UserRole.Admin)
-  findAll(): Promise<Route[]> {
+  async findAll(): Promise<Route[]> {
     return this.routesService.findAll();
   }
 
   @Get(":id")
   @Roles(UserRole.Admin)
-  findOne(@Param("id") id: string): Promise<Route> {
+  async findOne(@Param("id") id: number): Promise<Route> {
     return this.routesService.findOne(id);
   }
 
   @Post()
   @Roles(UserRole.Admin)
-  addRoute(@Body() createRouteDto: CreateRouteDto): Promise<Route> {
+  async addRoute(@Body() createRouteDto: CreateRouteDto): Promise<Route> {
     return this.routesService.create(createRouteDto);
   }
 }

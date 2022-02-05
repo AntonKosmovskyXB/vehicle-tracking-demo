@@ -14,4 +14,9 @@ export class CreateTrackDto {
     type: Number,
   })
   carId: number;
+
+  @ApiProperty({
+    type: Number,
+  })
+  routeId: number;
 }

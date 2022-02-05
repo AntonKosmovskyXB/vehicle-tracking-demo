@@ -10,6 +10,8 @@ import {
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
 
+import { Track } from "./track.entity";
+
 export type Coordinates = { lat: number; lng: number };
 
 @Entity()
@@ -43,6 +45,10 @@ export class Route {
 
   @Column("simple-json")
   startCoords: Coordinates;
+
+  @OneToOne(() => Track, (track) => track.route)
+  @JoinColumn()
+  track: Track;
 
   @ManyToMany((type) => Route)
   @JoinTable()

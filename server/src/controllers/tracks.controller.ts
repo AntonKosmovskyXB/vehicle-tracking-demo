@@ -27,25 +27,25 @@ export class TracksController {
 
   @Get()
   @Roles(UserRole.Admin)
-  findAll(): Promise<Track[]> {
+  async findAll(): Promise<Track[]> {
     return this.tracksService.findAll();
   }
 
   @Get(":id")
   @Roles(UserRole.Admin)
-  findOne(@Param("id") id: string): Promise<Track> {
+  async findOne(@Param("id") id: number): Promise<Track> {
     return this.tracksService.findOne(id);
   }
 
   @Post()
   @Roles(UserRole.Admin)
-  addTrack(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
+  async addTrack(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
     return this.tracksService.create(createTrackDto);
   }
 
   @Delete(":id")
   @Roles(UserRole.Admin)
-  deleteTrack(@Param("id") id: string): Promise<DeleteResult> {
+  async deleteTrack(@Param("id") id: number): Promise<DeleteResult> {
     return this.tracksService.remove(id);
   }
 }

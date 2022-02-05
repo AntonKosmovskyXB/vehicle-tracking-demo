@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
 import { Car } from "./car.entity";
+import { Route } from "./route.entity";
 
 @Entity()
 export class Track {
@@ -27,4 +28,7 @@ export class Track {
 
   @OneToOne(() => Car, (car) => car.track)
   car: Car;
+
+  @OneToOne(() => Route, (route) => route.track)
+  route: Route;
 }

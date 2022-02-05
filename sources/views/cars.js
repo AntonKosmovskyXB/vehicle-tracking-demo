@@ -28,37 +28,37 @@ export default class CarsView extends JetView {
 					width: 290,
 					body: {
 						rows: [
-							// {
-							// 	localId: "carPhoto",
-							// 	css: "carPhoto",
-							// 	width: 230,
-							// 	height: 134,
-							// 	borderless: true,
-							// 	template: obj => `<div class="car-photo"><img src=${obj.Photo || "../sources/assets/photo/default.png"}></div>`
-							// },
-							// {height: 10},
-							// {
-							// 	view: "uploader",
-							// 	localId: "photoUploader",
-							// 	width: 234,
-							// 	height: 38,
-							// 	value: "Загрузить фото",
-							// 	css: "webix_primary",
-							// 	autosend: false,
-							// 	on: {
-							// 		onBeforeFileAdd: (obj) => {
-							// 			const reader = new FileReader();
-							// 			reader.readAsDataURL(obj.file);
-							// 			reader.onloadend = () => {
-							// 				D.setValues({Photo: reader.result});
-							// 			};
-							// 			this.photoUploader.define("value", "Сменить фото");
-							// 			this.photoUploader.refresh();
-
-							// 			return false;
-							// 		}
-							// 	}
-							// },
+							{
+								localId: "carPhoto",
+								css: "carPhoto",
+								name: "image",
+								width: 230,
+								height: 134,
+								borderless: true,
+								template: obj => `<div class="car-photo"><img src=${obj.Photo || "../sources/assets/photo/default.png"}></div>`
+							},
+							{height: 10},
+							{
+								view: "uploader",
+								localId: "photoUploader",
+								width: 234,
+								height: 38,
+								value: "Загрузить фото",
+								css: "webix_primary",
+								autosend: false,
+								on: {
+									onBeforeFileAdd: (obj) => {
+										const reader = new FileReader();
+										reader.readAsDataURL(obj.file);
+										reader.onloadend = () => {
+											this.$$("carPhoto").setValues({Photo: reader.result});
+										};
+										this.photoUploader.define("value", "Сменить фото");
+										this.photoUploader.refresh();
+										// return false;
+									}
+								}
+							},
 							{height: 30},
 							{
 								view: "text",
@@ -136,17 +136,29 @@ export default class CarsView extends JetView {
 										click: () => {
 											if (this.form.validate()) {
 												const formValues = this.form.getValues();
-												if (formValues.id) {
-													this.carsList.updateItem(formValues.id, formValues);
+												const formData = new FormData();
+												formData.append("model", formValues.model);
+												formData.append("state_number", formValues.state_number);
+												const updoadedPhoto = this.$$("photoUploader").files.data.pull[this.$$("photoUploader").files.data.order[0]];
+												if (updoadedPhoto) {
+													formData.append("image", updoadedPhoto.file, updoadedPhoto.name);
 												}
-												else {
-													webix.ajax().post(`${serverUrl}cars`, formValues).then((res) => {
-														const result = res.json();
-														this.carsList.add(result);
+												if (formValues.id) {
+													webix.ajax().patch(`${serverUrl}cars/${formValues.id}`, formValues).then((res) => {
+														this.carsList.updateItem(formValues.id, formValues);
+														this.clearForm();
+														this.refreshLabels();
 													});
 												}
-												this.clearForm();
-												this.refreshLabels();
+												else {
+													webix.ajax().post(`${serverUrl}cars`, formData).then((res) => {
+														const result = res.json();
+														this.carsList.add(result);
+														this.clearForm();
+														this.refreshLabels();
+														this.$$("photoUploader").files.data.pull.length = 0;
+													});
+												}
 											}
 											else {
 												webix.message("Пожалуйста, заполните все необходимые поля");
@@ -209,11 +221,13 @@ export default class CarsView extends JetView {
 								if (selectedCar) {
 									this.form.parse(selectedCar);
 									this.refreshLabels("edit");
+									if (selectedCar.image) {
+										this.carPhoto.setValues({Photo: `./server/attachments/${selectedCar.image.file_name}`});
+									}
 								}
 								else {
 									webix.message("Пожалуйста выберите автомобиль для редактирования");
 								}
-								// this.carPhoto.setValues({Photo: selectedCar?.photo});
 							}
 						},
 						{width: 7}
@@ -236,12 +250,12 @@ export default class CarsView extends JetView {
 							template: "{common.checkbox()}",
 							width: 40
 						},
-						// {
-						// 	header: "",
-						// 	id: "photo",
-						// 	template: obj => `<div class='carSmallCard'><img src='${obj.photo}'></div>`,
-						// 	width: 65
-						// },
+						{
+							header: "",
+							id: "image",
+							template: (obj) => obj.image ? `<div class="carSmallCard"><img src="./server/attachments/${obj.image.file_name}"></div>` : "",
+							width: 55
+						},
 						{
 							header: "Марка",
 							id: "model",
@@ -316,19 +330,19 @@ export default class CarsView extends JetView {
 	clearForm() {
 		this.form.clear();
 		this.form.clearValidation();
-		// this.carPhoto.setValues({Photo: "../sources/assets/photo/default.png"});
+		this.carPhoto.setValues({Photo: "../sources/assets/photo/default.png"});
 	}
 
 	refreshLabels(editMode) {
 		if (editMode) {
 			this.headLabel.define("label", editCarText);
-			// this.photoUploader.define("value", "Сменить фото");
+			this.photoUploader.define("value", "Сменить фото");
 		}
 		else {
 			this.headLabel.define("label", newCarText);
-			// this.photoUploader.define("value", "Загрузить фото");
+			this.photoUploader.define("value", "Загрузить фото");
 		}
-		// this.photoUploader.refresh();
+		this.photoUploader.refresh();
 		this.headLabel.refresh();
 	}
 }

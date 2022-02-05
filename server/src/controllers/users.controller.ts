@@ -27,25 +27,25 @@ export class UsersController {
 
   @Post()
   @Roles(UserRole.Admin)
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersServices.create(createUserDto);
   }
 
   @Get()
   @Roles(UserRole.Admin)
-  findAll(): Promise<User[]> {
+  async findAll(): Promise<User[]> {
     return this.usersServices.findAll();
   }
 
   @Get(":id")
   @Roles(UserRole.Admin)
-  findOne(@Param("id") id: string): Promise<User> {
+  async findOne(@Param("id") id: number): Promise<User> {
     return this.usersServices.findOne(id);
   }
 
   @Delete(":id")
   @Roles(UserRole.Admin)
-  remove(@Param("id") id: string): Promise<DeleteResult> {
+  async remove(@Param("id") id: number): Promise<DeleteResult> {
     return this.usersServices.remove(id);
   }
 }

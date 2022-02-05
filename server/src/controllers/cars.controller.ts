@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  Patch,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { DeleteResult } from "typeorm";
@@ -19,6 +20,7 @@ import { UserRole } from "src/enums/user-role.enum";
 
 import { Car } from "src/entities/car.entity";
 import { CreateCarDto } from "src/dto/create-car.dto";
+import { ChangeCarDto } from "src/dto/change-car.dto";
 import { CarsService } from "src/services/cars.service";
 
 @ApiBearerAuth("JWT-auth")
@@ -30,13 +32,13 @@ export class CarsController {
 
   @Get()
   @Roles(UserRole.Admin)
-  findAll(): Promise<Car[]> {
+  async findAll(): Promise<Car[]> {
     return this.carsService.findAll();
   }
 
   @Get(":id")
   @Roles(UserRole.Admin)
-  findOne(@Param("id") id: string): Promise<Car> {
+  async findOne(@Param("id") id: number): Promise<Car> {
     return this.carsService.findOne(id);
   }
 
@@ -44,17 +46,23 @@ export class CarsController {
   @ApiConsumes("multipart/form-data")
   @UseInterceptors(FileInterceptor("image"))
   @Roles(UserRole.Admin)
-  addCar(
+  async addCar(
     @Body() createCarDto: CreateCarDto,
-    @UploadedFile() image: Express.Multer.File
+    @UploadedFile() image?: Express.Multer.File
   ): Promise<Car> {
-    console.log(image);
-    return this.carsService.create(createCarDto, image);
+    createCarDto.image = image;
+    return this.carsService.create(createCarDto);
+  }
+
+  @Patch(":id")
+  @Roles(UserRole.Admin)
+  async changeCar(@Param("id") id: number, @Body() changeCarDto: ChangeCarDto) {
+    return this.carsService.change(id, changeCarDto);
   }
 
   @Delete(":id")
   @Roles(UserRole.Admin)
-  deleteCar(@Param("id") id: string): Promise<DeleteResult> {
+  async deleteCar(@Param("id") id: number): Promise<DeleteResult> {
     return this.carsService.remove(id);
   }
 }

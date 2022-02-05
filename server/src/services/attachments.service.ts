@@ -12,6 +12,7 @@ export class AttachmentsService {
   ) {}
 
   async create(file: Express.Multer.File): Promise<Attachment> {
+    console.log(file);
     const attachment = new Attachment();
     attachment.file_name = file.filename;
     attachment.mime_type = file.mimetype;
@@ -19,11 +20,11 @@ export class AttachmentsService {
     return this.attachmentsRepository.save(attachment);
   }
 
-  findOne(id: string): Promise<Attachment> {
+  async findOne(id: number): Promise<Attachment> {
     return this.attachmentsRepository.findOneOrFail(id);
   }
 
-  remove(id: string): Promise<DeleteResult> {
+  async remove(id: number): Promise<DeleteResult> {
     return this.attachmentsRepository.delete(id);
   }
 }

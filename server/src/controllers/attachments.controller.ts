@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Param, UseGuards, StreamableFile, Response } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Param,
+  UseGuards,
+  StreamableFile,
+  Response,
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { createReadStream } from "fs";
 import { join } from "path";
@@ -19,10 +28,15 @@ export class AttachmentsController {
 
   @Get(":id")
   @Roles(UserRole.Admin)
-  async findOne(@Param("id") id: string, @Response({ passthrough: true }) res): Promise<StreamableFile> {
+  async findOne(
+    @Param("id") id: number,
+    @Response({ passthrough: true }) res
+  ): Promise<StreamableFile> {
     const attachment = await this.attachmentsService.findOne(id);
 
-    const file = createReadStream(join(process.cwd(), "attachments", attachment.file_name));
+    const file = createReadStream(
+      join(process.cwd(), "attachments", attachment.file_name)
+    );
     res.set({
       "Content-Type": attachment.mime_type,
       "Content-Disposition": `inline; filename="${attachment.original_name}"`,

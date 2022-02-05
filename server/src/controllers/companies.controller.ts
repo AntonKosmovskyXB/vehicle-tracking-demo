@@ -18,19 +18,19 @@ export class CompaniesController {
 
   @Post()
   @Roles(UserRole.Admin)
-  create(@Body() createCompanyDto: CreateCompanyDto): Promise<Company> {
+  async create(@Body() createCompanyDto: CreateCompanyDto): Promise<Company> {
     return this.companiesService.create(createCompanyDto);
   }
 
   @Get()
   @Roles(UserRole.Admin)
-  findAll(): Promise<Company[]> {
+  async findAll(): Promise<Company[]> {
     return this.companiesService.findAll();
   }
 
   @Get(":id")
   @Roles(UserRole.Admin)
-  findOne(@Param("id") id: string): Promise<Company> {
+  async findOne(@Param("id") id: number): Promise<Company> {
     return this.companiesService.findOne(id);
   }
 }

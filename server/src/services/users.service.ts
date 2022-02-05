@@ -43,13 +43,13 @@ export class UsersService {
     return this.usersRepository.find({ relations: ["car", "company"] });
   }
 
-  findOne(id: string): Promise<User> {
+  async findOne(id: number): Promise<User> {
     return this.usersRepository.findOneOrFail(id, {
       relations: ["car", "company"],
     });
   }
 
-  async remove(id: string): Promise<DeleteResult> {
+  async remove(id: number): Promise<DeleteResult> {
     return this.usersRepository.delete(id);
   }
 }

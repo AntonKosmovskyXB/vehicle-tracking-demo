@@ -18,11 +18,11 @@ export class CompaniesService {
     return this.companiesRepository.save(company);
   }
 
-  findAll(): Promise<Company[]> {
+  async findAll(): Promise<Company[]> {
     return this.companiesRepository.find();
   }
 
-  findOne(id: string): Promise<Company> {
+  async findOne(id: number): Promise<Company> {
     return this.companiesRepository.findOneOrFail(id);
   }
 }

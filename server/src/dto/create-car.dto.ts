@@ -10,6 +10,8 @@ export class CreateCarDto {
   @ApiProperty({
     type: String,
     format: "binary",
+    nullable: true,
+    required: false,
   })
-  image: Express.Multer.File;
+  image?: Express.Multer.File;
 }

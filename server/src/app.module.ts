@@ -48,7 +48,7 @@ import { AttachmentsController } from "./controllers/attachments.controller";
     CarsController,
     TracksController,
     RoutesController,
-    AttachmentsController
+    AttachmentsController,
   ],
   providers: [
     UsersService,

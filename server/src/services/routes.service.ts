@@ -30,11 +30,11 @@ export class RoutesService {
     return this.routesRepository.save(route);
   }
 
-  findAll(): Promise<Route[]> {
+  async findAll(): Promise<Route[]> {
     return this.routesRepository.find();
   }
 
-  findOne(id: string): Promise<Route> {
+  async findOne(id: number): Promise<Route> {
     return this.routesRepository.findOneOrFail(id);
   }
 }
