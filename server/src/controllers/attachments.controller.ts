@@ -7,10 +7,20 @@ import {
   UseGuards,
   StreamableFile,
   Response,
+  UseInterceptors,
+  BadRequestException,
+  UploadedFile,
 } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiProperty,
+  ApiTags,
+} from "@nestjs/swagger";
 import { createReadStream } from "fs";
 import { join } from "path";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 import { Roles } from "src/auth/roles.decorator";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
@@ -25,6 +35,30 @@ import { AttachmentsService } from "src/services/attachments.service";
 @UseGuards(JwtAuthGuard)
 export class AttachmentsController {
   constructor(private readonly attachmentsService: AttachmentsService) {}
+
+  @Post()
+  @ApiConsumes("multipart/form-data")
+  @UseInterceptors(FileInterceptor("image"))
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        image: {
+          type: "string",
+          format: "binary",
+        },
+      },
+    },
+  })
+  @Roles(UserRole.Admin)
+  async create(
+    @UploadedFile() image: Express.Multer.File
+  ): Promise<Attachment> {
+    if (image.size <= 0) {
+      throw new BadRequestException();
+    }
+    return this.attachmentsService.create(image);
+  }
 
   @Get(":id")
   @Roles(UserRole.Admin)

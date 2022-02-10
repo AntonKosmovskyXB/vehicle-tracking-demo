@@ -1,4 +1,5 @@
 import {JetView} from "webix-jet";
+
 import serverUrl from "../constants/server";
 
 const editDriverText = "Редактировать данные";

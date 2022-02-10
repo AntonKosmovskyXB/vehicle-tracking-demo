@@ -1,12 +1,15 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeleteResult, Repository } from "typeorm";
 
 import { Track } from "src/entities/track.entity";
 import { CreateTrackDto } from "src/dto/create-track.dto";
+import { ChangeTrackDto } from "src/dto/change-track.dto";
 
 import { Car } from "src/entities/car.entity";
 import { Route } from "src/entities/route.entity";
+import { CarsService } from "./cars.service";
+import { RoutesService } from "./routes.service";
 
 @Injectable()
 export class TracksService {
@@ -24,7 +27,6 @@ export class TracksService {
     const route = await this.routeRepository.findOneOrFail(
       createTrackDto.routeId
     );
-
     const track = new Track();
     track.car = car;
     track.route = route;
@@ -34,8 +36,37 @@ export class TracksService {
     return this.tracksRepository.save(track);
   }
 
+  async change(id: number, changeTrackDto: ChangeTrackDto): Promise<Track> {
+    if (id != changeTrackDto.id) {
+      throw new BadRequestException();
+    }
+
+    const track = await this.findOne(id);
+    if (changeTrackDto.model) {
+      track.model = changeTrackDto.model;
+    }
+
+    if (changeTrackDto.type) {
+      track.type = changeTrackDto.type;
+    }
+
+    if (changeTrackDto.serial_number) {
+      track.serial_number = changeTrackDto.serial_number;
+    }
+
+    if (changeTrackDto.carId) {
+      track.car = await this.carsRepository.findOneOrFail(changeTrackDto.carId);
+    }
+
+    if (changeTrackDto.routeId) {
+      track.route = await this.routeRepository.findOneOrFail(changeTrackDto.routeId);
+    }
+
+    return this.tracksRepository.save(track);
+  }
+
   async findAll(): Promise<Track[]> {
-    return this.tracksRepository.find({ relations: ["car"] });
+    return this.tracksRepository.find({ relations: ["car", "route"] });
   }
 
   async findOne(id: number): Promise<Track> {

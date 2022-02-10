@@ -12,7 +12,6 @@ export class AttachmentsService {
   ) {}
 
   async create(file: Express.Multer.File): Promise<Attachment> {
-    console.log(file);
     const attachment = new Attachment();
     attachment.file_name = file.filename;
     attachment.mime_type = file.mimetype;

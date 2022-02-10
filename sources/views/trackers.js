@@ -91,17 +91,20 @@ export default class TrackersView extends JetView {
 											if (this.form.validate()) {
 												const formValues = this.form.getValues();
 												if (formValues.id) {
-													this.trackersList.updateItem(formValues.id, formValues);
+													webix.ajax().patch(`${serverUrl}tracks/${formValues.id}`, formValues).then(() => {
+														this.trackersList.updateItem(formValues.id, formValues);
+														this.clearForm();
+														this.refreshLabels();
+													});
 												}
 												else {
 													webix.ajax().post(`${serverUrl}tracks`, formValues).then((res) => {
 														const result = res.json();
 														this.trackersList.add(result);
+														this.clearForm();
+														this.refreshLabels();
 													});
 												}
-
-												this.clearForm();
-												this.refreshLabels();
 											}
 											else {
 												webix.message("Пожалуйста, заполните все необходимые поля");

@@ -56,7 +56,10 @@ export class CarsController {
 
   @Patch(":id")
   @Roles(UserRole.Admin)
-  async changeCar(@Param("id") id: number, @Body() changeCarDto: ChangeCarDto) {
+  async changeCar(
+    @Param("id") id: number,
+    @Body() changeCarDto: ChangeCarDto
+  ): Promise<Car> {
     return this.carsService.change(id, changeCarDto);
   }
 

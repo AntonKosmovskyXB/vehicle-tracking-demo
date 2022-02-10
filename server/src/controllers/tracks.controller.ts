@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   UseGuards,
+  Patch,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { DeleteResult } from "typeorm";
@@ -16,6 +17,7 @@ import { UserRole } from "src/enums/user-role.enum";
 
 import { Track } from "src/entities/track.entity";
 import { CreateTrackDto } from "src/dto/create-track.dto";
+import { ChangeTrackDto } from "src/dto/change-track.dto";
 import { TracksService } from "src/services/tracks.service";
 
 @ApiBearerAuth("JWT-auth")
@@ -41,6 +43,15 @@ export class TracksController {
   @Roles(UserRole.Admin)
   async addTrack(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
     return this.tracksService.create(createTrackDto);
+  }
+
+  @Patch(":id")
+  @Roles(UserRole.Admin)
+  async changeTrack(
+    @Param("id") id: number,
+    @Body() changeTrackDto: ChangeTrackDto
+  ): Promise<Track> {
+    return this.tracksService.change(id, changeTrackDto);
   }
 
   @Delete(":id")

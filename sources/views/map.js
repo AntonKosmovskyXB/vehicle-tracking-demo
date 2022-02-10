@@ -76,7 +76,7 @@ export default class MainView extends JetView {
 		};
 	}
 
-	init() {
+	async init() {
 		this.editMode = false;
 		this.currentEditableCard = "";
 		this.addRoutePopup = this.ui(NewRoutePopup);
@@ -87,20 +87,24 @@ export default class MainView extends JetView {
 					const fullDistanceTime = result / 90;
 					const hours = Math.trunc(fullDistanceTime);
 					const minutes = ((fullDistanceTime - hours) * 60).toFixed();
-					this.$$(`card${num}`).setValues({
-						readyRoute: true,
-						startPoint: startCity,
-						endPoint: endCity,
-						status: "С маршрутом",
-						speed: "-",
-						distance: result,
-						doneDistance: 0,
-						fullDistanceTime: `${hours} ч ${minutes} мин`,
-						restDistanceTime: `${hours} ч ${minutes} мин`
-					}, true);
-		
-					this.$$(`card${num}`).define("height", 268);
-					this.$$(`card${num}`).resize();
+					const speed = this.getRandomInt(70, 90);
+					const objToSend = {
+						coords: {
+							lat: res.endCoord.Latitude,
+							lng: res.endCoord.Longitude
+						},
+						startCoords: {
+							lat: res.startCoord.Latitude,
+							lng: res.startCoord.Longitude
+						},
+						distance: Number(result),
+						speed,
+						travelTime: result / speed,
+						route: `${startCity} - ${endCity}`,
+						deliveryAdress: "",
+						alternativesIds: []
+					};
+					this.createRoute(objToSend, num);
 				})
 			});
 		});
@@ -119,6 +123,19 @@ export default class MainView extends JetView {
 		templates.forEach((elem) => elem.setAttribute("tabindex", "1"));
 	}
 
+	async createRoute(objToSend, cardNum) {
+		const card = this.$$(`card${cardNum}`);
+		const route = (await webix.ajax().headers({
+			"Content-Type": "application/json"
+		}).post(`${serverUrl}routes`, objToSend)).json()
+		webix.ajax().patch(`${serverUrl}tracks/${card.data.id}`, {routeId: route.id, id: card.data.id}).then(() => {
+			card.data.route = route;
+			card.define("height", 268);
+			card.resize();
+			card.refresh();
+		});
+	}
+
 	async getRoutePoints(startCity, endCity) {
 		const startPoint = await webix.ajax().get(`https://geocoder.api.here.com/6.2/geocode.json?searchtext=${startCity}&gen=9&app_id=1ABRBQas40fithl31gWe&app_code=RSz9AQaADwMmSf8oZYq8sA&language=RU`);
 		const endPoint = await webix.ajax().get(`https://geocoder.api.here.com/6.2/geocode.json?searchtext=${endCity}&gen=9&app_id=1ABRBQas40fithl31gWe&app_code=RSz9AQaADwMmSf8oZYq8sA&language=RU`);
@@ -128,101 +145,104 @@ export default class MainView extends JetView {
 		}
 	}
 
-	getCards() {
+	async getCards() {
 		const self = this;
 		let cardsObj = [];
-		webix.ajax().get(`${serverUrl}cars`).then((res) => {
-			const result = res.json();
-			const readyForRouteCars = result.filter(car => car.track && car.user);
-			console.log(readyForRouteCars);
-			for (let i = 0; i < readyForRouteCars.length; i++) {
-				cardsObj.push({
-					css: "travelCard",
-					height: result[i].distance ? 268 : 118,
-					localId: `card${i}`,
-					id: `card${i}`,
-					data: readyForRouteCars[i],
-					onClick: {
-						"mdi-delete": function () {
-							webix.confirm({
-								cancel: "Отменить",
-								text: "Вы хотите удалить эту карточку?"
-							}).then(() => {
-								this.hide();
-								cards[i].deleted = true;
-							});
-						},
-						"mdi-map-marker": function() {
-							self.checkIsCardEditing();
-							if (this.data.status === "В пути" || this.data.status === "С маршрутом") {
-								webix.message("Маршрут уже задан для данного автомобиля");
-							}
-							if (this.data.status === "Без маршрута") {
-								this.editMode = false;
-								this.refresh();
-								self.setRoutePopupPosition(this.$view);
-								self.addRoutePopup.showPopup(i);
-							}
-						},
-						"mdi-pencil": function () {
-							if (self.editMode && self.currentEditableCard !== this) {
-								webix.message("Пожалуйста, завершите редактирование другой карточки");
-							}
-							else {
-								self.editCard(this);
-							}
+		const result = (await webix.ajax().get(`${serverUrl}tracks`)).json();
+		const carsAssignedTracks = result.filter(obj => obj.car);
+		for (let i = 0; i < carsAssignedTracks.length; i++) {
+			const carInfo = (await webix.ajax().get(`${serverUrl}cars/${carsAssignedTracks[i].car.id}`)).json();
+			carsAssignedTracks[i].user = carInfo.user;
+		}
+		const readyForRouteCars = carsAssignedTracks.filter((elem) => elem.user);
+		for (let i = 0; i < readyForRouteCars.length; i++) {
+			cardsObj.push({
+				css: "travelCard",
+				height: readyForRouteCars[i].route ? 268 : 118,
+				localId: `card${i}`,
+				id: `card${i}`,
+				data: readyForRouteCars[i],
+				onClick: {
+					"mdi-delete": function () {
+						webix.confirm({
+							cancel: "Отменить",
+							text: "Вы хотите удалить эту карточку?"
+						}).then(() => {
+							this.hide();
+							cards[i].deleted = true;
+						});
+					},
+					"mdi-map-marker": function() {
+						self.checkIsCardEditing();
+						if (this.data.route !== null) {
+							webix.message("Маршрут уже задан для данного автомобиля");
+						}
+						else {
+							this.editMode = false;
+							this.refresh();
+							self.setRoutePopupPosition(this.$view);
+							self.addRoutePopup.showPopup(i);
 						}
 					},
-					on: {
-						onFocus: function () {
-							if (this.data.startPoint && this.data.endPoint) {
-								self.setMarkersForRoute(this.data.startPoint, this.data.endPoint);
-							}
-							else {
-								self.setMarkersForRoute();
-							}
+					"mdi-pencil": function () {
+						if (self.editMode && self.currentEditableCard !== this) {
+							webix.message("Пожалуйста, завершите редактирование другой карточки");
 						}
-					},
-					template: obj =>
-						`<div>
-							<div class="card-header">
-								<div class="carInfo">
-									<div class="cardCarName">${obj.model}</div>
-									<div class="cardCarNumber">${obj.state_number}</div>
-								</div>
-								<div class="${obj.track.type === "GPS" ? "cardTrackerGPS" : "cardTrackerGlonass"}">${obj.track.type}</div>
-								<div class="card-icons">
-									<span class="mdi mdi-map-marker"></span>
-									<span class="mdi mdi-pencil"></span>
-									<span class="mdi mdi-delete"></span>
-								</div>
+						else {
+							self.editCard(this);
+						}
+					}
+				},
+				on: {
+					onFocus: function () {
+						const cities = this.data.route.route.split(" ");
+						if (cities[0] && cities[2]) {
+							self.setMarkersForRoute(cities[0], cities[2]);
+						}
+						else {
+							self.setMarkersForRoute();
+						}
+					}
+				},
+				template: obj =>
+					`<div>
+						<div class="card-header">
+							<div class="carInfo">
+								<div class="cardCarName">${obj.car.model}</div>
+								<div class="cardCarNumber">${obj.car.state_number}</div>
 							</div>
-							${obj.route ? `<div class="route-info">
-							<div class="route">
-								<b>Маршрут: </b>
-								${this.editMode ? `<input type='text' class="routeStartPointInput">` : `<span class="cityName">${obj.startPoint}</span></span>` }
-								 - ${this.editMode ? `<input type='text' class="routeEndPointInput">` : `<span class="cityName">${obj.endPoint}</span></span>` }
+							<div class="${obj.type === "GPS" ? "cardTrackerGPS" : "cardTrackerGlonass"}">${obj.type}</div>
+							<div class="card-icons">
+								<span class="mdi mdi-map-marker"></span>
+								<span class="mdi mdi-pencil"></span>
+								<span class="mdi mdi-delete"></span>
 							</div>
-							<div class="route-distance">
-								<div class="fullDistance">${obj.distance} км</div>
-								<div class="fullTime">${obj.fullDistanceTime}</div>
-							</div>
-							<div class="routeLine">
-								${obj.status === "В пути" ? `<div class='routeDonePercent' style='width: ${(obj.doneDistance / obj.distance) * 100}%'></div>` : ""}
-							</div>
-							<div class="cardRow"><b>Движется со скоростью:</b><span class="cardRowInfo speed ${obj.speed > 90 ? "outOfspeed" : ""}"> ${obj.speed} км/ч </span></div>
-							<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${obj.doneDistance} км со скоростью ${obj.speed} км/ч </span></div>
-							<div class="cardRow"><b>Завершение маршрута:</b><span class="cardRowInfo"> через ${obj.restDistanceTime}</span></div>
-						</div>` : ""}
-							<div class="cardRow"><b>Водитель:${this.editMode ? `<input type='text' class='driverNameInput'>` : `</b><span class="cardRowInfo"> ${obj.user.firstName} ${obj.user.lastName}</span></div>`}
-							<div class="cardRow"><b>Номер телефона:${this.editMode ? `<input type='text' class='driverPhoneInput'>` : `</b><span class="cardRowInfo"> ${obj.user.phoneNumber}</span></div>`}
-				
-						</div>`
-				});
-			}
-			this.$$("scrollview").define("body", {rows: [...cardsObj, {height: cards.length * 9}]});
-			this.$$("scrollview").resizeChildren();
-		})
+						</div>
+						${obj.route ? `<div class="route-info">
+						<div class="route">
+							<b>Маршрут: </b>
+							${this.editMode ? `<input type='text' class="routeStartPointInput">` : `<span class="cityName">${obj.route.route}</span></span>`}
+						</div>
+						<div class="route-distance">
+							<div class="fullDistance">${obj.route.distance} км</div>
+							<div class="fullTime">${Math.round(obj.route.travelTime)} ч</div>
+						</div>
+						<div class="routeLine">
+							<div class='routeDonePercent' style='width: ${(Math.round(obj.route.distance * 0.7)) /obj.route.distance * 100}%'></div>
+						</div>
+						<div class="cardRow"><b>Движется со скоростью:</b><span class="cardRowInfo speed"> ${obj.route.speed} км/ч </span></div>
+						<div class="cardRow"><b>Пройдено:</b><span class="cardRowInfo"> ${Math.round(obj.route.distance * 0.7)} км</span></div>
+						<div class="cardRow"><b>Завершение маршрута:</b><span class="cardRowInfo"> через ${Math.round(obj.route.travelTime * 0.3)} ч</span></div>
+					</div>` : ""}
+						<div class="cardRow"><b>Водитель:${`</b><span class="cardRowInfo"> ${obj.user.firstName} ${obj.user.lastName}</span></div>`}
+						<div class="cardRow"><b>Номер телефона:${`</b><span class="cardRowInfo"> ${obj.user.phoneNumber}</span></div>`}
+			
+					</div>`
+			});
+		}
+		console.log(cardsObj);
+		this.$$("scrollview").define("body", {rows: [...cardsObj, {height: cards.length * 9}]});
+		this.$$("scrollview").resizeChildren();
 	}
 
 	setRoutePopupPosition(view) {
@@ -323,26 +343,17 @@ export default class MainView extends JetView {
 		if (!this.editMode) {
 			this.editMode = true;
 			card.refresh();
-			const nameInput = card.$view.querySelector(".driverNameInput");
-			const phoneInput = card.$view.querySelector(".driverPhoneInput");
 			const startPointInput = card.$view.querySelector(".routeStartPointInput");
 			const endPointInput = card.$view.querySelector(".routeEndPointInput");
-			nameInput.setAttribute("value", card.data.driver);
-			phoneInput.setAttribute("value", card.data.phone);
 			if (startPointInput && endPointInput) {
 				startPointInput.setAttribute("value", card.data.startPoint);
 				endPointInput.setAttribute("value", card.data.endPoint);
 			}
 		}
 		else {
-			const newDriverName = card.$view.querySelector(".driverNameInput")?.value;
-			const newDriverPhone = card.$view.querySelector(".driverPhoneInput")?.value;
 			const newStartPoint = card.$view.querySelector(".routeStartPointInput")?.value;
 			const newEndPoint = card.$view.querySelector(".routeEndPointInput")?.value;
 			
-			card.data.driver = newDriverName;
-			card.data.phone = newDriverPhone;
-
 			if (newStartPoint && newEndPoint) {
 				this.setMarkersForRoute(newStartPoint, newEndPoint);
 				this.getRoutePoints(newStartPoint, newEndPoint).then((res) => {
@@ -373,6 +384,12 @@ export default class MainView extends JetView {
 			card.refresh();
 		}
 	}
+
+	getRandomInt (min, max) {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	  }
 }
 
 webix.ui({
